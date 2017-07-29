@@ -8,9 +8,9 @@ import (
 	"github.com/urfave/negroni"
 	"github.com/wothing/log"
 
-	"github.com/goushuyun/weixin-golang/db"
-	"github.com/goushuyun/weixin-golang/gateway/interway/router"
-	m "github.com/goushuyun/weixin-golang/gateway/middleware"
+	"github.com/goushuyun/taobao-erp/db"
+	"github.com/goushuyun/taobao-erp/gateway/interway/router"
+	m "github.com/goushuyun/taobao-erp/gateway/middleware"
 )
 
 const (
