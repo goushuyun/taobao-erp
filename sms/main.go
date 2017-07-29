@@ -14,8 +14,10 @@ import (
 	"github.com/goushuyun/weixin-golang/sms/service"
 )
 
-const svcName = "bc_sms"
-const port = 8850
+const (
+	svcName = "sms"
+	port    = 10015
+)
 
 func main() {
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", db.GetPort(port)))

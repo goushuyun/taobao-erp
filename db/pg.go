@@ -29,7 +29,7 @@ func InitPG(svcName string) {
 	dbhost := GetValue(svcName, "pgsql/host", host)
 	dbport := GetValue(svcName, "pgsql/port", "5432")
 	dbpwd := GetValue(svcName, "pgsql/password", "")
-	dbname := GetValue(svcName, "pgsql/name", "bookcloud")
+	dbname := GetValue(svcName, "pgsql/name", "taobao_erp")
 	dbuser := GetValue(svcName, "pgsql/user", "postgres")
 	dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", dbuser, dbpwd, dbhost, dbport, dbname)
 	setupPG(dsn)
