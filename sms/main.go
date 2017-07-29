@@ -20,6 +20,9 @@ const (
 )
 
 func main() {
+	db.InitRedis(svcName)
+	defer db.CloseRedis()
+
 	lis, err := net.Listen("tcp", fmt.Sprintf(":%d", db.GetPort(port)))
 	if err != nil {
 		log.Fatalf("failed to listen: %v", err)
