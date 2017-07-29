@@ -14,27 +14,12 @@ import (
 )
 
 const (
-	svcName = "bc_interway"
-	port    = 8848
+	svcName = "interway"
+	port    = 10014
 )
 
 var serviceNames = []string{
-	"bc_seller",
-	"bc_store",
-	"bc_mediastore",
-	"bc_school",
-	"bc_location",
-	"bc_books",
-	"bc_goods",
-	"bc_topic",
-	"bc_weixin",
-	"bc_circular",
-	"bc_order",
-	"bc_retail",
-	"bc_statistic",
-	"bc_account",
-	"bc_payment",
-	"bc_groupon",
+	"users",
 }
 
 func main() {

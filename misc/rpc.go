@@ -17,32 +17,12 @@ import (
 	"github.com/wothing/worc"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/goushuyun/weixin-golang/errs"
-	"github.com/goushuyun/weixin-golang/pb"
+	"github.com/goushuyun/taobao-erp/errs"
+	"github.com/goushuyun/taobao-erp/pb"
 )
 
 var serviceList = map[string]interface{}{
-	"bc_seller":     pb.NewSellerServiceClient,
-	"bc_sms":        pb.NewSMSServiceClient,
-	"bc_store":      pb.NewStoreServiceClient,
-	"bc_mediastore": pb.NewMediastoreClient,
-	"bc_school":     pb.NewSchoolServiceClient,
-	"bc_location":   pb.NewLocationServiceClient,
-	"bc_books":      pb.NewBooksServiceClient,
-	"bc_goods":      pb.NewGoodsServiceClient,
-	"bc_topic":      pb.NewTopicServiceClient,
-	"bc_weixin":     pb.NewWeixinServiceClient,
-	"bc_user":       pb.NewUserServiceClient,
-	"bc_circular":   pb.NewCircularServiceClient,
-	"bc_cart":       pb.NewCartServiceClient,
-	"bc_order":      pb.NewOrderServiceClient,
-	"bc_account":    pb.NewAccountServiceClient,
-	"bc_address":    pb.NewAddressServiceClient,
-	"bc_payment":    pb.NewPaymentServiceClient,
-	"bc_retail":     pb.NewRetailServiceClient,
-	"bc_statistic":  pb.NewStatisticServiceClient,
-	"bc_master":     pb.NewMasterServiceClient,
-	"bc_groupon":    pb.NewGrouponServiceClient,
+	"users": pb.NewUsersServiceClient,
 }
 
 func StartServiceConns(address string, serviceNames []string) {

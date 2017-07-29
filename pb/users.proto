@@ -1,0 +1,20 @@
+syntax = "proto3";
+
+package pb;
+
+service UsersService {
+    rpc Register (User) returns (UserResp);
+}
+
+message User {
+    string tel = 1;
+    string password = 2;
+    int64 role = 3;
+    string name = 4;
+}
+
+message UserResp {
+    string code = 1;
+    string message = 2;
+    User data = 3;
+}

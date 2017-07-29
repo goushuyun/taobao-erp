@@ -3,12 +3,12 @@ package controller
 import (
 	"net/http"
 
-	"github.com/goushuyun/weixin-golang/misc"
-	"github.com/goushuyun/weixin-golang/pb"
+	"github.com/goushuyun/taobao-erp/misc"
+	"github.com/goushuyun/taobao-erp/pb"
 )
 
-func GetUserInfo(w http.ResponseWriter, r *http.Request) {
-	req := &pb.GetUserInfoReq{}
+func Register(w http.ResponseWriter, r *http.Request) {
+	req := &pb.User{}
 
-	misc.CallWithResp(w, r, "bc_user", "GetUserInfo", req, "store_id", "appid")
+	misc.CallWithResp(w, r, "users", "Register", req)
 }
