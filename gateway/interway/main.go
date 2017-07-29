@@ -20,6 +20,7 @@ const (
 
 var serviceNames = []string{
 	"users",
+	"sms",
 }
 
 func main() {
