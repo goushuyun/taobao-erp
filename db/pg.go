@@ -25,9 +25,6 @@ func InitPG(svcName string) {
 	if host == "" {
 		host = "127.0.0.1"
 	}
-	log.Debug("===================")
-	log.Debug(host)
-	log.Debug("===================")
 
 	dbhost := GetValue(svcName, "pgsql/host", host)
 	dbport := GetValue(svcName, "pgsql/port", "5432")
