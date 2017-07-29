@@ -13,7 +13,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/goushuyun/taobao-erp/seller/role"
+	"github.com/goushuyun/taobao-erp/users/role"
 )
 
 var tokenStr string

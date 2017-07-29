@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package pb;
+
+import "pb/common.proto";
+
+service Mediastore {
+    rpc FetchImage (FetchImageReq) returns (FetchImageResp);
+    rpc GetUpToken (UpLoadReq) returns (GetUpTokenResp);
+    rpc RefreshUrls (RefreshReq) returns (NormalResp);
+}
+
+message ExtractReq {
+    repeated string weixin_media_urls = 1;
+    string appid = 2;
+    MediaZone zone = 3;
+}
+
+message ExtractResp {
+    repeated string qiniu_keys = 1;
+}
+
+
+message RefreshReq {
+    repeated string urls = 1;
+}
+
+message UpLoadReq {
+    MediaZone zone = 1;
+    string key = 2;
+}
+message GetUpTokenResp {
+    string token = 1;
+    string url = 2;
+}
+
+message FetchImageReq {
+    MediaZone zone = 1;
+    string url = 2;
+    string key = 3;
+}
+
+message FetchImageResp {
+    string qiniu_url = 1;
+}

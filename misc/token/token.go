@@ -14,7 +14,7 @@ import (
 	"github.com/dgrijalva/jwt-go"
 	"github.com/elgs/gostrgen"
 
-	ro "github.com/goushuyun/taobao-erp/seller/role"
+	ro "github.com/goushuyun/taobao-erp/users/role"
 )
 
 func sign(c Claims) string {

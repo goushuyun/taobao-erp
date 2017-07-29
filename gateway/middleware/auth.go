@@ -15,7 +15,7 @@ import (
 	"github.com/goushuyun/taobao-erp/errs"
 	"github.com/goushuyun/taobao-erp/misc"
 	"github.com/goushuyun/taobao-erp/misc/token"
-	"github.com/goushuyun/taobao-erp/seller/role"
+	"github.com/goushuyun/taobao-erp/users/role"
 )
 
 // CheckAuth checks
