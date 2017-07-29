@@ -10,7 +10,7 @@ package token
 import (
 	"time"
 
-	"github.com/goushuyun/weixin-golang/seller/role"
+	"github.com/goushuyun/taobao-erp/seller/role"
 )
 
 type TokenType int64

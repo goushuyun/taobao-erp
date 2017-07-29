@@ -16,10 +16,10 @@ import (
 	"github.com/urfave/negroni"
 	"github.com/wothing/log"
 
-	"github.com/goushuyun/weixin-golang/db"
-	"github.com/goushuyun/weixin-golang/errs"
-	"github.com/goushuyun/weixin-golang/misc"
-	"github.com/goushuyun/weixin-golang/misc/token"
+	"github.com/goushuyun/taobao-erp/db"
+	"github.com/goushuyun/taobao-erp/errs"
+	"github.com/goushuyun/taobao-erp/misc"
+	"github.com/goushuyun/taobao-erp/misc/token"
 )
 
 var whiteList = map[string]bool{

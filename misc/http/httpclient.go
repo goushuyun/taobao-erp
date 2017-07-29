@@ -13,7 +13,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/goushuyun/weixin-golang/errs"
+	"github.com/goushuyun/taobao-erp/errs"
 	"github.com/wothing/log"
 )
 

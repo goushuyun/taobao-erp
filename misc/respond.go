@@ -12,9 +12,9 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/wothing/log"
 
-	"github.com/goushuyun/weixin-golang/errs"
-	"github.com/goushuyun/weixin-golang/misc/hack"
-	"github.com/goushuyun/weixin-golang/misc/jsonpb"
+	"github.com/goushuyun/taobao-erp/errs"
+	"github.com/goushuyun/taobao-erp/misc/hack"
+	"github.com/goushuyun/taobao-erp/misc/jsonpb"
 )
 
 var jbm = &jsonpb.Marshaler{EnumsAsInts: true, EmitDefaults: true, OrigName: true}

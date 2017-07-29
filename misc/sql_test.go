@@ -9,8 +9,8 @@ import (
 	"testing"
 	"time"
 
-	"github.com/goushuyun/weixin-golang/db"
-	"github.com/goushuyun/weixin-golang/pb"
+	"github.com/goushuyun/taobao-erp/db"
+	"github.com/goushuyun/taobao-erp/pb"
 	"github.com/wothing/log"
 )
 

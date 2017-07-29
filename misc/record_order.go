@@ -6,7 +6,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/goushuyun/weixin-golang/pb"
+	"github.com/goushuyun/taobao-erp/pb"
 )
 
 const (

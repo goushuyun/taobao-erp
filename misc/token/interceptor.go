@@ -1,7 +1,7 @@
 package token
 
 import (
-	"github.com/goushuyun/weixin-golang/errs"
+	"github.com/goushuyun/taobao-erp/errs"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/metadata"

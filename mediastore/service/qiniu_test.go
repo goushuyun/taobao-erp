@@ -5,7 +5,7 @@ import (
 	"log"
 	"testing"
 
-	"github.com/goushuyun/weixin-golang/pb"
+	"github.com/goushuyun/taobao-erp/pb"
 	"github.com/tealeg/xlsx"
 )
 

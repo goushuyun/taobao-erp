@@ -23,6 +23,7 @@ import (
 
 var serviceList = map[string]interface{}{
 	"users": pb.NewUsersServiceClient,
+	"sms":   pb.NewSMSServiceClient,
 }
 
 func StartServiceConns(address string, serviceNames []string) {

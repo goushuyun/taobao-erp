@@ -13,7 +13,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/goushuyun/weixin-golang/seller/role"
+	"github.com/goushuyun/taobao-erp/seller/role"
 )
 
 var tokenStr string

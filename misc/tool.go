@@ -18,7 +18,7 @@ import (
 	"regexp"
 	"time"
 
-	"github.com/goushuyun/weixin-golang/errs"
+	"github.com/goushuyun/taobao-erp/errs"
 	"github.com/wothing/log"
 )
 

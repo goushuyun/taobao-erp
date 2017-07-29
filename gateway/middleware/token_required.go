@@ -4,12 +4,12 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/goushuyun/weixin-golang/errs"
+	"github.com/goushuyun/taobao-erp/errs"
 
 	"github.com/urfave/negroni"
 
-	"github.com/goushuyun/weixin-golang/misc"
-	"github.com/goushuyun/weixin-golang/misc/token"
+	"github.com/goushuyun/taobao-erp/misc"
+	"github.com/goushuyun/taobao-erp/misc/token"
 	"github.com/wothing/log"
 )
 
