@@ -15,6 +15,7 @@ const (
 	url          = "https://app.cloopen.com:8883/2013-12-26/Accounts/"
 	appid        = "8a216da85afaadec015b1d5533390dbb"
 	accounttoken = "52591dc2aedd49a8b74027f7cafcd6e6"
+	expire_time  = 300
 )
 
 type SMSTemplate struct {

@@ -7,8 +7,8 @@ import (
 	"github.com/goushuyun/taobao-erp/pb"
 )
 
-func SendSms(w http.ResponseWriter, r *http.Request) {
+func SendIdentifyingCode(w http.ResponseWriter, r *http.Request) {
 	req := &pb.SMSReq{}
 
-	misc.CallWithResp(w, r, "sms", "SendSMS", req, "type", "mobile", "message")
+	misc.CallWithResp(w, r, "sms", "SendIdentifyingCode", req, "mobile")
 }

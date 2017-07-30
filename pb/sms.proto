@@ -6,12 +6,13 @@ import "pb/common.proto";
 
 service SMSService {
     // 即将关闭订单
-    rpc SendSMS(SMSReq) returns (Void);
+    rpc SendSMS (SMSReq) returns (Void);
+    rpc SendIdentifyingCode (SMSReq) returns (NormalResp);
 }
 
 enum SMSType {
     UnknownSMSType                 = 0;
-    
+
     // 购书云 164093 帐号申请时的短息验证码
     // 【购书云】您的验证码是{1}，请于3分钟内正确输入
     CommonCheckCode = 1;

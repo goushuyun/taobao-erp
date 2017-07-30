@@ -12,6 +12,8 @@ import (
 	"strings"
 	"time"
 
+	"github.com/goushuyun/taobao-erp/db"
+
 	"github.com/goushuyun/taobao-erp/errs"
 	"github.com/goushuyun/taobao-erp/misc"
 	"github.com/goushuyun/taobao-erp/pb"
@@ -25,6 +27,33 @@ var (
 )
 
 type SMSServer struct{}
+
+func (s *SMSServer) SendIdentifyingCode(ctx context.Context, req *pb.SMSReq) (resp *pb.NormalResp, err error) {
+
+	// package SMSReq
+	checkcode := misc.GenCheckCode(4, misc.KC_RAND_KIND_NUM)
+
+	req.Type = pb.SMSType_CommonCheckCode
+	req.Message = []string{checkcode}
+
+	_, err = s.SendSMS(ctx, req)
+	if err != nil {
+		log.Error(err)
+		return nil, err
+	} else {
+		// save code into redis
+		conn := db.GetRedisConn()
+		defer conn.Close()
+
+		_, err = conn.Do("set", req.Mobile, checkcode, "ex", expire_time)
+		if err != nil {
+			log.Error(err)
+			return nil, err
+		}
+
+		return &pb.NormalResp{Code: errs.Ok, Message: "ok"}, nil
+	}
+}
 
 func (s *SMSServer) SendSMS(ctx context.Context, req *pb.SMSReq) (resp *pb.Void, err error) {
 
