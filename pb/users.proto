@@ -7,14 +7,17 @@ service UsersService {
 }
 
 message User {
-    string tel = 1;
+    string mobile = 1;
     string password = 2;
     int64 role = 3;
     string name = 4;
+    string checkcode = 5;
+    string id = 6;
 }
 
 message UserResp {
     string code = 1;
     string message = 2;
     User data = 3;
+    string token = 4;
 }
