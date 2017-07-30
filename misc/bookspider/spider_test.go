@@ -9,14 +9,14 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
-	"strconv"
 	"strings"
 	"testing"
 
-	log "github.com/wothing/log"
-
+	"github.com/PuerkitoBio/goquery"
 	"github.com/hu17889/go_spider/core/common/request"
 	"github.com/hu17889/go_spider/core/spider"
+	log "github.com/wothing/log"
+	"gopkg.in/iconv.v1"
 )
 
 const ProxyServer = "proxy.abuyun.com:9020"
@@ -121,21 +121,48 @@ func TestRegular(t *testing.T) {
 	log.Debug(reg.FindString(detailStr))
 
 }
-func TestProxyIp(t *testing.T) {
-	url := "http://product.dangdang.com/index.php?r=callback%2Fdetail&productId=23764026&templateType=publish&describeMap=&shopId=0&categoryPath=01.49.01.18.00.00"
-	resp, err := http.Get(url)
+func TestProxyIp1(t *testing.T) {
+	log.Debug(111)
+	res, err := http.Get("https://dx.3.cn/desc/12155418?cdn=2&callback=showdesc")
 	if err != nil {
-		fmt.Println(err)
+		log.Debug(1)
+		log.Debug(err)
 	}
-	defer resp.Body.Close()
-	body, err := ioutil.ReadAll(resp.Body)
+	defer res.Body.Close()
+
+	// body, err := ioutil.ReadAll(res.Body) //取出主体的内容
+	// if err != nil {
+	// 	log.Error(err)
+	// 	return
+	// }
+	//
+	// log.Debug(string(body))
+	// // Convert the designated charset HTML to utf-8 encoded HTML.
+	// // `charset` being one of the charsets known by the iconv package.
+	cd, err := iconv.Open("utf-8", "gbk") // convert utf-8 to gbk
 	if err != nil {
-		// handle error
-		log.Error(err)
+		fmt.Println("iconv.Open failed!")
 		return
 	}
-	fmt.Println(strconv.Unquote(string(body)))
-	fmt.Println(strconv.Unquote(string(`\u7b2c\u516d\u8282 \u51fd\u6570\u9879\u7ea7\u6570\u7684\u4e00\u81f4\u6536\u655b\u6027\u53ca\u4e00\u81f4`)))
+	defer cd.Close()
+
+	utfBody := iconv.NewReader(cd, res.Body, 0)
+	if err != nil {
+		// handler error
+		log.Debug(11)
+		log.Debug(err)
+
+	}
+	// // use utfBody using goquery
+	doc, err := goquery.NewDocumentFromReader(utfBody)
+	if err != nil {
+		// handler error
+		log.Debug(1111)
+		log.Debug(err)
+	}
+	log.Debug(111)
+	text, _ := doc.Html()
+	log.Debug(text)
 }
 
 func TestAbuyun(t *testing.T) {
