@@ -4,6 +4,8 @@ package pb;
 
 service UsersService {
     rpc Register (User) returns (UserResp);
+    rpc Login (User) returns (UserResp);
+    rpc UserExist (User) returns (UserResp);
 }
 
 message User {

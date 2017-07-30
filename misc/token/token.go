@@ -26,13 +26,14 @@ func sign(c Claims) string {
 	return tokenStr
 }
 
-func SignUserToken(from TokenType, user_id string) string {
+func SignUserToken(from TokenType, user_id, mobile string) string {
 	var token string
 	session, err := gostrgen.RandGen(4, gostrgen.Lower|gostrgen.Digit, "", "")
 	if err != nil {
 		panic(err)
 	}
 	c := Claims{
+		Mobile:   mobile,
 		Scope:    from,
 		Session:  session,
 		UserId:   user_id,
