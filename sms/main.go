@@ -9,9 +9,9 @@ import (
 	"github.com/wothing/log"
 	"github.com/wothing/worpc"
 
-	"github.com/goushuyun/weixin-golang/db"
-	"github.com/goushuyun/weixin-golang/pb"
-	"github.com/goushuyun/weixin-golang/sms/service"
+	"github.com/goushuyun/taobao-erp/db"
+	"github.com/goushuyun/taobao-erp/pb"
+	"github.com/goushuyun/taobao-erp/sms/service"
 )
 
 const (

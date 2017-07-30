@@ -6,7 +6,7 @@ package misc
 import (
 	"fmt"
 
-	"github.com/goushuyun/weixin-golang/errs"
+	"github.com/goushuyun/taobao-erp/errs"
 )
 
 // Result 所有请求都返回这个类型，其中 data 是返回的实际内容

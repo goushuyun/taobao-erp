@@ -7,7 +7,7 @@ import (
 
 	"github.com/wothing/log"
 
-	"github.com/goushuyun/weixin-golang/pb"
+	"github.com/goushuyun/taobao-erp/pb"
 
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"

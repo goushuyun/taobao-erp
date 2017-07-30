@@ -1,6 +1,6 @@
 package service
 
-import "github.com/goushuyun/weixin-golang/pb"
+import "github.com/goushuyun/taobao-erp/pb"
 
 var (
 	templateId = map[pb.SMSType]string{

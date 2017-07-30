@@ -3,19 +3,15 @@ package main
 import (
 	"strings"
 
-	"google.golang.org/grpc"
-
-	"github.com/goushuyun/weixin-golang/mediastore/service"
-
-	"github.com/goushuyun/weixin-golang/pb"
-
-	"github.com/goushuyun/weixin-golang/db"
-
+	"github.com/goushuyun/taobao-erp/db"
+	"github.com/goushuyun/taobao-erp/mediastore/service"
+	"github.com/goushuyun/taobao-erp/pb"
 	"github.com/wothing/worpc"
+	"google.golang.org/grpc"
 )
 
-const svcName = "bc_mediastore"
-const port = 8852
+const svcName = "mediastore"
+const port = 10016
 
 func main() {
 	m := db.NewMicro(svcName, port)

@@ -8,3 +8,9 @@ message NormalResp {
     string code    = 1;
     string message = 2;
 }
+
+// 七牛 bucket
+enum MediaZone {
+    Test      = 0;
+    Public    = 1;
+}

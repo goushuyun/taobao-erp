@@ -17,8 +17,8 @@ import (
 	"strings"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/goushuyun/weixin-golang/errs"
-	"github.com/goushuyun/weixin-golang/misc/jsonpb"
+	"github.com/goushuyun/taobao-erp/errs"
+	"github.com/goushuyun/taobao-erp/misc/jsonpb"
 )
 
 var jsu = jsonpb.Unmarshaler{AllowUnknownFields: true}

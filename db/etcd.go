@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	prefix = "bookcloud"
+	prefix = "taobao-erp"
 )
 
 type etcdConn struct {

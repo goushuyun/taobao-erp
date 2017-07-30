@@ -9,7 +9,7 @@ import (
 
 	"google.golang.org/grpc/metadata"
 
-	"github.com/goushuyun/weixin-golang/misc/token"
+	"github.com/goushuyun/taobao-erp/misc/token"
 )
 
 // GetTidFromContext 从 gPRC context 中取到 tid

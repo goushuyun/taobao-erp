@@ -3,10 +3,10 @@ package service
 import (
 	"errors"
 
-	"github.com/goushuyun/weixin-golang/errs"
-	"github.com/goushuyun/weixin-golang/misc"
+	"github.com/goushuyun/taobao-erp/errs"
+	"github.com/goushuyun/taobao-erp/misc"
 
-	"github.com/goushuyun/weixin-golang/pb"
+	"github.com/goushuyun/taobao-erp/pb"
 
 	"github.com/wothing/log"
 	"golang.org/x/net/context"

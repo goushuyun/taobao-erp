@@ -8,7 +8,7 @@ import (
 )
 
 func SendSms(w http.ResponseWriter, r *http.Request) {
-	req := &pb.User{}
+	req := &pb.SMSReq{}
 
 	misc.CallWithResp(w, r, "sms", "SendSMS", req, "type", "mobile", "message")
 }

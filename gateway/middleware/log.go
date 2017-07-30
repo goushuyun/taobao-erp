@@ -10,9 +10,9 @@ import (
 	"github.com/pborman/uuid"
 	"github.com/urfave/negroni"
 
-	"github.com/goushuyun/weixin-golang/errs"
-	"github.com/goushuyun/weixin-golang/misc"
-	"github.com/goushuyun/weixin-golang/misc/hack"
+	"github.com/goushuyun/taobao-erp/errs"
+	"github.com/goushuyun/taobao-erp/misc"
+	"github.com/goushuyun/taobao-erp/misc/hack"
 	"github.com/wothing/log"
 )
 

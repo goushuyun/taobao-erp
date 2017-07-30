@@ -12,5 +12,8 @@ func SetRouterV1() *m.Router {
 	// users
 	v1.Register("/users/register", m.Wrap(c.Register))
 
+	// sms
+	v1.Register("/sms/send_sms", m.Wrap(c.SendSms))
+
 	return v1
 }

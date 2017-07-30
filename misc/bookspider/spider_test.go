@@ -9,6 +9,7 @@ import (
 	"net/http"
 	"net/url"
 	"regexp"
+	"strconv"
 	"strings"
 	"testing"
 
@@ -82,9 +83,22 @@ func TestSpiderDangdangDetail(t *testing.T) {
 }
 
 func TestSpiderBookUUList(t *testing.T) {
-	isbn := "9787559602404"
+	isbn := "9787559402585"
 	sp := spider.NewSpider(NewBookUUListProcesser(), "BookUUlist")
 	baseUrl := "http://search.bookuu.com/AdvanceSearch.php?isbn=ISBN&sm=&zz=&cbs=&dj_s=&dj_e=&bkj_s=&bkj_e=&layer2=&zk=0&cbrq_n=2017&cbrq_y=&cbrq_n1=2017&cbrq_y1=&sjsj=0&orderby=&layer1=1"
+	url := strings.Replace(baseUrl, "ISBN", isbn, -1)
+	req := request.NewRequest(url, "html", "", "GET", "", nil, nil, nil, nil)
+
+	pageItems := sp.GetByRequest(req)
+	for name, value := range pageItems.GetAll() {
+		log.Debug(name + "\t:\t" + value)
+	}
+}
+
+func TestSpiderCaiCoolList(t *testing.T) {
+	isbn := "9787562165576"
+	sp := spider.NewSpider(NewCaiCoolListProcesser(), "CaiCoolList")
+	baseUrl := "http://www.caicool.cn/search?keywords=ISBN&typesMark=0&typesCode=-1&switchMark=0"
 	url := strings.Replace(baseUrl, "ISBN", isbn, -1)
 	req := request.NewRequest(url, "html", "", "GET", "", nil, nil, nil, nil)
 
@@ -108,11 +122,8 @@ func TestRegular(t *testing.T) {
 
 }
 func TestProxyIp(t *testing.T) {
-	orderNo := getOrderNo()
-	url := "http://api.ip.data5u.com/dynamic/get.html?order=" + orderNo
-	resp, err := http.Post(url,
-		"application/text/html",
-		strings.NewReader("name=cjb"))
+	url := "http://product.dangdang.com/index.php?r=callback%2Fdetail&productId=23764026&templateType=publish&describeMap=&shopId=0&categoryPath=01.49.01.18.00.00"
+	resp, err := http.Get(url)
 	if err != nil {
 		fmt.Println(err)
 	}
@@ -123,12 +134,8 @@ func TestProxyIp(t *testing.T) {
 		log.Error(err)
 		return
 	}
-
-	reg := regexp.MustCompile("((2[0-4]\\d|25[0-5]|[01]?\\d\\d?)\\.){3}(2[0-4]\\d|25[0-5]|[01]?\\d\\d?)")
-	ip := reg.FindString(string(body))
-	log.Debug(string(body))
-	log.Debug(ip)
-
+	fmt.Println(strconv.Unquote(string(body)))
+	fmt.Println(strconv.Unquote(string(`\u7b2c\u516d\u8282 \u51fd\u6570\u9879\u7ea7\u6570\u7684\u4e00\u81f4\u6536\u655b\u6027\u53ca\u4e00\u81f4`)))
 }
 
 func TestAbuyun(t *testing.T) {

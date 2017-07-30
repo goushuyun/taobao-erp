@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/PuerkitoBio/goquery"
 	"github.com/hu17889/go_spider/core/common/page"
 	"github.com/hu17889/go_spider/core/common/request"
 	"github.com/hu17889/go_spider/core/spider"
@@ -113,18 +114,45 @@ func (s *DangDangDetailProcesser) Process(p *page.Page) {
 	p.AddField("publisher", publisher)
 	p.AddField("edition", edition)
 	log.Debug("==============")
-	content := query.Find("#detail_describe .key").Text()
-	log.Debug(content)
-	log.Debug("==============")
+	var series_name, page, packing, format string
+	query.Find("#detail_describe .key li").Each(func(i int, s *goquery.Selection) {
 
-	//丛书名
+		band := s.Text()
+		//丛书名
+		if strings.Contains(band, "丛书名：") {
+			series_name = strings.Replace(band, "丛书名：", "", -1)
+		}
+		//页数
+		if strings.Contains(band, "页 数：") {
+			page = strings.Replace(band, "页 数：", "", -1)
 
+		}
+		//包装
+		if strings.Contains(band, "包 装：") {
+			packing = strings.Replace(band, "包 装：", "", -1)
+		}
+		//开本
+		if strings.Contains(band, "开 本：") {
+			format = strings.Replace(band, "开 本：", "", -1)
+
+		}
+	})
+
+	var catalog, abstract, author_info string
 	//目录
+	catalog = query.Find("#catalog-show").Text()
+	log.Debug(catalog)
 	//内容简介
-	//页数
-	//包装
-	//开本
+	abstract = query.Find("#content-all").Text()
 	//作者简介
+	log.Debug("==============")
+	p.AddField("series_name", series_name)
+	p.AddField("catalog", catalog)
+	p.AddField("abstract", abstract)
+	p.AddField("author_info", author_info)
+	p.AddField("page", page)
+	p.AddField("packing", packing)
+	p.AddField("format", format)
 	p.AddField("pubdate", pubdate)
 	p.AddField("price", price)
 	p.AddField("isbn", isbn)

@@ -5,6 +5,7 @@ import (
 	"regexp"
 	"strings"
 
+	"github.com/PuerkitoBio/goquery"
 	log "github.com/wothing/log"
 
 	"github.com/hu17889/go_spider/core/common/page"
@@ -119,6 +120,53 @@ func (s *BookUUDetailProcesser) Process(p *page.Page) {
 	if edition != "" {
 		edition = "第" + edition + "版"
 	}
+	var series_name, page, packing, format, catalog, abstract, author_info string
+	query.Find(".parameter li").Each(func(i int, s *goquery.Selection) {
+		band := s.Text()
+		band = strings.Trim(band, " \t\n")
+		band = strings.Replace(band, " ", "", -1)
+		//丛书名
+		if strings.Contains(band, "丛书名：") {
+			series_name = strings.Replace(band, "丛书名：", "", -1)
+		}
+		//页数
+		if strings.Contains(band, "页数：") {
+			page = strings.Replace(band, "页数：", "", -1)
+
+		}
+		//包装
+		if strings.Contains(band, "包装：") {
+			packing = strings.Replace(band, "包装：", "", -1)
+		}
+		//开本
+		if strings.Contains(band, "开本：") {
+			format = strings.Replace(band, "开本：", "", -1)
+
+		}
+		fmt.Println(band)
+	})
+
+	//目录
+	catalog, _ = query.Find("#J_wrap_5").Html()
+	reg = regexp.MustCompile("<a.*</a>")
+	a := reg.FindString(catalog)
+	fmt.Println(a)
+	catalog = strings.Replace(catalog, a, "", -1)
+	price = reg.FindString(price)
+	catalog = strings.Replace(catalog, "display:none", "", -1)
+	//内容简介
+	abstract, _ = query.Find("#J_wrap_2").Html()
+	//作者简介
+	author_info, _ = query.Find("#J_wrap_3").Html()
+	log.Debug("==============")
+	p.AddField("series_name", series_name)
+	p.AddField("catalog", catalog)
+	p.AddField("abstract", abstract)
+	p.AddField("author_info", author_info)
+	p.AddField("page", page)
+	p.AddField("packing", packing)
+	p.AddField("format", format)
+
 	p.AddField("title", title)
 	p.AddField("remark", "")
 	p.AddField("author", author)
