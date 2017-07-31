@@ -1,0 +1,40 @@
+syntax = "proto3";
+
+package pb;
+import "pb/common.proto";
+
+service StockService {
+    rpc SaveSingleGoods (Goods) returns (NormalResp);
+    rpc SearchLocation (Location) returns (SearchLocationResp);
+}
+
+message Location {
+    string user_id = 1;
+    string warehouse = 2;
+    string shelf = 3;
+    string floor = 4;
+    string location_id = 5;
+    int64 total_stock = 6;
+}
+
+message SearchLocationResp {
+    string code = 1;
+    string message = 2;
+    repeated Location data = 3;
+}
+
+message Goods {
+    string isbn = 1;
+    string warehouse = 2;
+    string shelf = 3;
+    string floor = 4;
+    int64 stock = 5;
+    string goods_id = 6;
+    string user_id = 7;
+}
+
+message SearchStockResp {
+    string code = 1;
+    string message = 2;
+    repeated Goods data = 3;
+}
