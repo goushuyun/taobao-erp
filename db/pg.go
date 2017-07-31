@@ -23,7 +23,7 @@ func InitPG(svcName string) {
 	//配置docker 数据库连接
 	host := os.Getenv("POSTGRES_PORT_5432_TCP_ADDR")
 	if host == "" {
-		host = "127.0.0.1"
+		host = "114.215.87.9"
 	}
 
 	dbhost := GetValue(svcName, "pgsql/host", host)

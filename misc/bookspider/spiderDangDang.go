@@ -147,7 +147,6 @@ func (s *DangDangDetailProcesser) Process(p *page.Page) {
 	log.Debug("productId========", productId)
 	//获取商品价格url
 	priceUrl = strings.Replace(priceUrl, "PRODUCTID", productId, -1)
-
 	if productId == "" {
 		log.Debug("当当无详情")
 
@@ -173,7 +172,6 @@ func (s *DangDangDetailProcesser) Process(p *page.Page) {
 				if err != nil {
 					log.Debug(err)
 				}
-				log.Debug(doc.Html())
 				catalog, err = doc.Find("#catalog-textarea").Html()
 				if err != nil {
 
@@ -217,8 +215,6 @@ func (s *DangDangDetailProcesser) Process(p *page.Page) {
 	p.AddField("catalog", catalog)
 	p.AddField("abstract", abstract)
 	p.AddField("series_name", series_name)
-	p.AddField("catalog", catalog)
-	p.AddField("abstract", abstract)
 	p.AddField("author_info", author_info)
 	p.AddField("page", page)
 	p.AddField("packing", packing)

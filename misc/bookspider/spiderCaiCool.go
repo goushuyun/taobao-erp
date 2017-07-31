@@ -1,7 +1,6 @@
 package bookspider
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 
@@ -53,7 +52,6 @@ func (s *CaiCoolListProcesser) Process(p *page.Page) {
 }
 
 func (s *CaiCoolListProcesser) Finish() {
-	fmt.Printf("TODO:before end spider \r\n")
 }
 
 type CaiCoolDetailProcesser struct {
@@ -105,9 +103,8 @@ func (s *CaiCoolDetailProcesser) Process(p *page.Page) {
 			format = strings.Replace(band, "开本：", "", -1)
 
 		}
-		//获取版本信息
 
-		fmt.Println(band)
+		log.Debug(band)
 	})
 
 	//目录

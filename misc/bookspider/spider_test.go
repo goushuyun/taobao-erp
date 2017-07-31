@@ -39,7 +39,6 @@ func TestSpiderDangdangList(t *testing.T) {
 	url := strings.Replace(baseURL, "ISBN", isbn, -1)
 	req := request.NewRequest(url, "html", "", "GET", "", nil, nil, nil, nil)
 	pageItems := sp.GetByRequest(req)
-	//pageItems := sp.Get("http://baike.baidu.com/view/1628025.htm?fromtitle=http&fromid=243074&type=syn", "html")
 
 	//没爬到数据
 	if pageItems == nil || len(pageItems.GetAll()) <= 0 {
@@ -109,13 +108,13 @@ func TestSpiderCaiCoolList(t *testing.T) {
 	}
 }
 
-// func TestGetBookInfo(t *testing.T) {
-// 	book, _ := GetBookInfoBySpider("9787508622019", "")
-// 	println("-----------------------------------OOOOOOM---------------------------------")
-// 	fmt.Printf("%#v", book)
-// 	log.Debug("-----------------------------------OOOOOOM---------------------------------")
-//
-// }
+func TestGetBookInfo(t *testing.T) {
+	book, _ := GetBookInfoBySpider("9787508622019", "")
+	println("-----------------------------------OOOOOOM---------------------------------")
+	log.Debugf("%#v", book)
+	log.Debug("-----------------------------------OOOOOOM---------------------------------")
+
+}
 func TestRegular(t *testing.T) {
 	detailStr := "https://item.jd.com/11020022.html"
 	reg := regexp.MustCompile("/\\d*\\.")

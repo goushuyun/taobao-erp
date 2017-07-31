@@ -185,7 +185,7 @@ func (s *JDDetailProcesser) Process(p *page.Page) {
 		//版 次
 		if strings.Contains(band, "版次：") {
 			edition = strings.Replace(band, "版次：", "", -1)
-
+			edition = "第" + edition + "版"
 		}
 		//出版社
 		if strings.Contains(band, "出版社：") {

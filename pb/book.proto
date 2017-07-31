@@ -1,0 +1,45 @@
+syntax = "proto3";
+
+package pb;
+
+service BookService {
+    //获取图书信息
+    rpc GetBookInfo (Book) returns (BookResp);
+    //更改图书信息
+    rpc UpdateBookInfo (Book) returns (BookResp);
+    //管理员新增图书信息
+    rpc SaveBook (Book) returns (BookResp);
+
+}
+
+//获取图书信息
+message BookResp {
+    string code = 1;
+    string message = 2;
+    repeated Book data = 3;
+}
+
+//标准图书信息表
+message Book {
+    string id = 1;
+    string isbn = 2;
+    string book_no = 3;
+    string book_cate = 4;
+    string title = 5;
+    string publisher = 6;
+    string author = 7;
+    string edition = 8;
+    string pubdate = 9;
+    string series_name = 10;
+    string image = 11;
+    int64 price = 12;
+    string catalog = 13;
+    string abstract = 14;
+    string page = 15;
+    string packing = 16;
+    string format = 17;
+    string author_intro = 18;
+    string source_info = 19;
+    int64 create_at = 20;
+    int64 update_at = 21;
+}
