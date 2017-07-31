@@ -1,6 +1,7 @@
 package bookspider
 
 import (
+	"bytes"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -8,6 +9,9 @@ import (
 	"regexp"
 	"strings"
 
+	iconv "gopkg.in/iconv.v1"
+
+	"github.com/PuerkitoBio/goquery"
 	"github.com/hu17889/go_spider/core/common/page"
 	"github.com/hu17889/go_spider/core/common/request"
 	"github.com/hu17889/go_spider/core/spider"
@@ -82,7 +86,7 @@ func NewJDDetailProcesser() *JDDetailProcesser {
 // Parse html dom here and record the parse result that we want to crawl.
 // Package goquery (http://godoc.org/github.com/PuerkitoBio/goquery) is used to parse html.
 func (s *JDDetailProcesser) Process(p *page.Page) {
-	var author, publisher, pubdate, price string
+	var author, publisher, pubdate, price, series_name, page, packing, format, catalog, abstract, author_info, edition, isbn string
 	if !p.IsSucc() {
 		log.Debug(p.Errormsg())
 		return
@@ -101,8 +105,11 @@ func (s *JDDetailProcesser) Process(p *page.Page) {
 		log.Debug("京东无数据")
 		return
 	}
+	//获取商品详情url
+	detailUrl := strings.Replace("https://dx.3.cn/desc/PRODUCTID?cdn=2&callback=showdesc", "PRODUCTID", productId, -1)
+	//获取商品价格url
 	priceUrl = strings.Replace(priceUrl, "PRODUCTID", productId, -1)
-	log.Debug("priceUrl========", priceUrl)
+
 	ipStr := getProxyIp()
 	proxy := func(_ *http.Request) (*url.URL, error) {
 		return url.Parse(ipStr) //根据定义Proxy func(*Request) (*url.URL, error)这里要返回url.URL
@@ -122,6 +129,7 @@ func (s *JDDetailProcesser) Process(p *page.Page) {
 	}
 
 	log.Debug(string(body))
+
 	//获取价格
 	var param []map[string]string
 	err = json.Unmarshal(body, &param)
@@ -139,47 +147,124 @@ func (s *JDDetailProcesser) Process(p *page.Page) {
 	title := query.Find("#name h1").Text()
 	title = strings.Trim(title, " \t\n")
 
-	remark := query.Find("#p-ad").Text()
-	remark = strings.Trim(remark, " \t\n")
-
-	//获取图书作者，出版社 ，出版时间
-	detailStr := query.Find("#parameter2").Text()
-	detailStr = strings.Trim(detailStr, " \t\n")
-	detailStr = strings.Replace(detailStr, "\n", "", -1)
-	detailStr = strings.Replace(detailStr, " ", "", -1)
-	log.Debug(detailStr)
-
 	author = query.Find("#p-author").Text()
 	author = strings.Trim(author, " \t\n")
 
-	reg = regexp.MustCompile("出版社：.*ISBN")
-	publisher = reg.FindString(detailStr)
-	publisher = strings.Replace(publisher, "出版社：", "", -1)
-	publisher = strings.Replace(publisher, "ISBN", "", -1)
-
-	reg = regexp.MustCompile("\\d{4}[\\p{Han}-]{1}\\d{2}[\\p{Han}]{0,1}")
-	pubdate = reg.FindString(detailStr)
-
-	//获取isbn
-	reg = regexp.MustCompile("(\\d[- ]*){12}[\\d]")
-	isbn := reg.FindString(detailStr)
-	isbn = strings.Replace(isbn, "-", "", -1)
-	isbn = strings.Replace(isbn, " ", "", -1)
-
-	reg = regexp.MustCompile("版 次：[\\d]+")
-	edition := reg.FindString(detailStr)
-	edition = strings.Replace(edition, "版 次：", "", -1)
-	if edition != "" {
-		edition = "第" + edition + "版"
-	}
 	//获取图片url
 	url, _ := query.Find("#spec-n1 img").Attr("src")
 	url = strings.Trim(url, " \t\n")
 	if url != "" {
 		url = "https:" + url
 	}
+
+	query.Find("#parameter2 li").Each(func(i int, s *goquery.Selection) {
+		band := s.Text()
+		band = strings.Trim(band, "\t\n")
+		band = strings.Replace(band, "\n", "", -1)
+		band = strings.Replace(band, "\t", "", -1)
+		band = strings.Replace(band, " ", "", -1)
+
+		//丛书名
+		if strings.Contains(band, "丛书名：") {
+			series_name = strings.Replace(band, "丛书名：", "", -1)
+		}
+		//页数
+		if strings.Contains(band, "页数：") {
+			page = strings.Replace(band, "页数：", "", -1)
+
+		}
+		//包装
+		if strings.Contains(band, "包装：") {
+			packing = strings.Replace(band, "包装：", "", -1)
+		}
+		//开本
+		if strings.Contains(band, "开本：") {
+			format = strings.Replace(band, "开本：", "", -1)
+
+		}
+		//版 次
+		if strings.Contains(band, "版次：") {
+			edition = strings.Replace(band, "版次：", "", -1)
+
+		}
+		//出版社
+		if strings.Contains(band, "出版社：") {
+			publisher = strings.Replace(band, "出版社：", "", -1)
+		}
+		//出版日期
+		if strings.Contains(band, "出版时间：") {
+			pubdate = strings.Replace(band, "出版时间：", "", -1)
+		}
+		//isbn
+		if strings.Contains(band, "ISBN：") {
+			isbn = strings.Replace(band, "ISBN：", "", -1)
+		}
+
+	})
+	res, err := client.Get(detailUrl)
+	if err != nil {
+		log.Debug(err)
+		return
+	}
+
+	//把gbk编码转换成utf-8编码
+	cd, err := iconv.Open("utf-8", "gbk") // convert gbk to utf8
+	if err != nil {
+		log.Error(err)
+	} else {
+
+		defer cd.Close()
+		body, err = ioutil.ReadAll(res.Body)
+		if err != nil {
+
+			log.Error(err)
+		} else {
+			//构建goquery
+			convStr := strings.Replace(string(body), "\\\"", "'", -1)
+			reader := bytes.NewReader([]byte(convStr))
+			cd, err := iconv.Open("utf-8", "gbk") // convert gbk to utf8
+			if err != nil {
+				log.Error("iconv.Open failed!")
+			}
+			defer cd.Close()
+
+			utfBody := iconv.NewReader(cd, reader, 0)
+			if err != nil {
+				log.Debug(err)
+
+			}
+			doc, err := goquery.NewDocumentFromReader(utfBody)
+			if err != nil {
+				log.Error(err)
+			} else {
+				//目录
+				catalog, _ = doc.Find("#detail-tag-id-6").Html()
+				reg = regexp.MustCompile("<a.*</a>")
+				a := reg.FindString(catalog)
+				catalog = strings.Replace(catalog, a, "", -1)
+				catalog = strings.Replace(catalog, "display:none", "", -1)
+				catalog = strings.Replace(catalog, "\\n", "", -1)
+				//内容简介
+				abstract, _ = doc.Find("#detail-tag-id-3").Html()
+				abstract = strings.Replace(abstract, "\\n", "", -1)
+
+				//作者简介
+				author_info, _ = doc.Find("#detail-tag-id-4").Html()
+				author_info = strings.Replace(author_info, "\\n", "", -1)
+
+			}
+		}
+
+	}
+
+	p.AddField("series_name", series_name)
+	p.AddField("page", page)
+	p.AddField("packing", packing)
+	p.AddField("format", format)
+	p.AddField("catalog", catalog)
+	p.AddField("abstract", abstract)
+	p.AddField("author_info", author_info)
 	p.AddField("title", title)
-	p.AddField("remark", remark)
 	p.AddField("author", author)
 	p.AddField("publisher", publisher)
 	p.AddField("pubdate", pubdate)
@@ -187,7 +272,6 @@ func (s *JDDetailProcesser) Process(p *page.Page) {
 	p.AddField("isbn", isbn)
 	p.AddField("image_url", url)
 	p.AddField("edition", edition)
-
 }
 
 func (s *JDDetailProcesser) Finish() {

@@ -16,6 +16,8 @@ import (
 	"net/http"
 	"reflect"
 	"regexp"
+	"strconv"
+	"strings"
 	"time"
 
 	"github.com/goushuyun/taobao-erp/errs"
@@ -212,4 +214,44 @@ func SubString(str string, begin, length int) (substr string) {
 
 	// 返回子串
 	return string(rs[begin:end])
+}
+
+func UnicodeToUtf8(str string) (to string) {
+	buf := bytes.NewBuffer(nil)
+
+	i, j := 0, len(str)
+	for i < j {
+		x := i + 6
+		if x > j {
+			buf.WriteString(str[i:])
+			break
+		}
+		if str[i] == '\\' && str[i+1] == 'u' {
+			hex := str[i+2 : x]
+			r, err := strconv.ParseUint(hex, 16, 64)
+			if err == nil {
+				buf.WriteRune(rune(r))
+			} else {
+				buf.WriteString(str[i:x])
+			}
+			i = x
+		} else {
+			buf.WriteByte(str[i])
+			i++
+		}
+	}
+	to = buf.String()
+	to = strings.Replace(to, "&#34;", "'", -1)
+	to = strings.Replace(to, "&quot;", "'", -1)
+	to = strings.Replace(to, "&#38;", "&", -1)
+	to = strings.Replace(to, "&amp;", "&", -1)
+	to = strings.Replace(to, "&lt;", "<", -1)
+	to = strings.Replace(to, "&#60;", "<", -1)
+	to = strings.Replace(to, "&#62;", ">", -1)
+	to = strings.Replace(to, "&gt;", ">", -1)
+	to = strings.Replace(to, "&nbsp;", " ", -1)
+	to = strings.Replace(to, "&#160;", " ", -1)
+	to = strings.Replace(to, "\\n", "", -1)
+	to = strings.Replace(to, "\\", "", -1)
+	return
 }

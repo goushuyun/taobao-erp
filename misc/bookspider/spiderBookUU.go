@@ -111,7 +111,10 @@ func (s *BookUUDetailProcesser) Process(p *page.Page) {
 	//获取图片url
 	url, _ := query.Find(".show-pic img").Attr("src")
 	url = strings.Trim(url, " \t\n")
-
+	//处理默认图片
+	if url == "http://style.bookuu.com/images/none-picture.png" {
+		url = ""
+	}
 	//获取图书价格
 	price := query.Find(".original-price").Text()
 	price = strings.Trim(price, " \t\n")
@@ -120,6 +123,7 @@ func (s *BookUUDetailProcesser) Process(p *page.Page) {
 	if edition != "" {
 		edition = "第" + edition + "版"
 	}
+
 	var series_name, page, packing, format, catalog, abstract, author_info string
 	query.Find(".parameter li").Each(func(i int, s *goquery.Selection) {
 		band := s.Text()
@@ -143,16 +147,13 @@ func (s *BookUUDetailProcesser) Process(p *page.Page) {
 			format = strings.Replace(band, "开本：", "", -1)
 
 		}
-		fmt.Println(band)
 	})
 
 	//目录
 	catalog, _ = query.Find("#J_wrap_5").Html()
 	reg = regexp.MustCompile("<a.*</a>")
 	a := reg.FindString(catalog)
-	fmt.Println(a)
 	catalog = strings.Replace(catalog, a, "", -1)
-	price = reg.FindString(price)
 	catalog = strings.Replace(catalog, "display:none", "", -1)
 	//内容简介
 	abstract, _ = query.Find("#J_wrap_2").Html()
@@ -166,7 +167,6 @@ func (s *BookUUDetailProcesser) Process(p *page.Page) {
 	p.AddField("page", page)
 	p.AddField("packing", packing)
 	p.AddField("format", format)
-
 	p.AddField("title", title)
 	p.AddField("remark", "")
 	p.AddField("author", author)
