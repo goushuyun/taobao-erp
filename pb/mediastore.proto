@@ -20,7 +20,6 @@ message ExtractResp {
     repeated string qiniu_keys = 1;
 }
 
-
 message RefreshReq {
     repeated string urls = 1;
 }

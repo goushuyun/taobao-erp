@@ -27,8 +27,8 @@ var cli *kodo.Client
 var uploader kodocli.Uploader
 
 const (
-	ak = "PRBrdNUf1m07enHI26CgpG7z3O8YLYXgoCE-1P2S"
-	sk = "PtCRtf7xyY0P6mBaQARL6KeYW6dVdglFzIz3BiQS"
+	ak = "chJWNjyv2kKJrDO3lk3MiGsOQ28dKDTQq6V7DJLv"
+	sk = "6TsoVLgTxs-xjLPn131PRLJJJoYfjUDpzO6hyxU-"
 )
 
 type qiniuZone struct {
@@ -42,8 +42,8 @@ type qiniuZone struct {
 var zones = map[string]*qiniuZone{
 	"Test": &qiniuZone{
 		public: true,
-		bucket: "bookcloud-test",
-		domain: "http://images.goushuyun.cn/",
+		bucket: "taobao-erp-test",
+		domain: "http://otxkmhj3k.bkt.clouddn.com/",
 		imgsuf: "",
 		thmsuf: "-th",
 	},
