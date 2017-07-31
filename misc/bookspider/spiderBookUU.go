@@ -1,7 +1,6 @@
 package bookspider
 
 import (
-	"fmt"
 	"regexp"
 	"strings"
 
@@ -53,7 +52,6 @@ func (s *BookUUListProcesser) Process(p *page.Page) {
 }
 
 func (s *BookUUListProcesser) Finish() {
-	fmt.Printf("TODO:before end spider \r\n")
 }
 
 type BookUUDetailProcesser struct {

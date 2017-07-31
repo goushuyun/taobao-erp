@@ -2,7 +2,6 @@
 package bookspider
 
 import (
-	"fmt"
 	"io/ioutil"
 	"net/http"
 	"regexp"
@@ -21,7 +20,7 @@ func getProxyIp() string {
 		"application/text/html",
 		strings.NewReader("name=cjb"))
 	if err != nil {
-		fmt.Println(err)
+		log.Error(err)
 	}
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
