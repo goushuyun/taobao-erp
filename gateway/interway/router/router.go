@@ -19,5 +19,6 @@ func SetRouterV1() *m.Router {
 	//book
 	v1.Register("/book/get_book_info", m.Wrap(c.GetBookInfo))
 	v1.Register("/book/save_book_info", m.Wrap(c.SaveBook))
+	v1.Register("/book/update_book_info", m.Wrap(c.UpdateBookInfo))
 	return v1
 }
