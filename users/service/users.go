@@ -1,7 +1,10 @@
 package service
 
 import (
+	"errors"
 	"fmt"
+
+	"github.com/goushuyun/taobao-erp/misc"
 
 	"github.com/goushuyun/taobao-erp/db"
 	"github.com/goushuyun/taobao-erp/errs"
@@ -17,7 +20,52 @@ import (
 type UsersServer struct {
 }
 
+func (s *UsersServer) UserExist(ctx context.Context, req *pb.User) (*pb.UserResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "Login", "%#v", req))
+
+	isExist, err := users_db.UserExist(req)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+
+	var msg string
+	if isExist {
+		msg = "exist"
+	} else {
+		msg = "not_exist"
+	}
+
+	return &pb.UserResp{Code: errs.Ok, Message: msg}, nil
+}
+
+func (s *UsersServer) Login(ctx context.Context, req *pb.User) (*pb.UserResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "Login", "%#v", req))
+
+	err := users_db.Login(req)
+
+	// not found this user
+	if err.Error() == "not_found" {
+		return &pb.UserResp{Code: errs.Ok, Message: "not_found"}, nil
+	}
+
+	// met other error
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+
+	// has this user, sign token
+	token := token.SignUserToken(role.InterNormalUser, req.Id, req.Mobile)
+	return &pb.UserResp{Code: errs.Ok, Message: "ok", Token: token}, nil
+}
+
 func (s *UsersServer) Register(ctx context.Context, req *pb.User) (*pb.UserResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "Register", "%#v", req))
+
 	// check if identifying code is ok
 	conn := db.GetRedisConn()
 	defer conn.Close()
@@ -47,7 +95,7 @@ func (s *UsersServer) Register(ctx context.Context, req *pb.User) (*pb.UserResp,
 	}
 
 	// sign token
-	token := token.SignUserToken(role.InterNormalUser, req.Id)
+	token := token.SignUserToken(role.InterNormalUser, req.Id, req.Mobile)
 	req.Password = "*****"
 
 	return &pb.UserResp{Code: errs.Ok, Message: "ok", Data: req, Token: token}, nil

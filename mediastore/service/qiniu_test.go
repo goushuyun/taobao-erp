@@ -58,13 +58,13 @@ func TestFetch(t *testing.T) {
 
 	t.Log("My name is Wang Kai ...")
 
-	url, err := FetchImg(pb.MediaZone_Public, "http://wx4.sinaimg.cn/mw690/5a3cbcf7ly1fbo9k0kiukj21ve2io7wo.jpg", "beauty")
+	url, err := FetchImg(pb.MediaZone_Test, "https://gdp.alicdn.com/imgextra/i1/2356992787/TB2gUWwdrslyKJjSZJiXXb1tFXa_!!2356992787.jpg", "amazon.jpg")
 
 	t.Log(err, url)
 }
 
 func TestMakeToken(t *testing.T) {
-	token, url := makeToken(0, "wanghaiting")
+	token, url := makeToken(0, "wanng")
 
 	t.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 	t.Log(token, url)
