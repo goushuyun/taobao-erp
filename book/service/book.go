@@ -85,7 +85,12 @@ func (s *BookServer) GetBookInfo(ctx context.Context, in *pb.Book) (*pb.BookList
 func (s *BookServer) UpdateBookInfo(ctx context.Context, in *pb.Book) (*pb.BookResp, error) {
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "UpdateBookInfo", "%#v", in))
-
+	updateContent, err := db.UpdateBookInfo(in)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	log.Debug(updateContent)
 	return &pb.BookResp{Code: errs.Ok, Message: "ok"}, nil
 }
 
