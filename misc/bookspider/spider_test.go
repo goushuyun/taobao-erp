@@ -13,6 +13,7 @@ import (
 	"testing"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/goushuyun/taobao-erp/misc"
 	"github.com/hu17889/go_spider/core/common/request"
 	"github.com/hu17889/go_spider/core/spider"
 	log "github.com/wothing/log"
@@ -51,9 +52,9 @@ func TestSpiderDangdangList(t *testing.T) {
 }
 
 func TestSpiderJDList(t *testing.T) {
-	isbn := "9787301091319"
+	isbn := "9787535492838"
 	sp := spider.NewSpider(NewJDListProcesser(), "spiderJDList")
-	baseURL := "https://search.jd.com/Search?keyword=ISBN&enc=utf-8&wq=ISBN&pvid=3d3aefa8a0904ef1b08547fb69f57ae7"
+	baseURL := "https://search.jd.com/Search?keyword=ISBN&enc=utf-8&qrst=1&rt=1&stop=1&vt=2&wq=ISBN&psort=1&wtype=1&click=1"
 	url := strings.Replace(baseURL, "ISBN", isbn, -1)
 	req := request.NewRequest(url, "html", "", "GET", "", nil, nil, nil, nil)
 	pageItems := sp.GetByRequest(req)
@@ -121,7 +122,7 @@ func TestRegular(t *testing.T) {
 	log.Debug(reg.FindString(detailStr))
 
 }
-func TestProxyIp1(t *testing.T) {
+func TestGbkToUtf(t *testing.T) {
 	log.Debug(111)
 	res, err := http.Get("https://dx.3.cn/desc/12155418?cdn=2&callback=showdesc")
 	if err != nil {
@@ -129,40 +130,74 @@ func TestProxyIp1(t *testing.T) {
 		log.Debug(err)
 	}
 	defer res.Body.Close()
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
 
-	// body, err := ioutil.ReadAll(res.Body) //取出主体的内容
-	// if err != nil {
-	// 	log.Error(err)
-	// 	return
-	// }
-	//
-	// log.Debug(string(body))
-	// // Convert the designated charset HTML to utf-8 encoded HTML.
-	// // `charset` being one of the charsets known by the iconv package.
-	cd, err := iconv.Open("utf-8", "gbk") // convert utf-8 to gbk
+		log.Debug(err)
+	}
+	convStr := strings.Replace(string(body), "\\\"", "'", -1)
+	reader := bytes.NewReader([]byte(convStr))
+	cd, err := iconv.Open("utf-8", "gbk") // convert gbk to utf8
 	if err != nil {
 		fmt.Println("iconv.Open failed!")
-		return
 	}
 	defer cd.Close()
 
-	utfBody := iconv.NewReader(cd, res.Body, 0)
+	utfBody := iconv.NewReader(cd, reader, 0)
 	if err != nil {
-		// handler error
-		log.Debug(11)
 		log.Debug(err)
 
 	}
-	// // use utfBody using goquery
 	doc, err := goquery.NewDocumentFromReader(utfBody)
 	if err != nil {
-		// handler error
-		log.Debug(1111)
 		log.Debug(err)
 	}
 	log.Debug(111)
-	text, _ := doc.Html()
-	log.Debug(text)
+
+	catalog, _ := doc.Find("#detail-tag-id-6").Html()
+	//catalog, _ := doc.Html()
+
+	log.Debug(catalog)
+}
+
+func TestUnicodeToUtf(t *testing.T) {
+	log.Debug(111)
+	res, err := http.Get("http://product.dangdang.com/index.php?r=callback%2Fdetail&productId=1900465424&templateType=publish&describeMap=&shopId=0&categoryPath=01.49.01.18.00.00")
+	if err != nil {
+		log.Debug(1)
+		log.Debug(err)
+	}
+	defer res.Body.Close()
+
+	body, err := ioutil.ReadAll(res.Body)
+	if err != nil {
+		log.Debug(2)
+		log.Debug(err)
+	}
+	context := misc.UnicodeToUtf8(string(body))
+
+	reader := bytes.NewReader([]byte(context))
+
+	doc, err := goquery.NewDocumentFromReader(reader)
+	if err != nil {
+		log.Debug(3)
+		log.Debug(err)
+	}
+	catalog, err := doc.Find("#catalog-textarea").Html()
+	if err != nil {
+		log.Debug(3)
+		log.Debug(err)
+	}
+
+	content, err := doc.Find("#content").Html()
+	if err != nil {
+		log.Debug(3)
+		log.Debug(err)
+	}
+	log.Debug("=================")
+	log.Debug(misc.UnicodeToUtf8(catalog))
+	log.Debug(misc.UnicodeToUtf8(content))
+
 }
 
 func TestAbuyun(t *testing.T) {

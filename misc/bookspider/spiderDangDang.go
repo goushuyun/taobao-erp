@@ -1,11 +1,15 @@
 package bookspider
 
 import (
+	"bytes"
+	"io/ioutil"
 	"net/http"
+	"net/url"
 	"regexp"
 	"strings"
 
 	"github.com/PuerkitoBio/goquery"
+	"github.com/goushuyun/taobao-erp/misc"
 	"github.com/hu17889/go_spider/core/common/page"
 	"github.com/hu17889/go_spider/core/common/request"
 	"github.com/hu17889/go_spider/core/spider"
@@ -47,7 +51,6 @@ func (s *DangDangListProcesser) Process(p *page.Page) {
 	if pageItems == nil || pageItems.GetAll() == nil {
 		return
 	}
-	log.Debug("-----------------------------------spider.Get---------------------------------")
 	log.Debug("url\t:\t" + findUrl)
 	for name, value := range pageItems.GetAll() {
 		p.AddField(name, value)
@@ -103,18 +106,14 @@ func (s *DangDangDetailProcesser) Process(p *page.Page) {
 	edition := reg.FindString(isbnStr)
 	edition = strings.Replace(edition, "版 次：", "", -1)
 	//获取图片url
-	url, _ := query.Find("#largePicDiv #largePic").Attr("src")
-	url = strings.Trim(url, " \t\n")
+	image_url, _ := query.Find("#largePicDiv #largePic").Attr("src")
+	image_url = strings.Trim(image_url, " \t\n")
 	if edition != "" {
 		edition = "第" + edition + "版"
 	}
 
-	p.AddField("title", title)
-	p.AddField("author", author)
-	p.AddField("publisher", publisher)
-	p.AddField("edition", edition)
 	log.Debug("==============")
-	var series_name, page, packing, format string
+	var series_name, page, packing, format, catalog, abstract, author_info string
 	query.Find("#detail_describe .key li").Each(func(i int, s *goquery.Selection) {
 
 		band := s.Text()
@@ -138,14 +137,85 @@ func (s *DangDangDetailProcesser) Process(p *page.Page) {
 		}
 	})
 
-	var catalog, abstract, author_info string
-	//目录
-	catalog = query.Find("#catalog-show").Text()
-	log.Debug(catalog)
-	//内容简介
-	abstract = query.Find("#content-all").Text()
-	//作者简介
-	log.Debug("==============")
+	productUrl := p.GetRequest().GetUrl()
+	log.Debug("URL========", productUrl)
+	reg = regexp.MustCompile("/\\d*\\.")
+	productId := reg.FindString(productUrl)
+	productId = strings.Replace(productId, ".", "", -1)
+	productId = strings.Replace(productId, "/", "", -1)
+	priceUrl := "http://product.dangdang.com/index.php?r=callback%2Fdetail&productId=PRODUCTID&templateType=publish&describeMap=&shopId=0&categoryPath=01.49.01.18.00.00"
+	log.Debug("productId========", productId)
+	//获取商品价格url
+	priceUrl = strings.Replace(priceUrl, "PRODUCTID", productId, -1)
+
+	if productId == "" {
+		log.Debug("当当无详情")
+
+	} else {
+		ipStr := getProxyIp()
+		proxy := func(_ *http.Request) (*url.URL, error) {
+			return url.Parse(ipStr)
+		}
+		transport := &http.Transport{Proxy: proxy}
+		client := &http.Client{Transport: transport}
+		resp, err := client.Get(priceUrl) //请求并获取到对象,使用代理
+		if err != nil {
+			log.Error(err)
+		} else {
+			defer resp.Body.Close()
+			body, err := ioutil.ReadAll(resp.Body) //取出主体的内容
+			if err != nil {
+				log.Error(err)
+			} else {
+				context := misc.UnicodeToUtf8(string(body))
+				reader := bytes.NewReader([]byte(context))
+				doc, err := goquery.NewDocumentFromReader(reader)
+				if err != nil {
+					log.Debug(err)
+				}
+				log.Debug(doc.Html())
+				catalog, err = doc.Find("#catalog-textarea").Html()
+				if err != nil {
+
+					log.Debug(err)
+				}
+				abstract, err = doc.Find("#content-textarea").Html()
+				if err != nil {
+					log.Debug(err)
+				}
+
+				author_info, err = doc.Find("#authorIntroduction").Html()
+				if err != nil {
+					log.Debug(err)
+				}
+
+				catalog = misc.UnicodeToUtf8(catalog)
+				reg = regexp.MustCompile("<a.*</a>")
+				a := reg.FindString(catalog)
+				catalog = strings.Replace(catalog, a, "", -1)
+				catalog = strings.Replace(catalog, "display:none", "", -1)
+				catalog = strings.Replace(catalog, "\\n", "", -1)
+
+				abstract = misc.UnicodeToUtf8(abstract)
+				a = reg.FindString(abstract)
+				abstract = strings.Replace(abstract, a, "", -1)
+				abstract = strings.Replace(abstract, "display:none", "", -1)
+				abstract = strings.Replace(abstract, "\\n", "", -1)
+				author_info = misc.UnicodeToUtf8(author_info)
+				a = reg.FindString(author_info)
+				author_info = strings.Replace(author_info, a, "", -1)
+				author_info = strings.Replace(author_info, "display:none", "", -1)
+				author_info = strings.Replace(author_info, "\\n", "", -1)
+
+			}
+
+		}
+
+	}
+
+	//写入图书标准信息
+	p.AddField("catalog", catalog)
+	p.AddField("abstract", abstract)
 	p.AddField("series_name", series_name)
 	p.AddField("catalog", catalog)
 	p.AddField("abstract", abstract)
@@ -156,7 +226,11 @@ func (s *DangDangDetailProcesser) Process(p *page.Page) {
 	p.AddField("pubdate", pubdate)
 	p.AddField("price", price)
 	p.AddField("isbn", isbn)
-	p.AddField("image_url", url)
+	p.AddField("image_url", image_url)
+	p.AddField("title", title)
+	p.AddField("author", author)
+	p.AddField("publisher", publisher)
+	p.AddField("edition", edition)
 
 }
 
