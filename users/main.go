@@ -18,7 +18,6 @@ func main() {
 	m := db.NewMicro(svcName, port)
 	m.RegisterPG()
 	m.RegisterRedis()
-
 	s := grpc.NewServer(grpc.UnaryInterceptor(worpc.UnaryInterceptorChain(worpc.Recovery, worpc.Logging)))
 	pb.RegisterUsersServiceServer(s, &service.UsersServer{})
 

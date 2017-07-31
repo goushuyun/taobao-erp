@@ -10,13 +10,18 @@ import (
 )
 
 const (
-	svcName = "users"
+	svcName = "book"
 	port    = 10017
 )
+
+var svcNames = []string{
+	"mediastore",
+}
 
 func main() {
 	m := db.NewMicro(svcName, port)
 	m.RegisterPG()
+	m.ReferServices(svcNames...)
 	m.RegisterRedis()
 
 	s := grpc.NewServer(grpc.UnaryInterceptor(worpc.UnaryInterceptorChain(worpc.Recovery, worpc.Logging)))

@@ -22,8 +22,10 @@ import (
 )
 
 var serviceList = map[string]interface{}{
-	"users": pb.NewUsersServiceClient,
-	"sms":   pb.NewSMSServiceClient,
+	"users":      pb.NewUsersServiceClient,
+	"sms":        pb.NewSMSServiceClient,
+	"book":       pb.NewBookServiceClient,
+	"mediastore": pb.NewMediastoreClient,
 }
 
 func StartServiceConns(address string, serviceNames []string) {

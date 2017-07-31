@@ -15,12 +15,13 @@ import (
 
 const (
 	svcName = "interway"
-	port    = 10014
+	port    = 8848
 )
 
 var serviceNames = []string{
 	"users",
 	"sms",
+	"book",
 }
 
 func main() {

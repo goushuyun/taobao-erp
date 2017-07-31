@@ -44,3 +44,20 @@ func GetBookInfo(book *pb.Book) (books []*pb.Book, err error) {
 	}
 	return
 }
+
+/*
+   insert a new book data to db and return it's id where complete
+*/
+func InsertBookInfo(book *pb.Book) error {
+	query := "insert into book(isbn,book_no,book_cate,title,publisher,author,edition,pubdate,series_name,image,price,catalog,abstract,page,packing,format,author_intro,source_info) values(%s) returning id,extract(epoch from create_at)::bigint"
+	param := fmt.Sprintf("'%s','%s','%s','%s','%s','%s','%s','%s','%s','%s',%d,'%s','%s','%s','%s','%s','%s','%s'", book.Isbn, book.BookNo, book.BookCate, book.Title, book.Publisher, book.Author, book.Edition, book.Pubdate, book.SeriesName, book.Image, book.Price, book.Catalog, book.Abstract, book.Page, book.Packing, book.Format, book.AuthorIntro, book.SourceInfo)
+	query = fmt.Sprintf(query, param)
+	log.Debug(query)
+	err := DB.QueryRow(query).Scan(&book.Id, &book.CreateAt)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	book.UpdateAt = book.CreateAt
+	return nil
+}

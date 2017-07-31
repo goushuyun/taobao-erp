@@ -1,5 +1,5 @@
 drop table if exists book;
-drop SEQUENCE book_id_seq ;
+drop SEQUENCE if exists book_id_seq ;
 create SEQUENCE book_id_seq;
 
 --标准图书表

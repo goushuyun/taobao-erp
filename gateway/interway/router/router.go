@@ -16,5 +16,7 @@ func SetRouterV1() *m.Router {
 	// sms
 	v1.Register("/sms/send_identifying_code", m.Wrap(c.SendIdentifyingCode))
 
+	//book
+	v1.Register("/book/get_book_info", m.Wrap(c.GetBookInfo))
 	return v1
 }

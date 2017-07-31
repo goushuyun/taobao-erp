@@ -2,7 +2,12 @@ package service
 
 import (
 	"errors"
-	"goushuyun/books/db"
+	"path/filepath"
+	"strings"
+	"time"
+
+	"github.com/goushuyun/taobao-erp/book/db"
+	"github.com/goushuyun/taobao-erp/misc/bookspider"
 
 	"golang.org/x/net/context"
 
@@ -34,11 +39,10 @@ func (s *BookServer) GetBookInfo(ctx context.Context, in *pb.Book) (*pb.BookResp
 		if len(books) <= 0 {
 			return &pb.BookResp{Code: errs.Ok, Message: "errParam"}, nil
 		} else {
-			return &pb.BookResp{Code: errs.Ok, Message: "ok", Data: book}, nil
+			return &pb.BookResp{Code: errs.Ok, Message: "ok", Data: books}, nil
 		}
 	} else {
 		if in.Isbn != "" {
-
 			// first : get get book info from local db
 			books, err := db.GetBookInfo(in)
 			if err != nil {
@@ -46,12 +50,33 @@ func (s *BookServer) GetBookInfo(ctx context.Context, in *pb.Book) (*pb.BookResp
 				return nil, errs.Wrap(errors.New(err.Error()))
 			}
 			if len(books) > 0 {
-				return &pb.BookResp{Code: errs.Ok, Message: "ok", Data: book}, nil
+				return &pb.BookResp{Code: errs.Ok, Message: "ok", Data: books}, nil
 			}
 			// second :if local db don't has this book info ,just get it from internet (dangdang ,jd ,book uu)
-			GetBookInfoBySpider(in.Isbn, "")
-			//finally : insert a new data just has one field "isbn" and return
-
+			book, err := bookspider.GetBookInfoBySpider(in.Isbn, "")
+			if err != nil {
+				log.Error(err)
+				return nil, errs.Wrap(errors.New(err.Error()))
+			}
+			if book != nil {
+				err = handleBookInfos(book, ctx) //handle the book info
+				if err != nil {
+					log.Error(err)
+					return nil, errs.Wrap(errors.New(err.Error()))
+				}
+			} else {
+				//if book is not found from internet just init a book struct with one field 'isbn'
+				book = &pb.Book{Isbn: in.Isbn}
+			}
+			//finally : insert a new data and return
+			err = db.InsertBookInfo(book)
+			if err != nil {
+				log.Error(err)
+				return nil, errs.Wrap(errors.New(err.Error()))
+			}
+			bookresp := &pb.BookResp{Code: errs.Ok, Message: "ok"}
+			bookresp.Data = append(bookresp.Data, book)
+			return bookresp, nil
 		}
 	}
 	return &pb.BookResp{Code: errs.Ok, Message: "errParam"}, nil
@@ -71,4 +96,29 @@ func (s *BookServer) SaveBook(ctx context.Context, in *pb.Book) (*pb.BookResp, e
 	defer log.TraceOut(log.TraceIn(tid, "SaveBook", "%#v", in))
 
 	return &pb.BookResp{Code: errs.Ok, Message: "ok"}, nil
+}
+
+/*
+	private function: handle the book info
+	 1: download and upload the book image to qiniu
+	 2: handle the book title
+*/
+func handleBookInfos(book *pb.Book, ctx context.Context) error {
+	t := time.Now()
+	timestamp := t.Format("20060102030405")
+	if strings.HasPrefix(book.Image, "http") {
+		fetchImageReq := &pb.FetchImageReq{
+			Zone: pb.MediaZone_Test,
+			Url:  book.Image,
+			Key:  timestamp + book.Isbn + filepath.Ext(book.Image),
+		}
+		mediaResp := &pb.FetchImageResp{}
+		err := misc.CallSVC(ctx, "mediastore", "FetchImage", fetchImageReq, mediaResp)
+		if err != nil {
+			log.Error(err)
+			return err
+		}
+		book.Image = fetchImageReq.Key
+	}
+	return nil
 }
