@@ -12,3 +12,9 @@ func GetBookInfo(w http.ResponseWriter, r *http.Request) {
 	req := &pb.Book{}
 	misc.CallWithResp(w, r, "book", "GetBookInfo", req)
 }
+
+//get book info
+func SaveBook(w http.ResponseWriter, r *http.Request) {
+	req := &pb.Book{}
+	misc.CallWithResp(w, r, "book", "SaveBook", req, "isbn", "price", "title")
+}

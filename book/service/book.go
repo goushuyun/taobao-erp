@@ -22,13 +22,12 @@ type BookServer struct {
 }
 
 //获取图书信息
-func (s *BookServer) GetBookInfo(ctx context.Context, in *pb.Book) (*pb.BookResp, error) {
+func (s *BookServer) GetBookInfo(ctx context.Context, in *pb.Book) (*pb.BookListResp, error) {
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "GetBookInfo", "%#v", in))
 	/*
 	   check if need precision search by book'id if id not null ,just search book info from local db
 	*/
-
 	if in.Id != "" {
 		// get book info from local db
 		books, err := db.GetBookInfo(in)
@@ -37,9 +36,9 @@ func (s *BookServer) GetBookInfo(ctx context.Context, in *pb.Book) (*pb.BookResp
 			return nil, errs.Wrap(errors.New(err.Error()))
 		}
 		if len(books) <= 0 {
-			return &pb.BookResp{Code: errs.Ok, Message: "errParam"}, nil
+			return &pb.BookListResp{Code: errs.Ok, Message: "errParam"}, nil
 		} else {
-			return &pb.BookResp{Code: errs.Ok, Message: "ok", Data: books}, nil
+			return &pb.BookListResp{Code: errs.Ok, Message: "ok", Data: books}, nil
 		}
 	} else {
 		if in.Isbn != "" {
@@ -50,7 +49,7 @@ func (s *BookServer) GetBookInfo(ctx context.Context, in *pb.Book) (*pb.BookResp
 				return nil, errs.Wrap(errors.New(err.Error()))
 			}
 			if len(books) > 0 {
-				return &pb.BookResp{Code: errs.Ok, Message: "ok", Data: books}, nil
+				return &pb.BookListResp{Code: errs.Ok, Message: "ok", Data: books}, nil
 			}
 			// second :if local db don't has this book info ,just get it from internet (dangdang ,jd ,book uu)
 			book, err := bookspider.GetBookInfoBySpider(in.Isbn, "")
@@ -74,15 +73,15 @@ func (s *BookServer) GetBookInfo(ctx context.Context, in *pb.Book) (*pb.BookResp
 				log.Error(err)
 				return nil, errs.Wrap(errors.New(err.Error()))
 			}
-			bookresp := &pb.BookResp{Code: errs.Ok, Message: "ok"}
+			bookresp := &pb.BookListResp{Code: errs.Ok, Message: "ok"}
 			bookresp.Data = append(bookresp.Data, book)
 			return bookresp, nil
 		}
 	}
-	return &pb.BookResp{Code: errs.Ok, Message: "errParam"}, nil
+	return &pb.BookListResp{Code: errs.Ok, Message: "errParam"}, nil
 }
 
-//更改图书信息
+//change the book info
 func (s *BookServer) UpdateBookInfo(ctx context.Context, in *pb.Book) (*pb.BookResp, error) {
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "UpdateBookInfo", "%#v", in))
@@ -90,12 +89,20 @@ func (s *BookServer) UpdateBookInfo(ctx context.Context, in *pb.Book) (*pb.BookR
 	return &pb.BookResp{Code: errs.Ok, Message: "ok"}, nil
 }
 
-//管理员新增图书信息
+//insert new data to book
 func (s *BookServer) SaveBook(ctx context.Context, in *pb.Book) (*pb.BookResp, error) {
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "SaveBook", "%#v", in))
-
-	return &pb.BookResp{Code: errs.Ok, Message: "ok"}, nil
+	err := db.InsertBookInfo(in)
+	if err != nil {
+		//check the err reason if equal 'exists' in particular.if yes ,return specially identification str
+		if err.Error() == "exists" {
+			return &pb.BookResp{Code: errs.Ok, Message: "exists", Data: in}, nil
+		}
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	return &pb.BookResp{Code: errs.Ok, Message: "ok", Data: in}, nil
 }
 
 /*

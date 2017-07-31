@@ -4,7 +4,7 @@ package pb;
 
 service BookService {
     //获取图书信息
-    rpc GetBookInfo (Book) returns (BookResp);
+    rpc GetBookInfo (Book) returns (BookListResp);
     //更改图书信息
     rpc UpdateBookInfo (Book) returns (BookResp);
     //管理员新增图书信息
@@ -16,8 +16,16 @@ service BookService {
 message BookResp {
     string code = 1;
     string message = 2;
+     Book data = 3;
+}
+
+//获取图书信息
+message BookListResp {
+    string code = 1;
+    string message = 2;
     repeated Book data = 3;
 }
+
 
 //标准图书信息表
 message Book {
