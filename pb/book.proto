@@ -4,11 +4,13 @@ package pb;
 
 service BookService {
     //获取图书信息
-    rpc GetBookInfo (Book) returns (BookResp);
+    rpc GetBookInfo (Book) returns (BookListResp);
     //更改图书信息
     rpc UpdateBookInfo (Book) returns (BookResp);
     //管理员新增图书信息
     rpc SaveBook (Book) returns (BookResp);
+    // submit a request about the book check
+    rpc  SubmitBookAudit (BookAuditRecord) returns (BookAuditRecordListResp);
 
 }
 
@@ -16,9 +18,23 @@ service BookService {
 message BookResp {
     string code = 1;
     string message = 2;
+     Book data = 3;
+}
+
+//获取图书信息
+message BookListResp {
+    string code = 1;
+    string message = 2;
     repeated Book data = 3;
 }
 
+
+//auditrecord list
+message BookAuditRecordListResp{
+    string code = 1;
+    string message = 2;
+    repeated BookAuditRecord data = 3;
+}
 //标准图书信息表
 message Book {
     string id = 1;
@@ -42,4 +58,27 @@ message Book {
     string source_info = 19;
     int64 create_at = 20;
     int64 update_at = 21;
+    int64 upload_mode = 22;  //0 default mode(stardart mode): wait until search over ; 1 Speed mode : jump the wait time about the search from the internet
+}
+
+//图书申请记录
+message BookAuditRecord{
+    string id = 1;
+    string book_id = 2;
+    string isbn = 3;
+    string publisher = 4;
+    string author = 5;
+    string edition = 6;
+    string image = 7;
+    int64 price = 8;
+    string apply_user_id = 9;
+    string apply_user_name = 10;
+    string check_user_id = 11;
+    string check_useer_name = 12;
+    string apply_reason = 13;
+    int64 status = 14;
+    string feedback = 15;
+    int64 create_at = 16;
+    int64 update_at = 17;
+    string book_cate = 18;
 }

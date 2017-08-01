@@ -11,7 +11,7 @@ import (
 
 const (
 	svcName = "book"
-	port    = 10017
+	port    = 10018
 )
 
 var svcNames = []string{
