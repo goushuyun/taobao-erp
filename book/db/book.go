@@ -144,7 +144,6 @@ func UpdateBookInfo(book *pb.Book) (updateContent string, err error) {
 		condition += fmt.Sprintf(",source_info='%s'", book.SourceInfo)
 		updateContent += fmt.Sprintf(" 书本来源：'%s'", book.SourceInfo)
 	}
-
 	condition += fmt.Sprintf(" where id='%s'", book.Id)
 	if updateContent == "" {
 		err = errors.New("没任何信息更新呦～")

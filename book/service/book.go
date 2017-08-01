@@ -6,8 +6,11 @@ import (
 	"strings"
 	"time"
 
+	"google.golang.org/grpc/metadata"
+
 	"github.com/goushuyun/taobao-erp/book/db"
 	"github.com/goushuyun/taobao-erp/misc/bookspider"
+	"github.com/pborman/uuid"
 
 	"golang.org/x/net/context"
 
@@ -52,23 +55,8 @@ func (s *BookServer) GetBookInfo(ctx context.Context, in *pb.Book) (*pb.BookList
 				return &pb.BookListResp{Code: errs.Ok, Message: "ok", Data: books}, nil
 			}
 			// second :if local db don't has this book info ,just get it from internet (dangdang ,jd ,book uu)
-			book, err := bookspider.GetBookInfoBySpider(in.Isbn, "")
-			if err != nil {
-				log.Error(err)
-				return nil, errs.Wrap(errors.New(err.Error()))
-			}
-			if book != nil {
-				err = handleBookInfos(book, ctx) //handle the book info
-				if err != nil {
-					log.Error(err)
-					return nil, errs.Wrap(errors.New(err.Error()))
-				}
-			} else {
-				//if book is not found from internet just init a book struct with one field 'isbn'
-				book = &pb.Book{Isbn: in.Isbn}
-			}
-			//finally : insert a new data and return
-			err = db.InsertBookInfo(book)
+			// this function distinguish the upload mode: default or speed
+			book, err := insertByUploadMode(in.Isbn, in.UploadMode)
 			if err != nil {
 				log.Error(err)
 				return nil, errs.Wrap(errors.New(err.Error()))
@@ -133,4 +121,66 @@ func handleBookInfos(book *pb.Book, ctx context.Context) error {
 		book.Image = fetchImageReq.Key
 	}
 	return nil
+}
+
+/*
+	private function: in order to resolve the condition that user wantna upload book quick
+	 if upload mode is 1 , so speed upload ,just omit the wait time about the search book info on internet
+	 if upload mode is 0, wait until search over
+*/
+
+func insertByUploadMode(isbn string, uploadMode int64) (book *pb.Book, err error) {
+	ctx := metadata.NewContext(context.Background(), metadata.Pairs("tid", uuid.New()))
+	if uploadMode == 0 {
+		book, err = bookspider.GetBookInfoBySpider(isbn, "")
+		if err != nil {
+			log.Error(err)
+			return
+		}
+		if book != nil {
+			err = handleBookInfos(book, ctx) //handle the book info
+			if err != nil {
+				log.Error(err)
+				return
+			}
+		} else {
+			//if book is not found from internet just init a book struct with one field 'isbn'
+			book = &pb.Book{Isbn: isbn}
+		}
+		//finally : insert a new data and return
+		err = db.InsertBookInfo(book)
+		if err != nil {
+			log.Error(err)
+			return
+		}
+		return
+	} else {
+		book = &pb.Book{Isbn: isbn}
+		err = db.InsertBookInfo(book)
+		if err != nil {
+			log.Error(err)
+			return
+		}
+		go func() {
+			id := book.Id
+			book, err = bookspider.GetBookInfoBySpider(isbn, "")
+			if err != nil {
+				log.Error(err)
+				return
+			}
+			if book != nil {
+				err = handleBookInfos(book, ctx) //handle the book info
+				if err != nil {
+					log.Error(err)
+					return
+				}
+				book.Id = id
+				db.UpdateBookInfo(book)
+				return
+			}
+		}()
+
+	}
+
+	return
 }
