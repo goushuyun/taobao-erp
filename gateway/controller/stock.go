@@ -27,7 +27,7 @@ func SaveGoods(w http.ResponseWriter, r *http.Request) {
 	misc.CallWithResp(w, r, "stock", "SaveGoods", req, "book_id")
 }
 
-func SaveSingleGoods(w http.ResponseWriter, r *http.Request) {
+func SaveMapRow(w http.ResponseWriter, r *http.Request) {
 	req := &pb.MapRow{}
 
 	c := token.Get(r)
