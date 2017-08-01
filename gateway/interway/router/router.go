@@ -18,5 +18,8 @@ func SetRouterV1() *m.Router {
 
 	//book
 	v1.Register("/book/get_book_info", m.Wrap(c.GetBookInfo))
+
+	// location
+	v1.Register("/location/get_location_id", m.Wrap(c.GetLocationId))
 	return v1
 }
