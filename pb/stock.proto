@@ -3,10 +3,11 @@ syntax = "proto3";
 package pb;
 
 service StockService {
-    rpc SaveSingleGoods (MapRow) returns (MapRowResp);
+    rpc SaveMapRow (MapRow) returns (MapRowResp);
     rpc SearchLocation (Location) returns (SearchLocationResp);
 
     rpc GetLocationId (Location) returns (LocationResp);
+    rpc SaveGoods (Goods) returns (GoodsResp);
 }
 
 message Location {
@@ -60,6 +61,12 @@ message Goods {
     string remark = 11;
     string map_id = 12;
     int64 create_at = 13;
+}
+
+message GoodsResp {
+    string code = 1;
+    string message = 2;
+    repeated Goods data = 3;
 }
 
 message SearchStockResp {

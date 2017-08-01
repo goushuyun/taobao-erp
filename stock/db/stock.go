@@ -51,13 +51,6 @@ func SaveMap(g_l_map *pb.Goods) error {
 	return DB.QueryRow(query, g_l_map.LocationId, g_l_map.GoodsId, g_l_map.Stock).Scan(&g_l_map.MapId, &g_l_map.CreateAt)
 }
 
-func SaveGoods(g *pb.Goods) error {
-	query := "insert into goods(book_id, user_id, remark, status) values($1, $2, $3, $4) returning id"
-
-	log.Debugf("insert into goods(book_id, user_id, remark, status) values('%s', '%s', '%s', %d) returning id", g.BookId, g.UserId, g.Remark, g.Status)
-	return DB.QueryRow(query, g.BookId, g.UserId, g.Remark, g.Status).Scan(&g.GoodsId)
-}
-
 func GetGoodsByBookId(g *pb.Goods) error {
 	query := "select id, status, remark from goods where user_id = $1 and book_id = $2"
 	log.Debugf("select id, status, remark from goods where user_id = '%s' and book_id = '%s'", g.UserId, g.BookId)

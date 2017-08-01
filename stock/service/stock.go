@@ -52,7 +52,7 @@ func (s *StockServer) SearchLocation(ctx context.Context, req *pb.Location) (*pb
 	return &pb.SearchLocationResp{Code: errs.Ok, Message: "ok", Data: data}, nil
 }
 
-func (s *StockServer) SaveSingleGoods(ctx context.Context, req *pb.MapRow) (*pb.MapRowResp, error) {
+func (s *StockServer) SaveMapRow(ctx context.Context, req *pb.MapRow) (*pb.MapRowResp, error) {
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "SaveSingleGoods", "%#v", req))
 
