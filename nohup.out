@@ -31,3 +31,12 @@
 2017-08-02 01:28:57.059903 I | etcdserver: setting up the initial cluster version to 2.3
 2017-08-02 01:28:57.061232 N | etcdserver: set the initial cluster version to 2.3
 2017-08-02 01:28:57.061619 I | etcdserver: published {Name:default ClientURLs:[http://localhost:2379 http://localhost:4001]} to cluster 7e27652122e8b2ae
+2017-08-02 02:40:19.658882 I | etcdserver: start to snapshot (applied: 10001, lastsnap: 0)
+2017-08-02 02:40:19.674816 I | etcdserver: saved snapshot at index 10001
+2017-08-02 02:40:19.675476 I | etcdserver: compacted raft log at 5001
+2017-08-02 03:51:46.158446 I | etcdserver: start to snapshot (applied: 20002, lastsnap: 10001)
+2017-08-02 03:51:46.172537 I | etcdserver: saved snapshot at index 20002
+2017-08-02 03:51:46.173016 I | etcdserver: compacted raft log at 15002
+2017-08-02 07:15:44.031265 I | etcdserver: start to snapshot (applied: 30003, lastsnap: 20002)
+2017-08-02 07:15:44.043298 I | etcdserver: saved snapshot at index 30003
+2017-08-02 07:15:44.043720 I | etcdserver: compacted raft log at 25003
