@@ -1,0 +1,48 @@
+2017-08-02 01:28:56.640448 I | etcdmain: etcd Version: 2.3.6
+2017-08-02 01:28:56.640840 I | etcdmain: Git SHA: 128344c
+2017-08-02 01:28:56.641057 I | etcdmain: Go Version: go1.6.2
+2017-08-02 01:28:56.641496 I | etcdmain: Go OS/Arch: linux/amd64
+2017-08-02 01:28:56.641730 I | etcdmain: setting maximum number of CPUs to 4, total number of available CPUs is 4
+2017-08-02 01:28:56.641925 W | etcdmain: no data-dir provided, using default data-dir ./default.etcd
+2017-08-02 01:28:56.642982 I | etcdmain: listening for peers on http://localhost:2380
+2017-08-02 01:28:56.643297 I | etcdmain: listening for peers on http://localhost:7001
+2017-08-02 01:28:56.643597 I | etcdmain: listening for client requests on http://localhost:2379
+2017-08-02 01:28:56.643929 I | etcdmain: listening for client requests on http://localhost:4001
+2017-08-02 01:28:56.647542 I | etcdserver: name = default
+2017-08-02 01:28:56.647758 I | etcdserver: data dir = default.etcd
+2017-08-02 01:28:56.647971 I | etcdserver: member dir = default.etcd/member
+2017-08-02 01:28:56.648153 I | etcdserver: heartbeat = 100ms
+2017-08-02 01:28:56.648342 I | etcdserver: election = 1000ms
+2017-08-02 01:28:56.648522 I | etcdserver: snapshot count = 10000
+2017-08-02 01:28:56.648696 I | etcdserver: advertise client URLs = http://localhost:2379,http://localhost:4001
+2017-08-02 01:28:56.648885 I | etcdserver: initial advertise peer URLs = http://localhost:2380,http://localhost:7001
+2017-08-02 01:28:56.649085 I | etcdserver: initial cluster = default=http://localhost:2380,default=http://localhost:7001
+2017-08-02 01:28:56.652646 I | etcdserver: starting member ce2a822cea30bfca in cluster 7e27652122e8b2ae
+2017-08-02 01:28:56.652878 I | raft: ce2a822cea30bfca became follower at term 0
+2017-08-02 01:28:56.653090 I | raft: newRaft ce2a822cea30bfca [peers: [], term: 0, commit: 0, applied: 0, lastindex: 0, lastterm: 0]
+2017-08-02 01:28:56.653277 I | raft: ce2a822cea30bfca became follower at term 1
+2017-08-02 01:28:56.654931 I | etcdserver: starting server... [version: 2.3.6, cluster version: to_be_decided]
+2017-08-02 01:28:56.657590 N | etcdserver: added local member ce2a822cea30bfca [http://localhost:2380 http://localhost:7001] to cluster 7e27652122e8b2ae
+2017-08-02 01:28:57.056854 I | raft: ce2a822cea30bfca is starting a new election at term 1
+2017-08-02 01:28:57.057592 I | raft: ce2a822cea30bfca became candidate at term 2
+2017-08-02 01:28:57.058143 I | raft: ce2a822cea30bfca received vote from ce2a822cea30bfca at term 2
+2017-08-02 01:28:57.058614 I | raft: ce2a822cea30bfca became leader at term 2
+2017-08-02 01:28:57.059087 I | raft: raft.node: ce2a822cea30bfca elected leader ce2a822cea30bfca at term 2
+2017-08-02 01:28:57.059903 I | etcdserver: setting up the initial cluster version to 2.3
+2017-08-02 01:28:57.061232 N | etcdserver: set the initial cluster version to 2.3
+2017-08-02 01:28:57.061619 I | etcdserver: published {Name:default ClientURLs:[http://localhost:2379 http://localhost:4001]} to cluster 7e27652122e8b2ae
+2017-08-02 02:40:19.658882 I | etcdserver: start to snapshot (applied: 10001, lastsnap: 0)
+2017-08-02 02:40:19.674816 I | etcdserver: saved snapshot at index 10001
+2017-08-02 02:40:19.675476 I | etcdserver: compacted raft log at 5001
+2017-08-02 03:51:46.158446 I | etcdserver: start to snapshot (applied: 20002, lastsnap: 10001)
+2017-08-02 03:51:46.172537 I | etcdserver: saved snapshot at index 20002
+2017-08-02 03:51:46.173016 I | etcdserver: compacted raft log at 15002
+2017-08-02 07:15:44.031265 I | etcdserver: start to snapshot (applied: 30003, lastsnap: 20002)
+2017-08-02 07:15:44.043298 I | etcdserver: saved snapshot at index 30003
+2017-08-02 07:15:44.043720 I | etcdserver: compacted raft log at 25003
+2017-08-02 08:26:21.028584 I | etcdserver: start to snapshot (applied: 40004, lastsnap: 30003)
+2017-08-02 08:26:21.041114 I | etcdserver: saved snapshot at index 40004
+2017-08-02 08:26:21.041664 I | etcdserver: compacted raft log at 35004
+2017-08-02 09:38:48.969792 I | etcdserver: start to snapshot (applied: 50005, lastsnap: 40004)
+2017-08-02 09:38:48.982853 I | etcdserver: saved snapshot at index 50005
+2017-08-02 09:38:48.983613 I | etcdserver: compacted raft log at 45005

@@ -14,8 +14,8 @@ create table book_audit_record (
     price           int             default 0,      --价格
     apply_user_id   text            not null,       --申请人
     apply_user_name text            default '',
-    check_useer_name text           default '',
     check_user_id   text            default '',     --核查人
+    check_user_name text           default '',
     apply_reason    text            default '',     --申请原因
     status          int             default 1,      --状态       1:审核中    2:成功   3:失败
     feedback        text            default '',     --申请反馈

@@ -16,10 +16,17 @@ func GetBookInfo(book *pb.Book) (books []*pb.Book, err error) {
 	var condition string
 	if book.Isbn != "" {
 		condition += fmt.Sprintf(" and isbn='%s'", book.Isbn)
+		if book.BookCate != "" {
+			condition += fmt.Sprintf(" and book_cate='%s'", book.BookCate)
+		}
+		if book.BookNo != "" {
+			condition += fmt.Sprintf(" and book_no='%s'", book.BookNo)
+		}
 	}
 	if book.Id != "" {
 		condition += fmt.Sprintf(" and id='%s'", book.Id)
 	}
+
 	condition += " order by id desc"
 	query += condition
 	log.Debug(query)

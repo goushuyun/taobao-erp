@@ -69,6 +69,24 @@ func (s *BookServer) GetBookInfo(ctx context.Context, in *pb.Book) (*pb.BookList
 	return &pb.BookListResp{Code: errs.Ok, Message: "errParam"}, nil
 }
 
+//获取图书信息
+func (s *BookServer) GetLocalBookInfo(ctx context.Context, in *pb.Book) (*pb.BookListResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "GetLocalBookInfo", "%#v", in))
+
+	// get book info from local db
+	books, err := db.GetBookInfo(in)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	if len(books) <= 0 {
+		return &pb.BookListResp{Code: errs.Ok, Message: "errParam"}, nil
+	}
+	return &pb.BookListResp{Code: errs.Ok, Message: "ok", Data: books}, nil
+
+}
+
 //change the book info
 func (s *BookServer) UpdateBookInfo(ctx context.Context, in *pb.Book) (*pb.BookResp, error) {
 	tid := misc.GetTidFromContext(ctx)
