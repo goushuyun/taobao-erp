@@ -1,6 +1,6 @@
 syntax = "proto3";
-
 package pb;
+import "pb/common.proto";
 
 service BookService {
     //获取图书信息
@@ -10,8 +10,13 @@ service BookService {
     //管理员新增图书信息
     rpc SaveBook (Book) returns (BookResp);
     // submit a request about the book check
-    rpc  SubmitBookAudit (BookAuditRecord) returns (BookAuditRecordListResp);
-
+    rpc SubmitBookAudit (BookAuditRecord) returns (NormalResp);
+    // get book audit record
+    rpc GetBookAuditRecord (BookAuditRecord) returns (BookAuditRecordListResp);
+    // handle the audit request : accept or reject (when reject ,a reason is better)
+    rpc UpdateAuditRecord (BookAuditRecord) returns (NormalResp);
+    // get book audit organize list
+    rpc GetOrganizedBookAuditList (BookAuditRecord) returns (OrganizedBookAuditListResp);
 }
 
 //获取图书信息
@@ -29,6 +34,12 @@ message BookListResp {
 }
 
 
+message OrganizedBookAuditListResp{
+    string code = 1;
+    string message = 2;
+    repeated OrganizedBookAudit data = 3;
+    int64 total_count = 4;
+}
 //auditrecord list
 message BookAuditRecordListResp{
     string code = 1;
@@ -60,7 +71,6 @@ message Book {
     int64 update_at = 21;
     int64 upload_mode = 22;  //0 default mode(stardart mode): wait until search over ; 1 Speed mode : jump the wait time about the search from the internet
 }
-
 //图书申请记录
 message BookAuditRecord{
     string id = 1;
@@ -74,11 +84,29 @@ message BookAuditRecord{
     string apply_user_id = 9;
     string apply_user_name = 10;
     string check_user_id = 11;
-    string check_useer_name = 12;
+    string check_user_name = 12;
     string apply_reason = 13;
     int64 status = 14;
     string feedback = 15;
     int64 create_at = 16;
     int64 update_at = 17;
     string book_cate = 18;
+    string title = 19;
+
+    int64 searchType = 20; // search type : default: all; 1:
+
+}
+//组织过的图书申请请求
+message OrganizedBookAudit{
+    string book_id = 1;
+    string isbn = 2;
+    string book_cate = 3;
+    string book_no = 4;
+    string image = 5;
+    string title = 6;
+    int64 price = 7;
+    string publisher = 8;
+    string author = 9;
+    string edition = 10;
+    int64 participate_num = 11;
 }
