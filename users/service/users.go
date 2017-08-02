@@ -48,15 +48,15 @@ func (s *UsersServer) Login(ctx context.Context, req *pb.User) (*pb.UserResp, er
 	req.Password = misc.Md5String(req.Password)
 	err := users_db.Login(req)
 
-	// not found this user
-	if err.Error() == "not_found" {
-		return &pb.UserResp{Code: errs.Ok, Message: "not_found"}, nil
-	}
-
-	// met other error
 	if err != nil {
-		log.Error(err)
-		return nil, errs.Wrap(errors.New(err.Error()))
+		// not found this user
+		if err.Error() == "not_found" {
+			return &pb.UserResp{Code: errs.Ok, Message: "not_found"}, nil
+		} else {
+			// met other error
+			log.Error(err)
+			return nil, errs.Wrap(errors.New(err.Error()))
+		}
 	}
 
 	// has this user, sign token
