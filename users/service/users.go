@@ -24,6 +24,7 @@ func (s *UsersServer) UserExist(ctx context.Context, req *pb.User) (*pb.UserResp
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "Login", "%#v", req))
 
+	req.Password = misc.Md5String(req.Password)
 	isExist, err := users_db.UserExist(req)
 	if err != nil {
 		log.Error(err)
@@ -44,6 +45,7 @@ func (s *UsersServer) Login(ctx context.Context, req *pb.User) (*pb.UserResp, er
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "Login", "%#v", req))
 
+	req.Password = misc.Md5String(req.Password)
 	err := users_db.Login(req)
 
 	// not found this user
@@ -88,6 +90,7 @@ func (s *UsersServer) Register(ctx context.Context, req *pb.User) (*pb.UserResp,
 	}
 
 	// insert user to db
+	req.Password = misc.Md5String(req.Password) //encry Password using md5
 	err = users_db.SaveUser(req)
 	if err != nil {
 		log.Error(err)
