@@ -10,6 +10,12 @@ import (
 	"github.com/goushuyun/taobao-erp/pb"
 )
 
+func UpdateMapRow(w http.ResponseWriter, r *http.Request) {
+	req := &pb.MapRowBatch{}
+
+	misc.CallWithResp(w, r, "stock", "UpdateMapRow", req, "data")
+}
+
 func SaveGoods(w http.ResponseWriter, r *http.Request) {
 	req := &pb.Goods{}
 

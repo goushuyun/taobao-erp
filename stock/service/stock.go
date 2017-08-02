@@ -15,6 +15,34 @@ import (
 
 type StockServer struct{}
 
+func (s *StockServer) UpdateMapRow(ctx context.Context, req *pb.MapRowBatch) (*pb.NormalResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "ReduceMapRow", "%#v", req))
+
+	for _, map_row := range req.Data {
+		err := db.UpdateMapRow(map_row)
+		if err != nil {
+			log.Error(err)
+			return nil, errs.Wrap(errors.New(err.Error()))
+		}
+	}
+
+	return &pb.NormalResp{Code: errs.Ok, Message: "ok"}, nil
+}
+
+func (s *StockServer) ListGoodsAllLocations(ctx context.Context, req *pb.Goods) (*pb.GoodsResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "ListGoodsLocations", "%#v", req))
+
+	data, total, err := db.ListGoodsAllLocations(req)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+
+	return &pb.GoodsResp{Code: errs.Ok, Message: "ok", Data: data, Total: total}, nil
+}
+
 func (s *StockServer) GetLocationId(ctx context.Context, req *pb.Location) (*pb.LocationResp, error) {
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "GetLocationId", "%#v", req))

@@ -26,5 +26,6 @@ func SetRouterV1() *m.Router {
 	v1.Register("/stock/get_location_id", m.Wrap(c.GetLocationId))
 	v1.Register("/stock/save_map_row", m.Wrap(c.SaveMapRow))
 	v1.Register("/stock/save_goods", m.Wrap(c.SaveGoods))
+	v1.Register("/stock/update_map_row", m.Wrap(c.UpdateMapRow))
 	return v1
 }

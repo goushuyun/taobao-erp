@@ -17,7 +17,7 @@ import (
 )
 
 const (
-	prefix = "taobao-erp"
+	prefix = "taobao_erp"
 )
 
 type etcdConn struct {
