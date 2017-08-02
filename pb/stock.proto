@@ -1,11 +1,13 @@
 syntax = "proto3";
 
 package pb;
-import "pb/common.proto";
 
 service StockService {
-    rpc SaveSingleGoods (Goods) returns (NormalResp);
+    rpc SaveMapRow (MapRow) returns (MapRowResp);
     rpc SearchLocation (Location) returns (SearchLocationResp);
+
+    rpc GetLocationId (Location) returns (LocationResp);
+    rpc SaveGoods (Goods) returns (GoodsResp);
 }
 
 message Location {
@@ -15,6 +17,28 @@ message Location {
     string floor = 4;
     string location_id = 5;
     int64 total_stock = 6;
+}
+
+message LocationResp {
+    string code = 1;
+    string message = 2;
+    Location data = 3;
+}
+
+message MapRow {
+    string goods_id = 1;
+    string location_id = 2;
+    int64 stock = 3;
+    int64 create_at = 4;
+    int64 update_at = 5;
+    string map_row_id = 6;
+    string user_id = 7;
+}
+
+message MapRowResp {
+    string code = 1;
+    string message = 2;
+    MapRow data = 3;
 }
 
 message SearchLocationResp {
@@ -31,6 +55,18 @@ message Goods {
     int64 stock = 5;
     string goods_id = 6;
     string user_id = 7;
+    string location_id = 8;
+    string book_id = 9;
+    int64 status = 10;
+    string remark = 11;
+    string map_id = 12;
+    int64 create_at = 13;
+}
+
+message GoodsResp {
+    string code = 1;
+    string message = 2;
+    repeated Goods data = 3;
 }
 
 message SearchStockResp {

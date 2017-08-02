@@ -15,6 +15,30 @@ import (
 
 type StockServer struct{}
 
+func (s *StockServer) GetLocationId(ctx context.Context, req *pb.Location) (*pb.LocationResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "GetLocationId", "%#v", req))
+
+	err := db.GetLocationId(req)
+
+	if err != nil {
+		if err.Error() == "not_found" {
+			// create location
+			err = db.CreateLocation(req)
+			if err != nil {
+				log.Error(err)
+				return nil, errs.Wrap(errors.New(err.Error()))
+			}
+		} else {
+			// met other error
+			log.Error(err)
+			return nil, errs.Wrap(errors.New(err.Error()))
+		}
+	}
+
+	return &pb.LocationResp{Code: errs.Ok, Message: "ok", Data: req}, nil
+}
+
 func (s *StockServer) SearchLocation(ctx context.Context, req *pb.Location) (*pb.SearchLocationResp, error) {
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "SearchGoods", "%#v", req))
@@ -28,13 +52,33 @@ func (s *StockServer) SearchLocation(ctx context.Context, req *pb.Location) (*pb
 	return &pb.SearchLocationResp{Code: errs.Ok, Message: "ok", Data: data}, nil
 }
 
-func (s *StockServer) SaveSingleGoods(ctx context.Context, req *pb.Goods) (*pb.NormalResp, error) {
+func (s *StockServer) SaveMapRow(ctx context.Context, req *pb.MapRow) (*pb.MapRowResp, error) {
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "SaveSingleGoods", "%#v", req))
 
-	// to get book_id
+	err := db.GetMapRow(req)
+	if err != nil {
+		if err.Error() == "not_found" {
+			// create this map row
+			err = db.SaveMapRow(req)
+			if err != nil {
+				log.Error(err)
+				return nil, errs.Wrap(errors.New(err.Error()))
+			}
+			return &pb.MapRowResp{Code: errs.Ok, Message: "ok", Data: req}, nil
+		} else {
+			// met other error
+			log.Error(err)
+			return nil, errs.Wrap(errors.New(err.Error()))
+		}
+	}
 
-	// save stock
+	// update map row
+	err = db.UpdateMapRow(req)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
 
-	return &pb.NormalResp{Code: errs.Ok, Message: "ok"}, nil
+	return &pb.MapRowResp{Code: errs.Ok, Message: "ok", Data: req}, nil
 }

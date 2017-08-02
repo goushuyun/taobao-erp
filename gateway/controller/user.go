@@ -7,6 +7,12 @@ import (
 	"github.com/goushuyun/taobao-erp/pb"
 )
 
+func Login(w http.ResponseWriter, r *http.Request) {
+	req := &pb.User{}
+
+	misc.CallWithResp(w, r, "users", "Login", req, "mobile", "password")
+}
+
 func Register(w http.ResponseWriter, r *http.Request) {
 	req := &pb.User{}
 

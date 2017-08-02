@@ -22,6 +22,7 @@ var serviceNames = []string{
 	"users",
 	"sms",
 	"book",
+	"stock",
 }
 
 func main() {

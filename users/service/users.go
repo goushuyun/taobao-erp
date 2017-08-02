@@ -24,6 +24,7 @@ func (s *UsersServer) UserExist(ctx context.Context, req *pb.User) (*pb.UserResp
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "Login", "%#v", req))
 
+	req.Password = misc.Md5String(req.Password)
 	isExist, err := users_db.UserExist(req)
 	if err != nil {
 		log.Error(err)
@@ -44,21 +45,22 @@ func (s *UsersServer) Login(ctx context.Context, req *pb.User) (*pb.UserResp, er
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "Login", "%#v", req))
 
+	req.Password = misc.Md5String(req.Password)
 	err := users_db.Login(req)
 
-	// not found this user
-	if err.Error() == "not_found" {
-		return &pb.UserResp{Code: errs.Ok, Message: "not_found"}, nil
-	}
-
-	// met other error
 	if err != nil {
-		log.Error(err)
-		return nil, errs.Wrap(errors.New(err.Error()))
+		// not found this user
+		if err.Error() == "not_found" {
+			return &pb.UserResp{Code: errs.Ok, Message: "not_found"}, nil
+		} else {
+			// met other error
+			log.Error(err)
+			return nil, errs.Wrap(errors.New(err.Error()))
+		}
 	}
 
 	// has this user, sign token
-	token := token.SignUserToken(role.InterNormalUser, req.Id, req.Mobile)
+	token := token.SignUserToken(role.InterNormalUser, req.Id, req.Mobile, role.InterNormalUser)
 	return &pb.UserResp{Code: errs.Ok, Message: "ok", Token: token}, nil
 }
 
@@ -88,6 +90,7 @@ func (s *UsersServer) Register(ctx context.Context, req *pb.User) (*pb.UserResp,
 	}
 
 	// insert user to db
+	req.Password = misc.Md5String(req.Password) //encry Password using md5
 	err = users_db.SaveUser(req)
 	if err != nil {
 		log.Error(err)
@@ -95,7 +98,7 @@ func (s *UsersServer) Register(ctx context.Context, req *pb.User) (*pb.UserResp,
 	}
 
 	// sign token
-	token := token.SignUserToken(role.InterNormalUser, req.Id, req.Mobile)
+	token := token.SignUserToken(role.InterNormalUser, req.Id, req.Mobile, role.InterNormalUser)
 	req.Password = "*****"
 
 	return &pb.UserResp{Code: errs.Ok, Message: "ok", Data: req, Token: token}, nil

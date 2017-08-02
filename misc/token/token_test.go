@@ -13,7 +13,7 @@ import (
 	"reflect"
 	"testing"
 
-	"github.com/goushuyun/taobao-erp/users/role"
+	ro "github.com/goushuyun/taobao-erp/users/role"
 )
 
 var tokenStr string
@@ -47,20 +47,8 @@ func IsZeroOfUnderlyingType(x interface{}) bool {
 	return x == reflect.Zero(reflect.TypeOf(x)).Interface()
 }
 
-func TestSignAppToken(t *testing.T) {
-	tokenStr = SignUserToken(AppToken, "0000000001", "170405000004")
-	t.Log(tokenStr)
-
-	claims, err := Check(tokenStr)
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	t.Logf("%+v", claims)
-}
-
 func TestSign(t *testing.T) {
-	tokenStr = SignSellerToken(InterToken, "00000004", "18817953402", "170424000006", role.InterAdmin)
+	tokenStr = SignUserToken(InterToken, "u_17073000001", "18817953402", ro.InterNormalUser)
 	t.Log(">>>>>>>>>>>>>>>token>>>>>>>>>>>>>>")
 	t.Logf("%s\n", tokenStr)
 	t.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
