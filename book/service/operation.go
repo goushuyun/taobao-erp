@@ -26,6 +26,7 @@ func (s *BookServer) SubmitBookAudit(ctx context.Context, in *pb.BookAuditRecord
 			return nil, errs.Wrap(errors.New("你有该书未审核的图书信息，请勿重复提交"))
 		}
 	}
+
 	err := db.SaveBookAudit(in)
 	if err != nil {
 		log.Error(err)

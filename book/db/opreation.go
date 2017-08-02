@@ -14,7 +14,7 @@ import (
    save the book audit
 */
 func SaveBookAudit(record *pb.BookAuditRecord) error {
-	query := "insert into book_audit_record(book_id,isbn,book_cate,title,publisher,author,edition,image,price,apply_user_id,apply_user_name) values(%s) return id ,extract(epoch from create_at)::bigint"
+	query := "insert into book_audit_record(book_id,isbn,book_cate,title,publisher,author,edition,image,price,apply_user_id,apply_user_name) values(%s) returning id ,extract(epoch from create_at)::bigint"
 	var condition string
 	condition += fmt.Sprintf("'%s','%s','%s','%s','%s','%s','%s','%s',%d,'%s','%s'", record.BookId, record.Isbn, record.BookCate, record.Title, record.Publisher, record.Author, record.Edition, record.Image, record.Price, record.ApplyUserId, record.ApplyUserName)
 	query = fmt.Sprintf(query, condition)
@@ -67,7 +67,7 @@ func GetBookAuditList(record *pb.BookAuditRecord) (records []*pb.BookAuditRecord
 	log.Debug(queryCount)
 
 	// find out how rows tyey are
-	err = DB.QueryRow(query).Scan(&totalCount)
+	err = DB.QueryRow(queryCount).Scan(&totalCount)
 	if err != nil {
 		log.Error(err)
 		return
@@ -143,10 +143,17 @@ func UpdateBookAudit(record *pb.BookAuditRecord) error {
 
 // get book audit organize list
 func GetOrganizedBookAuditList(record *pb.BookAuditRecord) (models []*pb.OrganizedBookAudit, err error, totalCount int64) {
+
 	var query, queryCount string
+	if record.Page <= 0 {
+		record.Page = 1
+	}
+	if record.Size <= 0 {
+		record.Size = 15
+	}
 	if record.SearchType == 0 {
 		// update
-		query = fmt.Sprintf("select book_id,count(*) from book_audit_record where status=1 group by book_id order by create_at,id offset %d limit %d", (record.Page-1)*record.Size, record.Size)
+		query = fmt.Sprintf("select book_id,count(*) from book_audit_record where status=1 group by book_id order by count(*) desc,book_id offset %d limit %d", (record.Page-1)*record.Size, record.Size)
 		queryCount = "select count(distinct book_id) from book_audit_record where status=1"
 		log.Debug(queryCount)
 		err = DB.QueryRow(queryCount).Scan(&totalCount)
@@ -177,7 +184,7 @@ func GetOrganizedBookAuditList(record *pb.BookAuditRecord) (models []*pb.Organiz
 
 	} else {
 		// insert
-		query = fmt.Sprintf("select isbn,count(*) from book_audit_record where status=1 and book_cate<>'' group by book_id order by create_at,id offset %d limit %d", (record.Page-1)*record.Size, record.Size)
+		query = fmt.Sprintf("select isbn,count(*) from book_audit_record where status=1 and book_cate<>'' group by isbn order by count(*) desc,isbn offset %d limit %d", (record.Page-1)*record.Size, record.Size)
 		queryCount = "select count(distinct isbn) from book_audit_record where status=1 and book_cate<>''"
 		log.Debug(queryCount)
 		err = DB.QueryRow(queryCount).Scan(&totalCount)

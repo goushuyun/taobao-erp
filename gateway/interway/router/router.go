@@ -19,8 +19,12 @@ func SetRouterV1() *m.Router {
 
 	// book
 	v1.Register("/book/get_book_info", m.Wrap(c.GetBookInfo))
+	v1.Register("/book/get_local_book_info", m.Wrap(c.GetLocalBookInfo))
 	v1.Register("/book/save_book_info", m.Wrap(c.SaveBook))
 	v1.Register("/book/update_book_info", m.Wrap(c.UpdateBookInfo))
+	v1.Register("/book/submit_audit", m.Wrap(c.SubmitBookAudit))
+	v1.Register("/book/get_audit_list", m.Wrap(c.GetBookAuditRecord))
+	v1.Register("/book/get_organized_audit_list", m.Wrap(c.GetOrganizedBookAuditList))
 
 	// stock
 	v1.Register("/stock/get_location_id", m.Wrap(c.GetLocationId))

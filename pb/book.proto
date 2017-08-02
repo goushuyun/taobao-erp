@@ -19,6 +19,9 @@ service BookService {
     rpc UpdateAuditRecord (BookAuditRecord) returns (NormalResp);
     // get book audit organize list
     rpc GetOrganizedBookAuditList (BookAuditRecord) returns (OrganizedBookAuditListResp);
+    // handle the book audit
+    rpc HandleBookAudit (BookAuditRecord) returns (NormalResp);
+
 }
 
 //获取图书信息
