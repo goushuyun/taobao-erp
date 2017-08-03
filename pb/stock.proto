@@ -31,6 +31,7 @@ message LocationBatchResp {
     string code = 1;
     string message = 2;
     repeated Location data = 3;
+    int64 total = 4;
 }
 
 message LocationResp {
