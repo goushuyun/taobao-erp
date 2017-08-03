@@ -28,4 +28,4 @@ create table book (
 );
 
 
-CREATE UNIQUE INDEX IF NOT EXISTS book_isbn_no ON  book(isbn,book_no)
+CREATE UNIQUE INDEX IF NOT EXISTS book_isbn_no ON  book(isbn,book_no);

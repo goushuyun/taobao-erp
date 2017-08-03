@@ -86,6 +86,7 @@ message Goods {
     int64 page = 14;
     int64 size = 15;
     ListOrderBy order_by = 16;
+    string book_no = 17;
 }
 
 enum ListOrderBy {

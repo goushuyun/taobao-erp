@@ -29,8 +29,8 @@ func UpdateGoods(g *pb.Goods) error {
 }
 
 func SaveGoods(g *pb.Goods) error {
-	query := "insert into goods(book_id, user_id, remark, status) values($1, $2, $3, $4) returning id"
+	query := "insert into goods(book_id, user_id, remark, status, isbn, book_no) values($1, $2, $3, $4, $5, $6) returning id"
 
-	log.Debugf("insert into goods(book_id, user_id, remark, status) values('%s', '%s', '%s', %d) returning id", g.BookId, g.UserId, g.Remark, g.Status)
-	return DB.QueryRow(query, g.BookId, g.UserId, g.Remark, g.Status).Scan(&g.GoodsId)
+	log.Debugf("insert into goods(book_id, user_id, remark, status, isbn, book_no) values('%s', '%s', '%s', %d, '%s', '%s') returning id", g.BookId, g.UserId, g.Remark, g.Status, g.Isbn, g.BookNo)
+	return DB.QueryRow(query, g.BookId, g.UserId, g.Remark, g.Status, g.Isbn, g.BookNo).Scan(&g.GoodsId)
 }
