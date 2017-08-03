@@ -26,7 +26,7 @@ func sign(c Claims) string {
 	return tokenStr
 }
 
-func SignUserToken(from TokenType, user_id, mobile string, role int64) string {
+func SignUserToken(from TokenType, user_id, mobile, name string, role int64) string {
 	var token string
 	session, err := gostrgen.RandGen(4, gostrgen.Lower|gostrgen.Digit, "", "")
 	if err != nil {
@@ -35,6 +35,7 @@ func SignUserToken(from TokenType, user_id, mobile string, role int64) string {
 	c := Claims{
 		Mobile:   mobile,
 		Scope:    from,
+		Name:     name,
 		Role:     ro.Role(role),
 		Session:  session,
 		UserId:   user_id,

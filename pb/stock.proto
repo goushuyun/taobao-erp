@@ -13,8 +13,11 @@ service StockService {
 
     rpc ListGoodsAllLocations (Goods) returns (GoodsResp);
     rpc UpdateMapRow (MapRowBatch) returns (NormalResp);
+
+    rpc LocationFazzyQuery (Location) returns (LocationBatchResp);
 }
 
+// location
 message Location {
     string user_id = 1;
     string warehouse = 2;
@@ -24,12 +27,20 @@ message Location {
     int64 total_stock = 6;
 }
 
+message LocationBatchResp {
+    string code = 1;
+    string message = 2;
+    repeated Location data = 3;
+}
+
 message LocationResp {
     string code = 1;
     string message = 2;
     Location data = 3;
 }
 
+
+// map row
 message MapRow {
     string goods_id = 1;
     string location_id = 2;
