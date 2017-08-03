@@ -23,8 +23,8 @@ const (
 )
 
 var expires = map[TokenType]time.Duration{
-	AppToken:   time.Hour * 2,
-	InterToken: time.Hour * 3,
+	AppToken:   time.Hour * 10,
+	InterToken: time.Hour * 24,
 	HospToken:  time.Minute * 10,
 }
 

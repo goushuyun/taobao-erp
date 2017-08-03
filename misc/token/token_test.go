@@ -58,12 +58,14 @@ func TestSign(t *testing.T) {
 		t.Error(err)
 		return
 	}
-
+	if claims.VerifyIsExpired() != false {
+		t.Error("should not expire")
+	}
 	t.Logf("%+v", claims)
 }
 
 func TestCheck(t *testing.T) {
-	tokenStr := `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIwMDAwMDAwMDAxIiwic2VzIjoiZm40MCIsInNjcCI6MSwiaWF0IjoxNDkzMTEyNjA2LCJzdG9yZV9pZCI6IjE3MDQxMTAwMDAwMiIsImlzcyI6IjEuMCJ9.z43qCeJ6L3rNjgIWRHNRPavGZYtdni2xKyPeZjzyxXmm580YOaLGLkaPOMXxhusZMuyooh6suuS1b3KPPUq5SlGq3fVIKfkOJzEl-zHQHmAOMnkYVTXBl3Niq0hHZjaKxCKK1_wEQOIreP0GaYvmHTa7aDbdaLBviJUf7TaeF27uAS0i23-jKl6dFfleOKufyBQKkAuUfXcRXlmduLBK7RBUJ2p4CXF-vYNOZREiRmzuO2KPXORk-u0LQrpgmirK46uUD6xQvfD_OwUSmHs7rHDG1i2bco5m1lmlcKGIOhYO--XNrRSsQ8spWGDPCtwItX-xzuw7lDpGr3SAth9bzQ`
+	tokenStr := `eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJ1XzE3MDgwMjAwMDAxIiwibW9iIjoiMTc2MDA5MDkwNDAiLCJuYW1lIjoi5Yav5b-g5qOuIiwic2VzIjoiZm4yaiIsInNjcCI6NTEyLCJyb2wiOjUxMiwiaWF0IjoxNTAxNzUwODQ4LCJpc3MiOiIxLjAifQ.j3HLuI0T-omdiTD0GF2TY8DtU6KBsdL5bMwHJXEs5zrsc2brz0U2LIM7UQVIGiPrNnKpJ1heCj3ZXuikGVIuxwD-bTU97b-e1sFjXwajXCd6679G0pJucw1aQ2vkekYjjeDa5QLq0hGJ7XZgodrAMMBUgH7UyejqjBlR3BbJraTbhLZpXtNdYjdvtcEHMqva3xFARAM714qxaWjyBkFfXYSWM0UvqUNl0WP1E6IRIOVdu1lTbtEWkRTU6gE-VbTs_4lNfJN_NU53V74ymNKawG62TwHwA8blaDVip6nO5ELGmUaF_uTXV1bm-IyDdZ8HIFrgUo4sghxoSWqnn-h30g`
 
 	c, err := Check(tokenStr)
 
@@ -76,6 +78,7 @@ func TestCheck(t *testing.T) {
 	if c.VerifyIsExpired() != false {
 		t.Error("should not expire")
 	}
+	t.Log(c.VerifyIsExpired())
 
 	if c.VerifyCanRefresh() != true {
 		t.Error("can be refresh")
