@@ -48,7 +48,7 @@ func IsZeroOfUnderlyingType(x interface{}) bool {
 }
 
 func TestSign(t *testing.T) {
-	tokenStr = SignUserToken(InterToken, "u_17073000001", "18817953402", ro.InterNormalUser)
+	tokenStr = SignUserToken(InterToken, "u_17073000001", "18817953402", ro.InterAdmin)
 	t.Log(">>>>>>>>>>>>>>>token>>>>>>>>>>>>>>")
 	t.Logf("%s\n", tokenStr)
 	t.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
