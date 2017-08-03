@@ -11,10 +11,10 @@ import (
 )
 
 func Login(u *pb.User) error {
-	query := "select id from users where mobile = $1 and password = $2"
-	log.Debugf("select id from users where mobile = %s and password = %s", u.Mobile, u.Password)
+	query := "select id, name from users where mobile = $1 and password = $2"
+	log.Debugf("select id, name from users where mobile = %s and password = %s", u.Mobile, u.Password)
 
-	err := DB.QueryRow(query, u.Mobile, u.Password).Scan(&u.Id)
+	err := DB.QueryRow(query, u.Mobile, u.Password).Scan(&u.Id, &u.Name)
 	switch {
 	case err == sql.ErrNoRows:
 		return errors.New("not_found")

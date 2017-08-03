@@ -40,6 +40,7 @@ const currentVersion string = "1.0"
 type Claims struct {
 	UserId   string    `json:"sub,omitempty"`
 	Mobile   string    `json:"mob,omitempty"`
+	Name     string    `json:"name,omitempty"`
 	HospId   string    `json:"hsp,omitempty"` // self def
 	Session  string    `json:"ses,omitempty"` // self def
 	Scope    TokenType `json:"scp,omitempty"` // self def

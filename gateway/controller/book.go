@@ -86,7 +86,7 @@ func SubmitBookAudit(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	req := &pb.BookAuditRecord{ApplyUserId: c.UserId}
+	req := &pb.BookAuditRecord{ApplyUserId: c.UserId, ApplyUserName: c.Name}
 	misc.CallWithResp(w, r, "book", "SubmitBookAudit", req)
 }
 
@@ -132,6 +132,6 @@ func HandleBookAudit(w http.ResponseWriter, r *http.Request) {
 		})
 		return
 	}
-	req := &pb.BookAuditRecord{CheckUserId: c.UserId}
+	req := &pb.BookAuditRecord{CheckUserId: c.UserId, CheckUserName: c.Name}
 	misc.CallWithResp(w, r, "book", "HandleBookAudit", req)
 }

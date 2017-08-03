@@ -10,33 +10,64 @@ import (
 	"github.com/wothing/log"
 )
 
-func UpdateMapRow(m *pb.MapRow) error {
-	query := "update goods_location_map set stock = stock + $1, update_at = now() where id = $2 returning stock, extract(epoch from update_at)::bigint"
-
-	log.Debugf("update goods_location_map set stock = stock + %d, update = now() where id = '%s' returning stock, extract(epoch from update_at)::bigint", m.Stock, m.MapRowId)
-	return DB.QueryRow(query, m.Stock, m.MapRowId).Scan(&m.Stock, &m.UpdateAt)
-}
-
-func SaveMapRow(m *pb.MapRow) error {
-	query := "insert into goods_location_map(location_id, goods_id, stock, user_id) values($1, $2, $3, $4) returning id, extract(epoch from create_at)::bigint, extract(epoch from update_at)::bigint"
-
-	log.Debugf("insert into goods_location_map(location_id, goods_id, stock, user_id) values('%s', '%s', %d, '%s') returning id, extract(epoch from create_at)::bigint, extract(epoch from update_at)::bigint", m.LocationId, m.GoodsId, m.Stock, m.UserId)
-
-	return DB.QueryRow(query, m.LocationId, m.GoodsId, m.Stock, m.UserId).Scan(&m.MapRowId, &m.CreateAt, &m.UpdateAt)
-}
-
-func GetMapRow(m *pb.MapRow) error {
-	query := "select id, extract(epoch from create_at)::bigint, extract(epoch from update_at)::bigint from goods_location_map where location_id = $1 and goods_id = $2"
-	log.Debugf("select id, extract(epoch from create_at)::bigint, extract(epoch from update_at)::bigint from goods_location_map where location_id = '%s' and goods_id = '%s'", m.LocationId, m.GoodsId)
-
-	err := DB.QueryRow(query, m.LocationId, m.GoodsId).Scan(&m.MapRowId, &m.CreateAt, &m.UpdateAt)
-	if err == sql.ErrNoRows {
-		return errors.New("not_found")
-	} else if err != nil {
+func ListGoodsAllLocations(g *pb.Goods) ([]*pb.Goods, int64, error) {
+	query := `
+	select %s from goods_location_map as m
+		right join goods as g on g.book_id = $1 and m.goods_id = g.id
+		left join location as l on m.location_id = l.id
+	`
+	var (
+		total int64
+		data  []*pb.Goods
+	)
+	err := DB.QueryRow(fmt.Sprintf(query, "count(*)"), g.BookId).Scan(&total)
+	if err != nil {
 		log.Error(err)
-		return err
+		return nil, 0, err
 	}
-	return nil
+
+	if total == 0 {
+		// not found
+		return data, total, nil
+	}
+
+	target := "m.stock, g.status, g.remark, l.warehouse, l.shelf, l.floor"
+	// join "order by" condition
+	condition := " order by %s limit %d offset %d"
+	var order_condition string
+
+	switch g.OrderBy {
+	case pb.ListOrderBy_LocationReverse:
+		order_condition = "m.stock desc"
+	case pb.ListOrderBy_StockForward:
+		order_condition = "m.stock asc"
+	case pb.ListOrderBy_UpdateAtReverse:
+		order_condition = "m.update_at desc"
+	case pb.ListOrderBy_UpdateAtForward:
+		order_condition = "m.update_at asc"
+	default:
+		order_condition = "m.floor asc, m.shelf asc, m.warehouse asc"
+	}
+
+	condition = fmt.Sprintf(condition, order_condition, (g.Page-1)*g.Size, g.Size)
+
+	rows, err := DB.Query(fmt.Sprintf(query, target) + condition)
+	if err != nil {
+		log.Error(err)
+		return nil, 0, err
+	}
+
+	if rows.Next() {
+		tmp := &pb.Goods{}
+		err = rows.Scan(&tmp.Stock, &tmp.Status, &tmp.Remark, &tmp.Warehouse, &tmp.Shelf, &tmp.Floor)
+		if err != nil {
+			log.Error(err)
+			return nil, 0, err
+		}
+		data = append(data, tmp)
+	}
+
+	return data, total, nil
 }
 
 func UpdateStock(g *pb.Goods) error {
