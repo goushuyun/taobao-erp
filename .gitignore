@@ -38,7 +38,8 @@ _testmain.go
 
 ver/
 vendor/
-
+default.etcd/
+nohup.out
 *.paw
 
 # build info
