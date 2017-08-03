@@ -6,13 +6,14 @@ import "pb/common.proto";
 
 service StockService {
     rpc SaveMapRow (MapRow) returns (MapRowResp);
+    rpc UpdateMapRow (MapRowBatch) returns (NormalResp);
+
     rpc SearchLocation (Location) returns (SearchLocationResp);
 
     rpc GetLocationId (Location) returns (LocationResp);
     rpc SaveGoods (Goods) returns (GoodsResp);
 
     rpc ListGoodsAllLocations (Goods) returns (GoodsResp);
-    rpc UpdateMapRow (MapRowBatch) returns (NormalResp);
 
     rpc LocationFazzyQuery (Location) returns (LocationBatchResp);
 }

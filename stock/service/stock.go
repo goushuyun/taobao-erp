@@ -20,7 +20,17 @@ func (s *StockServer) UpdateMapRow(ctx context.Context, req *pb.MapRowBatch) (*p
 	defer log.TraceOut(log.TraceIn(tid, "ReduceMapRow", "%#v", req))
 
 	for _, map_row := range req.Data {
+		g := &pb.Goods{Stock: map_row.Stock}
+
 		err := db.UpdateMapRow(map_row)
+		if err != nil {
+			log.Error(err)
+			return nil, errs.Wrap(errors.New(err.Error()))
+		}
+
+		// update goods's stock
+		g.GoodsId = map_row.GoodsId
+		err = db.UpdateGoods(g)
 		if err != nil {
 			log.Error(err)
 			return nil, errs.Wrap(errors.New(err.Error()))
@@ -107,6 +117,15 @@ func (s *StockServer) SaveMapRow(ctx context.Context, req *pb.MapRow) (*pb.MapRo
 		log.Error(err)
 		return nil, errs.Wrap(errors.New(err.Error()))
 	}
+
+	// update goods's stock
+	defer func() {
+		g := &pb.Goods{Stock: req.Stock, GoodsId: req.GoodsId}
+		err = db.UpdateGoods(g)
+		if err != nil {
+			log.Error(err)
+		}
+	}()
 
 	return &pb.MapRowResp{Code: errs.Ok, Message: "ok", Data: req}, nil
 }
