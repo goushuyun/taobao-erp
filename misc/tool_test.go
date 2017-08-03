@@ -103,32 +103,6 @@ func test(p **int) {
 	fmt.Println(**p)
 }
 
-func TestDownloadAndAnaly(t *testing.T) {
-
-	xlFile, err := xlsx.OpenFile("hello.xlsx")
-	if err != nil {
-		fmt.Printf("err :%+v", err)
-	}
-	var books []*pb.Goods
-	sheet := xlFile.Sheets[0]
-	for _, row := range sheet.Rows {
-		isbn, _ := row.Cells[0].String()
-		numStr, _ := row.Cells[1].String()
-		if isbn == "" {
-			break
-		}
-		book := &pb.Goods{Isbn: isbn, StrNum: numStr}
-		books = append(books, book)
-	}
-
-	splitList, _ := splitGoodsList(50, books)
-	fmt.Printf("%+v\n", len(splitList))
-	fmt.Println("======================")
-	fmt.Printf("%+v\n", splitList[791])
-	fmt.Println("======================")
-	fmt.Printf("%+v\n", splitList[792])
-	//os.Remove("hello.xls")
-}
 func TestUrlSubString(t *testing.T) {
 	uri := "http://image.goushuyun.cn/Exceltest.xls"
 	splitStringArray := strings.Split(uri, "/")
@@ -224,6 +198,15 @@ func TestWriteExcelAndSave(t *testing.T) {
 	// if err != nil {
 	// 	fmt.Printf(err.Error())
 	// }
+}
+
+func TestFazzyQuery(t *testing.T) {
+	t.Log(FazzyQuery("A"))
+
+	query := "select %s from location where user_id = $1 %s"
+	condition := "and warehouse like %A%"
+
+	t.Log(fmt.Sprintf(query, "count(1)", condition))
 }
 
 func TestIsbnInjust(t *testing.T) {

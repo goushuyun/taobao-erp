@@ -10,10 +10,10 @@ import (
 )
 
 func UpdateMapRow(m *pb.MapRow) error {
-	query := "update goods_location_map set stock = stock + $1, update_at = now() where id = $2 returning stock, extract(epoch from update_at)::bigint"
+	query := "update goods_location_map set stock = stock + $1, update_at = now() where id = $2 returning stock, extract(epoch from update_at)::bigint, goods_id"
 
-	log.Debugf("update goods_location_map set stock = stock + %d, update = now() where id = '%s' returning stock, extract(epoch from update_at)::bigint", m.Stock, m.MapRowId)
-	return DB.QueryRow(query, m.Stock, m.MapRowId).Scan(&m.Stock, &m.UpdateAt)
+	log.Debugf("update goods_location_map set stock = stock + %d, update = now() where id = '%s' returning stock, extract(epoch from update_at)::bigint, goods_id", m.Stock, m.MapRowId)
+	return DB.QueryRow(query, m.Stock, m.MapRowId).Scan(&m.Stock, &m.UpdateAt, &m.GoodsId)
 }
 
 func SaveMapRow(m *pb.MapRow) error {

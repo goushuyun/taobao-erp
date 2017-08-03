@@ -6,9 +6,59 @@ import (
 	"fmt"
 
 	. "github.com/goushuyun/taobao-erp/db"
+	"github.com/goushuyun/taobao-erp/misc"
 	"github.com/goushuyun/taobao-erp/pb"
 	"github.com/wothing/log"
 )
+
+func LocationFazzyQuery(l *pb.Location) ([]*pb.Location, int64, error) {
+	query := "select %s from location where user_id = $1 %s"
+	target := "id, warehouse, shelf, floor"
+	var condition string
+
+	if l.Warehouse != "" {
+		condition += fmt.Sprintf("and warehouse like '%s'", misc.FazzyQuery(l.Warehouse))
+	}
+	if l.Shelf != "" {
+		condition += fmt.Sprintf("and shelf like '%s'", misc.FazzyQuery(l.Shelf))
+	}
+	if l.Floor != "" {
+		condition += fmt.Sprintf("and floor like '%s'", misc.FazzyQuery(l.Floor))
+	}
+	var total int64
+	data := []*pb.Location{}
+	err := DB.QueryRow(fmt.Sprintf(query, "count(1)", condition), l.UserId).Scan(&total)
+	if err != nil {
+		log.Error(err)
+		return nil, 0, err
+	}
+
+	if total == 0 {
+		return data, 0, nil
+	}
+
+	log.Debug(fmt.Sprintf(query, target, condition))
+	rows, err := DB.Query(fmt.Sprintf(query, target, condition), l.UserId)
+	if err != nil {
+		log.Error(err)
+		return nil, 0, err
+	}
+
+	for rows.Next() {
+		tmp := &pb.Location{}
+		err = rows.Scan(&tmp.LocationId, &tmp.Warehouse, &tmp.Shelf, &tmp.Floor)
+		if err != nil {
+			log.Error(err)
+			return nil, 0, err
+		}
+
+		log.JSON(tmp)
+
+		data = append(data, tmp)
+	}
+
+	return data, total, nil
+}
 
 func ListGoodsAllLocations(g *pb.Goods) ([]*pb.Goods, int64, error) {
 	query := `
@@ -57,7 +107,7 @@ func ListGoodsAllLocations(g *pb.Goods) ([]*pb.Goods, int64, error) {
 		return nil, 0, err
 	}
 
-	if rows.Next() {
+	for rows.Next() {
 		tmp := &pb.Goods{}
 		err = rows.Scan(&tmp.Stock, &tmp.Status, &tmp.Remark, &tmp.Warehouse, &tmp.Shelf, &tmp.Floor)
 		if err != nil {

@@ -184,6 +184,7 @@ func FazzyQuery(value string) string {
 			fazzy_value += (char + "%")
 		}
 	}
+
 	return fazzy_value
 }
 
