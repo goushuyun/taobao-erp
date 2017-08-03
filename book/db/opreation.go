@@ -3,6 +3,7 @@ package db
 import (
 	"errors"
 	"fmt"
+	"strings"
 
 	"github.com/wothing/log"
 
@@ -124,6 +125,52 @@ func UpdateBookAudit(record *pb.BookAuditRecord) error {
 		condition += fmt.Sprintf(",feedback='%s'", record.Feedback)
 	}
 	condition += fmt.Sprintf(" where id='%s'", record)
+	query += condition
+	log.Debug(query)
+	result, err := DB.Exec(query)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	rowsCount, err := result.RowsAffected()
+	if err != nil {
+		log.Error(err)
+	}
+	if rowsCount <= 0 {
+		return errors.New("没修改任何数据呦～")
+	}
+	return nil
+}
+
+/*
+   update book audit
+*/
+func BatchUpdateBookAudit(record *pb.BookAuditRecord) error {
+	query := "update book_audit_record set update_at=now()"
+	var condition string
+	if record.CheckUserId != "" {
+		condition += fmt.Sprintf(",check_user_id='%s'", record.CheckUserId)
+	}
+	if record.CheckUserName != "" {
+		condition += fmt.Sprintf(",check_user_name='%s'", record.CheckUserName)
+	}
+	if record.Status != 0 {
+		condition += fmt.Sprintf(",status=%d", record.Status)
+	}
+	if record.Feedback != "" {
+		condition += fmt.Sprintf(",feedback='%s'", record.Feedback)
+	}
+
+	stmt := strings.Repeat(",'%s'", len(record.Ids))
+	var ids []interface{}
+	for _, value := range record.Ids {
+		ids = append(ids, value)
+	}
+
+	stmt = fmt.Sprintf(stmt, ids...)
+	stmt = string([]byte(stmt)[1:])
+	condition += fmt.Sprintf(" where id in(%s)", stmt)
+
 	query += condition
 	log.Debug(query)
 	result, err := DB.Exec(query)

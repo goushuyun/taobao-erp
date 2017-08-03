@@ -8,6 +8,7 @@ import (
 
 	"google.golang.org/grpc/metadata"
 
+	"github.com/goushuyun/taobao-erp/book/constant"
 	"github.com/goushuyun/taobao-erp/book/db"
 	"github.com/goushuyun/taobao-erp/misc/bookspider"
 	"github.com/pborman/uuid"
@@ -104,6 +105,29 @@ func (s *BookServer) UpdateBookInfo(ctx context.Context, in *pb.Book) (*pb.BookR
 func (s *BookServer) SaveBook(ctx context.Context, in *pb.Book) (*pb.BookResp, error) {
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "SaveBook", "%#v", in))
+	book_no := "00"
+	if in.BookCate == "poker" {
+		//首先查看有没有未分配的book_no
+		books, err := db.GetBookInfo(&pb.Book{Isbn: in.Isbn})
+		if err != nil {
+			log.Error(err)
+			return nil, errs.Wrap(errors.New(err.Error()))
+		}
+		for i := 0; i < len(books); i++ {
+			book := books[i]
+			if book.BookCate == "" {
+				book.BookCate = "poker"
+				book.BookNo = book_no
+				book_no = constant.FindNextNo(book_no)
+				db.UpdateBookInfo(book)
+			} else {
+				book_no = constant.FindNextNo(book.BookNo)
+			}
+
+		}
+
+	}
+	in.BookNo = book_no
 	err := db.InsertBookInfo(in)
 	if err != nil {
 		//check the err reason if equal 'exists' in particular.if yes ,return specially identification str

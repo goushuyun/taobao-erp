@@ -46,3 +46,46 @@
 2017-08-02 09:38:48.969792 I | etcdserver: start to snapshot (applied: 50005, lastsnap: 40004)
 2017-08-02 09:38:48.982853 I | etcdserver: saved snapshot at index 50005
 2017-08-02 09:38:48.983613 I | etcdserver: compacted raft log at 45005
+2017-08-02 11:00:18.418743 I | etcdserver: start to snapshot (applied: 60006, lastsnap: 50005)
+2017-08-02 11:00:18.429435 I | etcdserver: saved snapshot at index 60006
+2017-08-02 11:00:18.429878 I | etcdserver: compacted raft log at 55006
+2017-08-02 11:00:39.646803 I | fileutil: purged file default.etcd/member/snap/0000000000000002-0000000000002711.snap successfully
+2017-08-02 12:09:45.916893 I | etcdserver: start to snapshot (applied: 70007, lastsnap: 60006)
+2017-08-02 12:09:45.927410 I | etcdserver: saved snapshot at index 70007
+2017-08-02 12:09:45.927952 I | etcdserver: compacted raft log at 65007
+2017-08-02 12:10:10.490589 I | fileutil: purged file default.etcd/member/snap/0000000000000002-0000000000004e22.snap successfully
+2017-08-02 14:39:42.632631 I | etcdserver: start to snapshot (applied: 80008, lastsnap: 70007)
+2017-08-02 14:39:42.647712 I | etcdserver: saved snapshot at index 80008
+2017-08-02 14:39:42.648971 I | etcdserver: compacted raft log at 75008
+2017-08-02 14:39:43.573017 I | fileutil: purged file default.etcd/member/snap/0000000000000002-0000000000007533.snap successfully
+2017-08-03 01:16:55.224520 I | etcdmain: etcd Version: 2.3.6
+2017-08-03 01:16:55.229990 I | etcdmain: Git SHA: 128344c
+2017-08-03 01:16:55.230254 I | etcdmain: Go Version: go1.6.2
+2017-08-03 01:16:55.230789 I | etcdmain: Go OS/Arch: linux/amd64
+2017-08-03 01:16:55.231043 I | etcdmain: setting maximum number of CPUs to 4, total number of available CPUs is 4
+2017-08-03 01:16:55.231390 W | etcdmain: no data-dir provided, using default data-dir ./default.etcd
+2017-08-03 01:16:55.233216 N | etcdmain: the server is already initialized as member before, starting as etcd member...
+2017-08-03 01:16:55.233837 I | etcdmain: listening for peers on http://localhost:2380
+2017-08-03 01:16:55.234180 I | etcdmain: listening for peers on http://localhost:7001
+2017-08-03 01:16:55.234513 I | etcdmain: listening for client requests on http://localhost:2379
+2017-08-03 01:16:55.235005 I | etcdmain: listening for client requests on http://localhost:4001
+2017-08-03 01:16:55.258276 I | etcdserver: recovered store from snapshot at index 80008
+2017-08-03 01:16:55.258801 I | etcdserver: name = default
+2017-08-03 01:16:55.259495 I | etcdserver: data dir = default.etcd
+2017-08-03 01:16:55.259758 I | etcdserver: member dir = default.etcd/member
+2017-08-03 01:16:55.259992 I | etcdserver: heartbeat = 100ms
+2017-08-03 01:16:55.260287 I | etcdserver: election = 1000ms
+2017-08-03 01:16:55.260601 I | etcdserver: snapshot count = 10000
+2017-08-03 01:16:55.260898 I | etcdserver: advertise client URLs = http://localhost:2379,http://localhost:4001
+2017-08-03 01:16:55.416934 I | etcdserver: restarting member ce2a822cea30bfca in cluster 7e27652122e8b2ae at commit index 82994
+2017-08-03 01:16:55.417421 I | raft: ce2a822cea30bfca became follower at term 2
+2017-08-03 01:16:55.417684 I | raft: newRaft ce2a822cea30bfca [peers: [ce2a822cea30bfca], term: 2, commit: 82994, applied: 80008, lastindex: 82994, lastterm: 2]
+2017-08-03 01:16:55.418884 I | etcdserver: added member ce2a822cea30bfca [http://localhost:2380 http://localhost:7001] to cluster 7e27652122e8b2ae from store
+2017-08-03 01:16:55.419067 I | etcdserver: set the cluster version to 2.3 from store
+2017-08-03 01:16:55.420823 I | etcdserver: starting server... [version: 2.3.6, cluster version: 2.3]
+2017-08-03 01:16:55.823578 I | raft: ce2a822cea30bfca is starting a new election at term 2
+2017-08-03 01:16:55.824258 I | raft: ce2a822cea30bfca became candidate at term 3
+2017-08-03 01:16:55.824813 I | raft: ce2a822cea30bfca received vote from ce2a822cea30bfca at term 3
+2017-08-03 01:16:55.825354 I | raft: ce2a822cea30bfca became leader at term 3
+2017-08-03 01:16:55.825903 I | raft: raft.node: ce2a822cea30bfca elected leader ce2a822cea30bfca at term 3
+2017-08-03 01:16:55.828358 I | etcdserver: published {Name:default ClientURLs:[http://localhost:2379 http://localhost:4001]} to cluster 7e27652122e8b2ae

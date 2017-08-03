@@ -27,7 +27,7 @@ func GetBookInfo(book *pb.Book) (books []*pb.Book, err error) {
 		condition += fmt.Sprintf(" and id='%s'", book.Id)
 	}
 
-	condition += " order by id desc"
+	condition += " order by id"
 	query += condition
 	log.Debug(query)
 	rows, err := DB.Query(query)

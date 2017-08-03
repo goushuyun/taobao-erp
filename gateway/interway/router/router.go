@@ -25,6 +25,7 @@ func SetRouterV1() *m.Router {
 	v1.Register("/book/submit_audit", m.Wrap(c.SubmitBookAudit))
 	v1.Register("/book/get_audit_list", m.Wrap(c.GetBookAuditRecord))
 	v1.Register("/book/get_organized_audit_list", m.Wrap(c.GetOrganizedBookAuditList))
+	v1.Register("/book/handle_book_audit_list", m.Wrap(c.HandleBookAudit))
 
 	// stock
 	v1.Register("/stock/get_location_id", m.Wrap(c.GetLocationId))

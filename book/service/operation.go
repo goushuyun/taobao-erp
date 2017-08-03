@@ -70,3 +70,15 @@ func (s *BookServer) GetOrganizedBookAuditList(ctx context.Context, in *pb.BookA
 	}
 	return &pb.OrganizedBookAuditListResp{Code: errs.Ok, Message: "ok", Data: models, TotalCount: totalCount}, nil
 }
+
+//  handle the book audit
+func (s *BookServer) HandleBookAudit(ctx context.Context, in *pb.BookAuditRecord) (*pb.NormalResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "HandleBookAudit", "%#v", in))
+	err := db.BatchUpdateBookAudit(in)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	return &pb.NormalResp{Code: errs.Ok, Message: "ok"}, nil
+}

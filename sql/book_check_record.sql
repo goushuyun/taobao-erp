@@ -5,7 +5,7 @@ create table book_audit_record (
     id              uuid primary key default gen_random_uuid(),
     book_id         text            not null,       --图书isbn
     isbn            text            default '',     --isbn
-    book_cate       text            default '',     --isbn
+    book_cate       text            default '',     -- poker or ''
     title           text            default '',     --标题
     publisher       text            default '',     --出版社
     author          text            default '',     --作者

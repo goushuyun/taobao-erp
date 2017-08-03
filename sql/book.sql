@@ -26,3 +26,6 @@ create table book (
     create_at timestamptz not null default now(),
     update_at timestamptz not null default now()
 );
+
+
+CREATE UNIQUE INDEX IF NOT EXISTS book_isbn_no ON  book(isbn,book_no)

@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"fmt"
 	"net/http"
 
 	"github.com/goushuyun/taobao-erp/errs"
@@ -112,4 +113,25 @@ func GetOrganizedBookAuditList(w http.ResponseWriter, r *http.Request) {
 	}
 	req := &pb.BookAuditRecord{}
 	misc.CallWithResp(w, r, "book", "GetOrganizedBookAuditList", req)
+}
+
+//handle the book audit
+func HandleBookAudit(w http.ResponseWriter, r *http.Request) {
+	c := token.Get(r)
+	//检测token
+	if c == nil || c.UserId == "" {
+		misc.ReturnNotToken(w, r)
+		return
+	}
+	fmt.Println(c.Role)
+	fmt.Println(role.InterAdmin)
+	if c.Role != role.InterAdmin {
+		misc.RespondMessage(w, r, map[string]interface{}{
+			"code":    errs.ErrTokenNotFound,
+			"message": "权限不够",
+		})
+		return
+	}
+	req := &pb.BookAuditRecord{CheckUserId: c.UserId}
+	misc.CallWithResp(w, r, "book", "HandleBookAudit", req)
 }

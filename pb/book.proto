@@ -98,10 +98,11 @@ message BookAuditRecord{
     int64 update_at = 17;
     string book_cate = 18;
     string title = 19;
-
     int64 search_type = 20; // search type : default: all; 1:
     int64 page = 21;
     int64 size = 22;
+    repeated string ids = 23;
+
 }
 //组织过的图书申请请求
 message OrganizedBookAudit{
