@@ -1,12 +1,32 @@
 package db
 
 import (
+	"database/sql"
+	"errors"
 	"fmt"
 
 	. "github.com/goushuyun/taobao-erp/db"
 	"github.com/goushuyun/taobao-erp/pb"
 	"github.com/wothing/log"
 )
+
+func GetGoodsByBookId(g *pb.Goods) error {
+	query := "select id, status, remark from goods where user_id = $1 and book_id = $2"
+	log.Debugf("select id, status, remark from goods where user_id = '%s' and book_id = '%s'", g.UserId, g.BookId)
+	err := DB.QueryRow(query, g.UserId, g.BookId).Scan(&g.GoodsId, &g.Status, &g.Remark)
+
+	if err == sql.ErrNoRows {
+		log.Debug("Goods not fount")
+		return errors.New("not_found")
+	}
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
 
 func UpdateGoods(g *pb.Goods) error {
 	query := "update goods %s where id = $1"

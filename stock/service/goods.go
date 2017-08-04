@@ -17,10 +17,20 @@ func (s *StockServer) SaveGoods(ctx context.Context, req *pb.Goods) (*pb.GoodsRe
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "SaveGoods", "%#v", req))
 
-	err := db.SaveGoods(req)
+	err := db.GetGoodsByBookId(req)
 	if err != nil {
-		log.Error(err)
-		return nil, errs.Wrap(errors.New(err.Error()))
+		if err.Error() == "not_found" {
+			// not found this goods
+			err = db.SaveGoods(req)
+			if err != nil {
+				log.Error(err)
+				return nil, errs.Wrap(errors.New(err.Error()))
+			}
+		} else {
+			// met other error
+			log.Error(err)
+			return nil, errs.Wrap(errors.New(err.Error()))
+		}
 	}
 
 	return &pb.GoodsResp{Code: errs.Ok, Message: "ok", Data: []*pb.Goods{req}}, nil
