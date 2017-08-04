@@ -96,6 +96,15 @@ func (s *StockServer) SaveMapRow(ctx context.Context, req *pb.MapRow) (*pb.MapRo
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "SaveSingleGoods", "%#v", req))
 
+	// update goods's stock
+	defer func() {
+		g := &pb.Goods{Stock: req.Stock, GoodsId: req.GoodsId}
+		err := db.UpdateGoods(g)
+		if err != nil {
+			log.Error(err)
+		}
+	}()
+
 	err := db.GetMapRow(req)
 	if err != nil {
 		if err.Error() == notFound {
@@ -119,15 +128,6 @@ func (s *StockServer) SaveMapRow(ctx context.Context, req *pb.MapRow) (*pb.MapRo
 		log.Error(err)
 		return nil, errs.Wrap(errors.New(err.Error()))
 	}
-
-	// update goods's stock
-	defer func() {
-		g := &pb.Goods{Stock: req.Stock, GoodsId: req.GoodsId}
-		err = db.UpdateGoods(g)
-		if err != nil {
-			log.Error(err)
-		}
-	}()
 
 	return &pb.MapRowResp{Code: errs.Ok, Message: "ok", Data: req}, nil
 }

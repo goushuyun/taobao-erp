@@ -63,8 +63,9 @@ func LocationFazzyQuery(l *pb.Location) ([]*pb.Location, int64, error) {
 func ListGoodsAllLocations(g *pb.Goods) ([]*pb.Goods, int64, error) {
 	query := `
 	select %s from goods_location_map as m
-		right join goods as g on g.id = $1 and m.goods_id = g.id and m.user_id = $2 and m.stock > 0
+		left join goods as g on m.goods_id = g.id
 		left join location as l on m.location_id = l.id
+		where m.stock > 0 and m.goods_id = $1 and m.user_id = $2 and m.stock > 0
 	`
 	var (
 		total int64
