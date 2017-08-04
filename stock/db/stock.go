@@ -63,14 +63,16 @@ func LocationFazzyQuery(l *pb.Location) ([]*pb.Location, int64, error) {
 func ListGoodsAllLocations(g *pb.Goods) ([]*pb.Goods, int64, error) {
 	query := `
 	select %s from goods_location_map as m
-		right join goods as g on g.book_id = $1 and m.goods_id = g.id
+		right join goods as g on g.id = $1 and m.goods_id = g.id and m.user_id = $2
 		left join location as l on m.location_id = l.id
 	`
 	var (
 		total int64
 		data  []*pb.Goods
 	)
-	err := DB.QueryRow(fmt.Sprintf(query, "count(*)"), g.BookId).Scan(&total)
+
+	log.Debug(fmt.Sprintf(query, "count(*)"))
+	err := DB.QueryRow(fmt.Sprintf(query, "count(*)"), g.GoodsId, g.UserId).Scan(&total)
 	if err != nil {
 		log.Error(err)
 		return nil, 0, err
@@ -81,7 +83,7 @@ func ListGoodsAllLocations(g *pb.Goods) ([]*pb.Goods, int64, error) {
 		return data, total, nil
 	}
 
-	target := "m.stock, g.status, g.remark, l.warehouse, l.shelf, l.floor"
+	target := "m.stock, g.status, g.remark, l.warehouse, l.shelf, l.floor, m.id"
 	// join "order by" condition
 	condition := " order by %s limit %d offset %d"
 	var order_condition string
@@ -96,12 +98,13 @@ func ListGoodsAllLocations(g *pb.Goods) ([]*pb.Goods, int64, error) {
 	case pb.ListOrderBy_UpdateAtForward:
 		order_condition = "m.update_at asc"
 	default:
-		order_condition = "m.floor asc, m.shelf asc, m.warehouse asc"
+		order_condition = "l.floor asc, l.shelf asc, l.warehouse asc"
 	}
 
-	condition = fmt.Sprintf(condition, order_condition, (g.Page-1)*g.Size, g.Size)
+	condition = fmt.Sprintf(condition, order_condition, g.Size, (g.Page-1)*g.Size)
 
-	rows, err := DB.Query(fmt.Sprintf(query, target) + condition)
+	log.Debug(fmt.Sprintf(query, target) + condition)
+	rows, err := DB.Query(fmt.Sprintf(query, target)+condition, g.GoodsId, g.UserId)
 	if err != nil {
 		log.Error(err)
 		return nil, 0, err
@@ -109,7 +112,7 @@ func ListGoodsAllLocations(g *pb.Goods) ([]*pb.Goods, int64, error) {
 
 	for rows.Next() {
 		tmp := &pb.Goods{}
-		err = rows.Scan(&tmp.Stock, &tmp.Status, &tmp.Remark, &tmp.Warehouse, &tmp.Shelf, &tmp.Floor)
+		err = rows.Scan(&tmp.Stock, &tmp.Status, &tmp.Remark, &tmp.Warehouse, &tmp.Shelf, &tmp.Floor, &tmp.MapRowId)
 		if err != nil {
 			log.Error(err)
 			return nil, 0, err

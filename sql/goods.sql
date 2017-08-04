@@ -9,7 +9,7 @@ create table goods (
       user_id text not null,
       remark text default '',
       stock int not null default 0,
-      
+
       create_at timestamptz not null default now(),
       update_at timestamptz not null default now()
 );
