@@ -198,3 +198,23 @@
 2017-08-04 02:04:47.385103 I | etcdserver: saved snapshot at index 120012
 2017-08-04 02:04:47.386762 I | etcdserver: compacted raft log at 115012
 2017-08-04 02:05:14.710786 I | fileutil: purged file default.etcd/member/snap/0000000000000003-0000000000011177.snap successfully
+2017-08-04 03:14:09.370287 I | etcdserver: start to snapshot (applied: 130013, lastsnap: 120012)
+2017-08-04 03:14:09.380389 I | etcdserver: saved snapshot at index 130013
+2017-08-04 03:14:09.381981 I | etcdserver: compacted raft log at 125013
+2017-08-04 03:14:15.447581 I | fileutil: purged file default.etcd/member/snap/0000000000000003-0000000000013888.snap successfully
+2017-08-04 06:14:07.761097 I | etcdserver: start to snapshot (applied: 140014, lastsnap: 130013)
+2017-08-04 06:14:07.774773 I | etcdserver: saved snapshot at index 140014
+2017-08-04 06:14:07.776296 I | etcdserver: compacted raft log at 135014
+2017-08-04 06:14:14.574714 I | fileutil: purged file default.etcd/member/snap/0000000000000003-0000000000015f99.snap successfully
+2017-08-04 06:50:58.394297 I | etcdmain: etcd Version: 2.3.6
+2017-08-04 06:50:58.396542 I | etcdmain: Git SHA: 128344c
+2017-08-04 06:50:58.397022 I | etcdmain: Go Version: go1.6.2
+2017-08-04 06:50:58.397314 I | etcdmain: Go OS/Arch: linux/amd64
+2017-08-04 06:50:58.397593 I | etcdmain: setting maximum number of CPUs to 4, total number of available CPUs is 4
+2017-08-04 06:50:58.397846 W | etcdmain: no data-dir provided, using default data-dir ./default.etcd
+2017-08-04 06:50:58.399187 N | etcdmain: the server is already initialized as member before, starting as etcd member...
+2017-08-04 06:50:58.399641 C | etcdmain: listen tcp 127.0.0.1:2380: bind: address already in use
+2017-08-04 07:23:34.996852 I | etcdserver: start to snapshot (applied: 150015, lastsnap: 140014)
+2017-08-04 07:23:35.011793 I | etcdserver: saved snapshot at index 150015
+2017-08-04 07:23:35.012508 I | etcdserver: compacted raft log at 145015
+2017-08-04 07:23:45.322346 I | fileutil: purged file default.etcd/member/snap/0000000000000003-00000000000186aa.snap successfully

@@ -132,3 +132,19 @@ func SearchGoods(goods *pb.GoodsInfo) (models []*pb.GoodsInfo, err error, totalC
 	}
 	return
 }
+
+// update the goods info
+func UpdateGoodsInfo(goods *pb.Goods) error {
+	query := "update goods set update_at=now()"
+	if goods.Remark != "" {
+		query += fmt.Sprintf(",remark='%s'", goods.Remark)
+	}
+	query += fmt.Sprintf(" where id='%s' and user_id='%s'", goods.GoodsId, goods.UserId)
+	log.Debug(query)
+	_, err := DB.Exec(query)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}

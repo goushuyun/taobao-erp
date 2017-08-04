@@ -34,6 +34,7 @@ func SetRouterV1() *m.Router {
 	v1.Register("/stock/update_map_row", m.Wrap(c.UpdateMapRow))
 	v1.Register("/stock/location_fazzy_query", m.Wrap(c.LocationFazzyQuery))
 	v1.Register("/stock/search_goods", m.Wrap(c.SearchGoods))
+	v1.Register("/stock/update_goods_info", m.Wrap(c.UpdateGoodsInfo))
 
 	return v1
 }

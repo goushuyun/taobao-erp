@@ -96,3 +96,16 @@ func SearchGoods(w http.ResponseWriter, r *http.Request) {
 	req := &pb.GoodsInfo{UserId: c.UserId}
 	misc.CallWithResp(w, r, "stock", "SearchGoods", req)
 }
+
+// update the goods info
+func UpdateGoodsInfo(w http.ResponseWriter, r *http.Request) {
+	c := token.Get(r)
+	//检测token
+	if c == nil || c.UserId == "" {
+		misc.ReturnNotToken(w, r)
+		return
+	}
+
+	req := &pb.Goods{UserId: c.UserId}
+	misc.CallWithResp(w, r, "stock", "UpdateGoodsInfo", req, "goods_id", "remark")
+}
