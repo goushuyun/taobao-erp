@@ -97,8 +97,9 @@ func (s *StockServer) SaveMapRow(ctx context.Context, req *pb.MapRow) (*pb.MapRo
 	defer log.TraceOut(log.TraceIn(tid, "SaveSingleGoods", "%#v", req))
 
 	// update goods's stock
+	var operate_stock int64 = req.Stock
 	defer func() {
-		g := &pb.Goods{Stock: req.Stock, GoodsId: req.GoodsId}
+		g := &pb.Goods{Stock: operate_stock, GoodsId: req.GoodsId}
 		err := db.UpdateGoods(g)
 		if err != nil {
 			log.Error(err)
