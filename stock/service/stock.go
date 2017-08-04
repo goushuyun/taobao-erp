@@ -15,6 +15,8 @@ import (
 
 type StockServer struct{}
 
+var notFound = "not_found"
+
 func (s *StockServer) UpdateMapRow(ctx context.Context, req *pb.MapRowBatch) (*pb.NormalResp, error) {
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "ReduceMapRow", "%#v", req))
@@ -60,7 +62,7 @@ func (s *StockServer) GetLocationId(ctx context.Context, req *pb.Location) (*pb.
 	err := db.GetLocationId(req)
 
 	if err != nil {
-		if err.Error() == "not_found" {
+		if err.Error() == notFound {
 			// create location
 			err = db.CreateLocation(req)
 			if err != nil {
@@ -96,7 +98,7 @@ func (s *StockServer) SaveMapRow(ctx context.Context, req *pb.MapRow) (*pb.MapRo
 
 	err := db.GetMapRow(req)
 	if err != nil {
-		if err.Error() == "not_found" {
+		if err.Error() == notFound {
 			// create this map row
 			err = db.SaveMapRow(req)
 			if err != nil {

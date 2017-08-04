@@ -47,3 +47,15 @@ func (s *StockServer) SearchGoods(ctx context.Context, req *pb.GoodsInfo) (*pb.G
 	}
 	return &pb.GoodsInfoListResp{Code: errs.Ok, Message: "ok", Data: models, TotalCount: totalCount}, nil
 }
+
+// update the goods info
+func (s *StockServer) UpdateGoodsInfo(ctx context.Context, in *pb.Goods) (*pb.NormalResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "UpdateGoodsInfo", "%#v", in))
+	err := db.UpdateGoodsInfo(in)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	return &pb.NormalResp{Code: errs.Ok, Message: "ok"}, nil
+}

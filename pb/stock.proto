@@ -5,9 +5,9 @@ package pb;
 import "pb/common.proto";
 
 service StockService {
+
     rpc SaveMapRow (MapRow) returns (MapRowResp);
     rpc UpdateMapRow (MapRowBatch) returns (NormalResp);
-
     rpc SearchLocation (Location) returns (SearchLocationResp);
 
     rpc GetLocationId (Location) returns (LocationResp);
@@ -20,6 +20,8 @@ service StockService {
     // goods module
     // search goods from local db
     rpc SearchGoods (GoodsInfo) returns (GoodsInfoListResp);
+    // update the goods info
+    rpc UpdateGoodsInfo (Goods) returns (NormalResp);
 }
 
 // location
