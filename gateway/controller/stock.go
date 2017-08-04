@@ -10,6 +10,23 @@ import (
 	"github.com/goushuyun/taobao-erp/pb"
 )
 
+func ListGoodsAllLocations(w http.ResponseWriter, r *http.Request) {
+	req := &pb.Goods{}
+
+	c := token.Get(r)
+	if c != nil && c.UserId != "" {
+		req.UserId = c.UserId
+	} else {
+		misc.RespondMessage(w, r, map[string]interface{}{
+			"code":    errs.ErrTokenNotFound,
+			"message": "token not found",
+		})
+		return
+	}
+
+	misc.CallWithResp(w, r, "stock", "ListGoodsAllLocations", req, "goods_id")
+}
+
 func LocationFazzyQuery(w http.ResponseWriter, r *http.Request) {
 	req := &pb.Location{}
 
