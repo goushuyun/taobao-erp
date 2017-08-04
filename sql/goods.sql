@@ -3,8 +3,6 @@ create table goods (
 
       /* book info */
       book_id text not null,
-      isbn text not null,
-      book_no text default '',
 
       /* goods info */
       status int not null default 0,
