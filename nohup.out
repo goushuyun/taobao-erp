@@ -136,3 +136,65 @@
 2017-08-03 08:24:11.823088 I | etcdserver: saved snapshot at index 40004
 2017-08-03 08:24:11.824293 I | etcdserver: compacted raft log at 35004
 2017-08-03 08:26:21.019233 C | etcdserver: failed to purge snap file readdirent: input/output error
+2017-08-03 09:22:19.050682 I | etcdmain: etcd Version: 2.3.6
+2017-08-03 09:22:19.051476 I | etcdmain: Git SHA: 128344c
+2017-08-03 09:22:19.051671 I | etcdmain: Go Version: go1.6.2
+2017-08-03 09:22:19.051811 I | etcdmain: Go OS/Arch: linux/amd64
+2017-08-03 09:22:19.051995 I | etcdmain: setting maximum number of CPUs to 4, total number of available CPUs is 4
+2017-08-03 09:22:19.052153 W | etcdmain: no data-dir provided, using default data-dir ./default.etcd
+2017-08-03 09:22:19.053095 N | etcdmain: the server is already initialized as member before, starting as etcd member...
+2017-08-03 09:22:19.053573 I | etcdmain: listening for peers on http://localhost:2380
+2017-08-03 09:22:19.053808 I | etcdmain: listening for peers on http://localhost:7001
+2017-08-03 09:22:19.054013 I | etcdmain: listening for client requests on http://localhost:2379
+2017-08-03 09:22:19.054225 I | etcdmain: listening for client requests on http://localhost:4001
+2017-08-03 09:22:19.082561 I | etcdserver: recovered store from snapshot at index 40004
+2017-08-03 09:22:19.083020 I | etcdserver: name = default
+2017-08-03 09:22:19.083349 I | etcdserver: data dir = default.etcd
+2017-08-03 09:22:19.083676 I | etcdserver: member dir = default.etcd/member
+2017-08-03 09:22:19.083991 I | etcdserver: heartbeat = 100ms
+2017-08-03 09:22:19.084230 I | etcdserver: election = 1000ms
+2017-08-03 09:22:19.084430 I | etcdserver: snapshot count = 10000
+2017-08-03 09:22:19.084643 I | etcdserver: advertise client URLs = http://localhost:2379,http://localhost:4001
+2017-08-03 09:22:19.166203 I | etcdserver: restarting member ce2a822cea30bfca in cluster 7e27652122e8b2ae at commit index 40314
+2017-08-03 09:22:19.166973 I | raft: ce2a822cea30bfca became follower at term 2
+2017-08-03 09:22:19.167359 I | raft: newRaft ce2a822cea30bfca [peers: [ce2a822cea30bfca], term: 2, commit: 40314, applied: 40004, lastindex: 40314, lastterm: 2]
+2017-08-03 09:22:19.167908 I | etcdserver: added member ce2a822cea30bfca [http://localhost:2380 http://localhost:7001] to cluster 7e27652122e8b2ae from store
+2017-08-03 09:22:19.168231 I | etcdserver: set the cluster version to 2.3 from store
+2017-08-03 09:22:19.170251 I | etcdserver: starting server... [version: 2.3.6, cluster version: 2.3]
+2017-08-03 09:22:19.570587 I | raft: ce2a822cea30bfca is starting a new election at term 2
+2017-08-03 09:22:19.571231 I | raft: ce2a822cea30bfca became candidate at term 3
+2017-08-03 09:22:19.571761 I | raft: ce2a822cea30bfca received vote from ce2a822cea30bfca at term 3
+2017-08-03 09:22:19.572343 I | raft: ce2a822cea30bfca became leader at term 3
+2017-08-03 09:22:19.572865 I | raft: raft.node: ce2a822cea30bfca elected leader ce2a822cea30bfca at term 3
+2017-08-03 09:22:19.573998 I | etcdserver: published {Name:default ClientURLs:[http://localhost:2379 http://localhost:4001]} to cluster 7e27652122e8b2ae
+2017-08-03 11:05:40.380747 I | etcdserver: start to snapshot (applied: 50005, lastsnap: 40004)
+2017-08-03 11:05:40.393567 I | etcdserver: saved snapshot at index 50005
+2017-08-03 11:05:40.394034 I | etcdserver: compacted raft log at 45005
+2017-08-03 12:15:08.401173 I | etcdserver: start to snapshot (applied: 60006, lastsnap: 50005)
+2017-08-03 12:15:08.414606 I | etcdserver: saved snapshot at index 60006
+2017-08-03 12:15:08.415400 I | etcdserver: compacted raft log at 55006
+2017-08-03 12:15:23.798576 I | fileutil: purged file default.etcd/member/snap/0000000000000002-0000000000002711.snap successfully
+2017-08-03 13:34:19.660707 I | etcdserver: start to snapshot (applied: 70007, lastsnap: 60006)
+2017-08-03 13:34:19.673366 I | etcdserver: saved snapshot at index 70007
+2017-08-03 13:34:19.673821 I | etcdserver: compacted raft log at 65007
+2017-08-03 13:34:36.396293 I | fileutil: purged file default.etcd/member/snap/0000000000000002-0000000000004e22.snap successfully
+2017-08-03 14:47:36.434406 I | etcdserver: start to snapshot (applied: 80008, lastsnap: 70007)
+2017-08-03 14:47:36.446282 I | etcdserver: saved snapshot at index 80008
+2017-08-03 14:47:36.446664 I | etcdserver: compacted raft log at 75008
+2017-08-03 14:47:55.444010 I | fileutil: purged file default.etcd/member/snap/0000000000000002-0000000000007533.snap successfully
+2017-08-03 15:57:05.026557 I | etcdserver: start to snapshot (applied: 90009, lastsnap: 80008)
+2017-08-03 15:57:05.039782 I | etcdserver: saved snapshot at index 90009
+2017-08-03 15:57:05.040484 I | etcdserver: compacted raft log at 85009
+2017-08-03 15:57:26.458009 I | fileutil: purged file default.etcd/member/snap/0000000000000002-0000000000009c44.snap successfully
+2017-08-03 17:06:32.436329 I | etcdserver: start to snapshot (applied: 100010, lastsnap: 90009)
+2017-08-03 17:06:32.450337 I | etcdserver: saved snapshot at index 100010
+2017-08-03 17:06:32.451470 I | etcdserver: compacted raft log at 95010
+2017-08-03 17:06:57.521921 I | fileutil: purged file default.etcd/member/snap/0000000000000003-000000000000c355.snap successfully
+2017-08-04 00:55:18.873070 I | etcdserver: start to snapshot (applied: 110011, lastsnap: 100010)
+2017-08-04 00:55:18.883810 I | etcdserver: saved snapshot at index 110011
+2017-08-04 00:55:18.884852 I | etcdserver: compacted raft log at 105011
+2017-08-04 00:55:43.886986 I | fileutil: purged file default.etcd/member/snap/0000000000000003-000000000000ea66.snap successfully
+2017-08-04 02:04:47.371219 I | etcdserver: start to snapshot (applied: 120012, lastsnap: 110011)
+2017-08-04 02:04:47.385103 I | etcdserver: saved snapshot at index 120012
+2017-08-04 02:04:47.386762 I | etcdserver: compacted raft log at 115012
+2017-08-04 02:05:14.710786 I | fileutil: purged file default.etcd/member/snap/0000000000000003-0000000000011177.snap successfully

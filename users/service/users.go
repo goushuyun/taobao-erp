@@ -60,7 +60,7 @@ func (s *UsersServer) Login(ctx context.Context, req *pb.User) (*pb.UserResp, er
 	}
 
 	// has this user, sign token
-	token := token.SignUserToken(role.InterNormalUser, req.Id, req.Mobile, req.Name, role.InterNormalUser)
+	token := token.SignUserToken(token.InterToken, req.Id, req.Mobile, req.Name, role.InterNormalUser)
 	req.Password = "****"
 	return &pb.UserResp{Code: errs.Ok, Message: "ok", Token: token, Data: req}, nil
 }
@@ -99,7 +99,7 @@ func (s *UsersServer) Register(ctx context.Context, req *pb.User) (*pb.UserResp,
 	}
 
 	// sign token
-	token := token.SignUserToken(role.InterNormalUser, req.Id, req.Mobile, req.Name, role.InterNormalUser)
+	token := token.SignUserToken(token.InterToken, req.Id, req.Mobile, req.Name, role.InterNormalUser)
 	req.Password = "*****"
 
 	return &pb.UserResp{Code: errs.Ok, Message: "ok", Data: req, Token: token}, nil

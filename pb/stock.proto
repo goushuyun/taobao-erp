@@ -16,6 +16,10 @@ service StockService {
     rpc ListGoodsAllLocations (Goods) returns (GoodsResp);
 
     rpc LocationFazzyQuery (Location) returns (LocationBatchResp);
+
+    // goods module
+    // search goods from local db
+    rpc SearchGoods (GoodsInfo) returns (GoodsInfoListResp);
 }
 
 // location
@@ -88,6 +92,8 @@ message Goods {
     ListOrderBy order_by = 16;
 }
 
+
+
 enum ListOrderBy {
     StockReverse = 0;
     StockForward = 1;
@@ -102,6 +108,36 @@ message GoodsResp {
     string message = 2;
     repeated Goods data = 3;
     int64 total = 4;
+}
+
+// goods book info
+message GoodsInfo{
+    string book_id = 1;
+    string isbn = 2;
+    string book_no = 3;
+    string book_cate = 4;
+    string title = 5;
+    string publisher = 6;
+    string author = 7;
+    string edition = 8;
+    string image = 9;
+    int64  price = 10;
+    string goods_id = 11;
+    int64 stock =12;
+    string remark = 13;
+    string compare = 14;
+    string user_id = 15;
+    string order_by = 16;
+    string sequence = 17;
+    int64 page = 18;
+    int64 size = 19;
+}
+// goods infos resp
+message GoodsInfoListResp{
+    string code = 1;
+    string message = 2;
+    repeated GoodsInfo data = 3;
+    int64 total_count = 7;
 }
 
 message SearchStockResp {

@@ -83,3 +83,16 @@ func GetLocationId(w http.ResponseWriter, r *http.Request) {
 
 	misc.CallWithResp(w, r, "stock", "GetLocationId", req, "warehouse", "shelf", "floor")
 }
+
+//get book info
+func SearchGoods(w http.ResponseWriter, r *http.Request) {
+	c := token.Get(r)
+	//检测token
+	if c == nil || c.UserId == "" {
+		misc.ReturnNotToken(w, r)
+		return
+	}
+
+	req := &pb.GoodsInfo{UserId: c.UserId}
+	misc.CallWithResp(w, r, "stock", "SearchGoods", req)
+}
