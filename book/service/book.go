@@ -117,8 +117,12 @@ func (s *BookServer) SaveBook(ctx context.Context, in *pb.Book) (*pb.BookResp, e
 			book := books[i]
 			if book.BookCate == "" {
 				book.BookCate = "poker"
-				book.BookNo = book_no
-				book_no = constant.FindNextNo(book_no)
+				if book.BookNo == "" {
+					book.BookNo = book_no
+					book_no = constant.FindNextNo(book_no)
+				} else {
+					book_no = constant.FindNextNo(book.BookNo)
+				}
 				db.UpdateBookInfo(book)
 			} else {
 				book_no = constant.FindNextNo(book.BookNo)

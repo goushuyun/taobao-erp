@@ -22,6 +22,16 @@ service StockService {
     rpc SearchGoods (GoodsInfo) returns (GoodsInfoListResp);
     // update the goods info
     rpc UpdateGoodsInfo (Goods) returns (NormalResp);
+    // batch upload
+    rpc GoodsBatchUpload (GoodsBatchUploadModel) returns (GoodsBatchUploadResp);
+    // add a batch upload record
+    rpc SaveGoodsBatchUploadRecord (GoodsBatchUploadRecord) returns (NormalResp);
+    // get the batch upload record list
+    rpc GetGoodsBatchUploadRecords (GoodsBatchUploadRecord) returns (GoodsBatchUploadRecordsResp);
+    // get the pending goods check list
+    rpc GetGoodsPendingCheckList (GoodsPendingCheck) returns (GoodsPendingCheckListResp);
+    // deal with the goods check
+    rpc DealWithGoodsPendingCheckList (GoodsPendingCheck) returns (NormalResp);
 }
 
 // location
@@ -75,6 +85,7 @@ message SearchLocationResp {
     repeated Location data = 3;
 }
 
+
 message Goods {
     string isbn = 1;
     string warehouse = 2;
@@ -113,6 +124,72 @@ message GoodsResp {
     int64 total = 4;
 }
 
+// goods batch upload model
+message GoodsBatchUploadModel{
+    string user_id = 1;
+    repeated GoodsUploadModel data = 2;
+}
+
+message GoodsBatchUploadResp{
+    string code = 1;
+    string message = 2;
+    int64 success_num = 3;        //成功插入的数据量
+    int64 pending_check_num = 4;  //待处理
+    repeated GoodsUploadModel failed_data = 5;
+
+}
+// goods upload model from batchupload
+message GoodsUploadModel{
+    // isbn num
+    string isbn = 1;
+    int64 num = 2;
+    string warehouse = 3; //仓库
+    string shelf = 4;     //货架
+    string floor = 5;     //层
+}
+
+//goods pending check
+message GoodsPendingCheck{
+    string id = 1;
+    string isbn = 2;
+    int64 num = 3;
+    string user_id = 4;
+    string warehouse = 5;
+    string shelf = 6;
+    string floor = 7;
+    int64 create_at = 8;
+    int64 update_at = 9;
+    int64 page = 10;
+    int64 size = 11;
+}
+// goods pending check list resp
+message GoodsPendingCheckListResp{
+    string code = 1;
+    string message =2;
+    repeated GoodsPendingCheck data = 3;
+    int64 total_count = 4;
+}
+//批量上传记录
+message GoodsBatchUploadRecordsResp{
+    string code = 1;
+    string message = 2;
+    repeated GoodsBatchUploadRecord data = 3;
+    int64 total_count = 4;
+}
+// goods batch upload
+message GoodsBatchUploadRecord{
+    string id = 1;
+    string user_id = 2;
+    int64 success_num = 3;
+    int64 failed_num = 4;
+    string origin_file = 5;
+    string origin_filename = 6;
+    string error_file = 7;
+    int64 create_at = 8;
+    int64 update_at = 9;
+    int64 page = 10;
+    int64 size = 11;
+}
 // goods book info
 message GoodsInfo{
     string book_id = 1;
@@ -134,6 +211,8 @@ message GoodsInfo{
     string sequence = 17;
     int64 page = 18;
     int64 size = 19;
+    int64 info_is_complete = 20; //0 全部 1:信息不全 2:信息全有
+
 }
 // goods infos resp
 message GoodsInfoListResp{

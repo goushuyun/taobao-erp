@@ -218,3 +218,51 @@
 2017-08-04 07:23:35.011793 I | etcdserver: saved snapshot at index 150015
 2017-08-04 07:23:35.012508 I | etcdserver: compacted raft log at 145015
 2017-08-04 07:23:45.322346 I | fileutil: purged file default.etcd/member/snap/0000000000000003-00000000000186aa.snap successfully
+2017-08-04 08:34:25.471074 I | etcdserver: start to snapshot (applied: 160016, lastsnap: 150015)
+2017-08-04 08:34:25.484503 I | etcdserver: saved snapshot at index 160016
+2017-08-04 08:34:25.486072 I | etcdserver: compacted raft log at 155016
+2017-08-04 08:34:41.094421 I | fileutil: purged file default.etcd/member/snap/0000000000000003-000000000001adbb.snap successfully
+2017-08-04 09:58:30.357079 I | etcdserver: start to snapshot (applied: 170017, lastsnap: 160016)
+2017-08-04 09:58:30.369572 I | etcdserver: saved snapshot at index 170017
+2017-08-04 09:58:30.373771 I | etcdserver: compacted raft log at 165017
+2017-08-04 09:58:47.331527 I | fileutil: purged file default.etcd/member/snap/0000000000000003-000000000001d4cc.snap successfully
+2017-08-04 12:14:31.637684 I | etcdserver: start to snapshot (applied: 180018, lastsnap: 170017)
+2017-08-04 12:14:31.651774 I | etcdserver: saved snapshot at index 180018
+2017-08-04 12:14:31.654528 I | etcdserver: compacted raft log at 175018
+2017-08-04 12:14:49.948957 I | fileutil: purged file default.etcd/member/snap/0000000000000003-000000000001fbdd.snap successfully
+2017-08-04 13:36:06.181407 I | etcdserver: start to snapshot (applied: 190019, lastsnap: 180018)
+2017-08-04 13:36:06.194631 I | etcdserver: saved snapshot at index 190019
+2017-08-04 13:36:06.195562 I | etcdserver: compacted raft log at 185019
+2017-08-04 13:36:25.801226 I | fileutil: purged file default.etcd/member/snap/0000000000000003-00000000000222ee.snap successfully
+2017-08-04 14:45:36.094045 I | etcdserver: start to snapshot (applied: 200020, lastsnap: 190019)
+2017-08-04 14:45:36.107637 I | etcdserver: saved snapshot at index 200020
+2017-08-04 14:45:36.108125 I | etcdserver: compacted raft log at 195020
+2017-08-04 14:45:57.231574 I | fileutil: purged file default.etcd/member/snap/0000000000000003-00000000000249ff.snap successfully
+2017-08-05 01:24:47.080229 I | etcdserver: start to snapshot (applied: 210021, lastsnap: 200020)
+2017-08-05 01:24:47.092047 I | etcdserver: saved snapshot at index 210021
+2017-08-05 01:24:47.094294 I | etcdserver: compacted raft log at 205021
+2017-08-05 01:25:07.438594 I | fileutil: purged file default.etcd/member/snap/0000000000000003-0000000000027110.snap successfully
+2017-08-05 02:34:15.558404 I | etcdserver: start to snapshot (applied: 220022, lastsnap: 210021)
+2017-08-05 02:34:15.571582 I | etcdserver: saved snapshot at index 220022
+2017-08-05 02:34:15.572813 I | etcdserver: compacted raft log at 215022
+2017-08-05 02:34:38.258036 I | fileutil: purged file default.etcd/member/snap/0000000000000003-0000000000029821.snap successfully
+2017-08-05 04:13:48.118907 I | etcdserver: start to snapshot (applied: 230023, lastsnap: 220022)
+2017-08-05 04:13:48.131677 I | etcdserver: saved snapshot at index 230023
+2017-08-05 04:13:48.133176 I | etcdserver: compacted raft log at 225023
+2017-08-05 04:14:12.284919 I | fileutil: purged file default.etcd/member/snap/0000000000000003-000000000002bf32.snap successfully
+2017-08-05 06:38:31.182933 I | etcdserver: start to snapshot (applied: 240024, lastsnap: 230023)
+2017-08-05 06:38:31.197452 I | etcdserver: saved snapshot at index 240024
+2017-08-05 06:38:31.201096 I | etcdserver: compacted raft log at 235024
+2017-08-05 06:38:58.174321 I | fileutil: purged file default.etcd/member/snap/0000000000000003-000000000002e643.snap successfully
+2017-08-05 07:47:51.186049 I | etcdserver: start to snapshot (applied: 250025, lastsnap: 240024)
+2017-08-05 07:47:51.200193 I | etcdserver: saved snapshot at index 250025
+2017-08-05 07:47:51.203073 I | etcdserver: compacted raft log at 245025
+2017-08-05 07:47:59.439357 I | fileutil: purged file default.etcd/member/snap/0000000000000003-0000000000030d54.snap successfully
+2017-08-05 08:57:18.818455 I | etcdserver: start to snapshot (applied: 260026, lastsnap: 250025)
+2017-08-05 08:57:18.834875 I | etcdserver: saved snapshot at index 260026
+2017-08-05 08:57:18.836449 I | etcdserver: compacted raft log at 255026
+2017-08-05 08:57:30.816332 I | fileutil: purged file default.etcd/member/snap/0000000000000003-0000000000033465.snap successfully
+2017-08-05 10:06:46.316297 I | etcdserver: start to snapshot (applied: 270027, lastsnap: 260026)
+2017-08-05 10:06:46.330209 I | etcdserver: saved snapshot at index 270027
+2017-08-05 10:06:46.330671 I | etcdserver: compacted raft log at 265027
+2017-08-05 10:07:01.540111 I | fileutil: purged file default.etcd/member/snap/0000000000000003-0000000000035b76.snap successfully
