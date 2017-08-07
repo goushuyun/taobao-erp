@@ -8,7 +8,6 @@ import (
 
 	"golang.org/x/net/context"
 
-	bookDb "github.com/goushuyun/taobao-erp/book/db"
 	"github.com/goushuyun/taobao-erp/pb"
 	"github.com/goushuyun/taobao-erp/stock/db"
 	"github.com/wothing/log"
@@ -73,7 +72,15 @@ func (s *StockServer) GoodsBatchUpload(ctx context.Context, in *pb.GoodsBatchUpl
 	for i := 0; i < len(in.Data); i++ {
 		uploadModel := in.Data[i]
 		// 1 根绝isbn获取图书信息
-		books, err := bookDb.GetBookInfo(&pb.Book{Isbn: uploadModel.Isbn})
+		bookListResp := &pb.BookListResp{}
+		req := &pb.Book{Isbn: uploadModel.Isbn, UploadMode: 1}
+		err := misc.CallSVC(ctx, "book", "GetBookInfo", req, bookListResp)
+		if err != nil {
+			log.Error(err)
+			fieldUploadModels = append(fieldUploadModels, uploadModel)
+			continue
+		}
+		books := bookListResp.Data
 		if err != nil {
 			log.Error(err)
 			fieldUploadModels = append(fieldUploadModels, uploadModel)
@@ -91,7 +98,10 @@ func (s *StockServer) GoodsBatchUpload(ctx context.Context, in *pb.GoodsBatchUpl
 			pendingNum++
 			continue
 		}
-
+		if books == nil || len(books) < 0 {
+			fieldUploadModels = append(fieldUploadModels, uploadModel)
+			continue
+		}
 		// 2 根据isbn获取商品信息
 		goods := &pb.Goods{BookId: books[0].Id, UserId: in.UserId}
 		err = db.GetGoodsByBookId(goods)
