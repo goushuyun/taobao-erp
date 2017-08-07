@@ -92,6 +92,10 @@ func (s *StockServer) GoodsBatchUpload(ctx context.Context, in *pb.GoodsBatchUpl
 			continue
 		}
 
+		log.Debug("---------------------------")
+		log.JSON(books)
+		log.Debug("---------------------------")
+
 		// 2 根据isbn获取商品信息
 		goods := &pb.Goods{BookId: books[0].Id, UserId: in.UserId}
 		err = db.GetGoodsByBookId(goods)
