@@ -69,6 +69,7 @@ func GetBookAuditList(record *pb.BookAuditRecord) (records []*pb.BookAuditRecord
 	} else {
 		condition += " and book_cate<>''"
 	}
+
 	queryCount += condition
 	log.Debug(queryCount)
 
@@ -205,8 +206,8 @@ func GetOrganizedBookAuditList(record *pb.BookAuditRecord) (models []*pb.Organiz
 	}
 	if record.SearchType == 0 {
 		// update
-		query = fmt.Sprintf("select book_id,count(*) from book_audit_record where status=1 group by book_id order by count(*) desc,book_id offset %d limit %d", (record.Page-1)*record.Size, record.Size)
-		queryCount = "select count(distinct book_id) from book_audit_record where status=1"
+		query = fmt.Sprintf("select book_id,count(*) from book_audit_record where status=1 and book_id<>''  group by book_id order by count(*) desc,book_id offset %d limit %d", (record.Page-1)*record.Size, record.Size)
+		queryCount = "select count(distinct book_id) from book_audit_record where status=1 and book_id<>'' "
 		log.Debug(queryCount)
 		err = DB.QueryRow(queryCount).Scan(&totalCount)
 		if err != nil {
@@ -277,7 +278,7 @@ func GetOrganizedBookAuditList(record *pb.BookAuditRecord) (models []*pb.Organiz
 			return models, err, totalCount
 		}
 		if len(bookList) > 0 {
-			book = bookList[1]
+			book = bookList[0]
 			model.BookId = book.Id
 			model.Isbn = book.Isbn
 			model.BookCate = book.BookCate

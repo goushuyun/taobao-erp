@@ -266,3 +266,42 @@
 2017-08-05 10:06:46.330209 I | etcdserver: saved snapshot at index 270027
 2017-08-05 10:06:46.330671 I | etcdserver: compacted raft log at 265027
 2017-08-05 10:07:01.540111 I | fileutil: purged file default.etcd/member/snap/0000000000000003-0000000000035b76.snap successfully
+2017-08-05 12:26:23.893946 I | etcdserver: start to snapshot (applied: 280028, lastsnap: 270027)
+2017-08-05 12:26:23.906655 I | etcdserver: saved snapshot at index 280028
+2017-08-05 12:26:23.907093 I | etcdserver: compacted raft log at 275028
+2017-08-05 12:26:46.911862 I | fileutil: purged file default.etcd/member/snap/0000000000000003-0000000000038287.snap successfully
+2017-08-05 13:35:50.889787 I | etcdserver: start to snapshot (applied: 290029, lastsnap: 280028)
+2017-08-05 13:35:50.903988 I | etcdserver: saved snapshot at index 290029
+2017-08-05 13:35:50.904408 I | etcdserver: compacted raft log at 285029
+2017-08-05 13:36:17.691121 I | fileutil: purged file default.etcd/member/snap/0000000000000003-000000000003a998.snap successfully
+2017-08-07 11:52:05.076020 I | etcdmain: etcd Version: 2.3.6
+2017-08-07 11:52:05.076387 I | etcdmain: Git SHA: 128344c
+2017-08-07 11:52:05.076572 I | etcdmain: Go Version: go1.6.2
+2017-08-07 11:52:05.076756 I | etcdmain: Go OS/Arch: linux/amd64
+2017-08-07 11:52:05.076938 I | etcdmain: setting maximum number of CPUs to 4, total number of available CPUs is 4
+2017-08-07 11:52:05.077141 W | etcdmain: no data-dir provided, using default data-dir ./default.etcd
+2017-08-07 11:52:05.078355 N | etcdmain: the server is already initialized as member before, starting as etcd member...
+2017-08-07 11:52:05.079015 I | etcdmain: listening for peers on http://localhost:2380
+2017-08-07 11:52:05.079293 I | etcdmain: listening for peers on http://localhost:7001
+2017-08-07 11:52:05.079593 I | etcdmain: listening for client requests on http://localhost:2379
+2017-08-07 11:52:05.079897 I | etcdmain: listening for client requests on http://localhost:4001
+2017-08-07 11:52:05.104979 I | etcdserver: recovered store from snapshot at index 290029
+2017-08-07 11:52:05.105338 I | etcdserver: name = default
+2017-08-07 11:52:05.105574 I | etcdserver: data dir = default.etcd
+2017-08-07 11:52:05.105848 I | etcdserver: member dir = default.etcd/member
+2017-08-07 11:52:05.106050 I | etcdserver: heartbeat = 100ms
+2017-08-07 11:52:05.106287 I | etcdserver: election = 1000ms
+2017-08-07 11:52:05.106513 I | etcdserver: snapshot count = 10000
+2017-08-07 11:52:05.106756 I | etcdserver: advertise client URLs = http://localhost:2379,http://localhost:4001
+2017-08-07 11:52:05.587861 I | etcdserver: restarting member ce2a822cea30bfca in cluster 7e27652122e8b2ae at commit index 292887
+2017-08-07 11:52:05.588812 I | raft: ce2a822cea30bfca became follower at term 3
+2017-08-07 11:52:05.589095 I | raft: newRaft ce2a822cea30bfca [peers: [ce2a822cea30bfca], term: 3, commit: 292887, applied: 290029, lastindex: 292887, lastterm: 3]
+2017-08-07 11:52:05.590981 I | etcdserver: added member ce2a822cea30bfca [http://localhost:2380 http://localhost:7001] to cluster 7e27652122e8b2ae from store
+2017-08-07 11:52:05.591228 I | etcdserver: set the cluster version to 2.3 from store
+2017-08-07 11:52:05.592946 I | etcdserver: starting server... [version: 2.3.6, cluster version: 2.3]
+2017-08-07 11:52:05.995210 I | raft: ce2a822cea30bfca is starting a new election at term 3
+2017-08-07 11:52:05.995778 I | raft: ce2a822cea30bfca became candidate at term 4
+2017-08-07 11:52:05.996224 I | raft: ce2a822cea30bfca received vote from ce2a822cea30bfca at term 4
+2017-08-07 11:52:05.996671 I | raft: ce2a822cea30bfca became leader at term 4
+2017-08-07 11:52:05.997085 I | raft: raft.node: ce2a822cea30bfca elected leader ce2a822cea30bfca at term 4
+2017-08-07 11:52:05.998981 I | etcdserver: published {Name:default ClientURLs:[http://localhost:2379 http://localhost:4001]} to cluster 7e27652122e8b2ae
