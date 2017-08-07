@@ -23,6 +23,7 @@ var serviceNames = []string{
 	"sms",
 	"book",
 	"stock",
+	"mediastore",
 }
 
 func main() {

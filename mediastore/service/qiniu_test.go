@@ -33,18 +33,6 @@ func TestWriteXLSXFile(t *testing.T) {
 	PutExcelFile(file)
 }
 
-func TestUploadFromWeixin(t *testing.T) {
-	url := `https://api.weixin.qq.com/cgi-bin/media/get?access_token=jCiexjRIyClaBz_t2TG_SUh7TgmQqc7e-s46qp23GxbGv1QH1R0XEV95HoOI4zGu3yVq16WMQ56BnzY4BiHRNrqB9qhiBaa_UiE8msfpmG8RlzDJn_C7cPEXJ5ZuRN_6PICjAJDTMG&media_id=qsTFkV76Ob-RrUfGvNxISG0vswmZvv5ssRBjy85AevBiwE-j7E5FDsZbzhGvgeHH`
-
-	key, err := upload(url, pb.MediaZone_Test, "12110007027")
-	if err != nil {
-		t.Fatal(err)
-	}
-
-	fmt.Println(key)
-
-}
-
 func TestUploadLocal(t *testing.T) {
 	err := uploadLocal("../1.jpeg", 0, "test/1.jpeg")
 	if err != nil {
@@ -64,7 +52,7 @@ func TestFetch(t *testing.T) {
 }
 
 func TestMakeToken(t *testing.T) {
-	token, url := makeToken(0, "wanng")
+	token, url := makeToken(0, "kai2.xlsx")
 
 	t.Log(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>")
 	t.Log(token, url)
