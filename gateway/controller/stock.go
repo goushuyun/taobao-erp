@@ -126,3 +126,63 @@ func UpdateGoodsInfo(w http.ResponseWriter, r *http.Request) {
 	req := &pb.Goods{UserId: c.UserId}
 	misc.CallWithResp(w, r, "stock", "UpdateGoodsInfo", req, "goods_id", "remark")
 }
+
+// update the goods info
+func GoodsBatchUpload(w http.ResponseWriter, r *http.Request) {
+	c := token.Get(r)
+	//检测token
+	if c == nil || c.UserId == "" {
+		misc.ReturnNotToken(w, r)
+		return
+	}
+	req := &pb.GoodsBatchUploadModel{UserId: c.UserId}
+	misc.CallWithResp(w, r, "stock", "GoodsBatchUpload", req)
+}
+
+// add a batch upload record
+func SaveGoodsBatchUploadRecord(w http.ResponseWriter, r *http.Request) {
+	c := token.Get(r)
+	//检测token
+	if c == nil || c.UserId == "" {
+		misc.ReturnNotToken(w, r)
+		return
+	}
+	req := &pb.GoodsBatchUploadRecord{UserId: c.UserId}
+	misc.CallWithResp(w, r, "stock", "SaveGoodsBatchUploadRecord", req, "origin_file", "origin_filename", "error_file")
+}
+
+// get the batch upload record list
+func GetGoodsBatchUploadRecords(w http.ResponseWriter, r *http.Request) {
+	c := token.Get(r)
+	//检测token
+	if c == nil || c.UserId == "" {
+		misc.ReturnNotToken(w, r)
+		return
+	}
+	req := &pb.GoodsBatchUploadRecord{UserId: c.UserId}
+	misc.CallWithResp(w, r, "stock", "GetGoodsBatchUploadRecords", req)
+}
+
+// get the pending goods check list
+func GetGoodsPendingCheckList(w http.ResponseWriter, r *http.Request) {
+	c := token.Get(r)
+	//检测token
+	if c == nil || c.UserId == "" {
+		misc.ReturnNotToken(w, r)
+		return
+	}
+	req := &pb.GoodsPendingCheck{UserId: c.UserId}
+	misc.CallWithResp(w, r, "stock", "GetGoodsPendingCheckList", req)
+}
+
+// deal with the goods check
+func DealWithGoodsPendingCheckList(w http.ResponseWriter, r *http.Request) {
+	c := token.Get(r)
+	//检测token
+	if c == nil || c.UserId == "" {
+		misc.ReturnNotToken(w, r)
+		return
+	}
+	req := &pb.GoodsPendingCheck{UserId: c.UserId}
+	misc.CallWithResp(w, r, "stock", "DealWithGoodsPendingCheckList", req, "id")
+}

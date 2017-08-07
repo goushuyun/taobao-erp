@@ -15,8 +15,6 @@ import (
 
 type StockServer struct{}
 
-var notFound = "not_found"
-
 func (s *StockServer) UpdateMapRow(ctx context.Context, req *pb.MapRowBatch) (*pb.NormalResp, error) {
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "ReduceMapRow", "%#v", req))

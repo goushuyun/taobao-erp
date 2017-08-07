@@ -13,3 +13,4 @@ create table goods (
       create_at timestamptz not null default now(),
       update_at timestamptz not null default now()
 );
+CREATE UNIQUE INDEX IF NOT EXISTS goods_bookid_userid ON  goods(user_id,book_id);

@@ -6,7 +6,9 @@ import (
 	"fmt"
 
 	. "github.com/goushuyun/taobao-erp/db"
+	"github.com/goushuyun/taobao-erp/misc"
 	"github.com/goushuyun/taobao-erp/pb"
+
 	"github.com/wothing/log"
 )
 
@@ -65,7 +67,7 @@ func SearchGoods(goods *pb.GoodsInfo) (models []*pb.GoodsInfo, err error, totalC
 		condition += fmt.Sprintf(" and b.isbn='%s'", goods.Isbn)
 	}
 	if goods.Title != "" {
-		condition += fmt.Sprintf(" and b.title='%s'", goods.Title)
+		condition += fmt.Sprintf(" and b.title like '%s'", misc.FazzyQuery(goods.Title))
 	}
 	if goods.Publisher != "" {
 		condition += fmt.Sprintf(" and b.publisher='%s'", goods.Publisher)
@@ -85,6 +87,13 @@ func SearchGoods(goods *pb.GoodsInfo) (models []*pb.GoodsInfo, err error, totalC
 	}
 	if goods.GoodsId != "" {
 		condition += fmt.Sprintf(" and g.id='%s'", goods.GoodsId)
+	}
+	if goods.InfoIsComplete != 0 {
+		if goods.InfoIsComplete == 1 {
+			condition += " and (b.title='' or b.price =0 or b.publisher='' or b.author ='' or b.edition='')"
+		} else if goods.InfoIsComplete == 2 {
+			condition += " and b.title <>'' and b.price <>0 and b.publisher<>'' and b.author <>'' and b.edition<>''"
+		}
 	}
 
 	queryCount += condition
@@ -140,6 +149,143 @@ func UpdateGoodsInfo(goods *pb.Goods) error {
 		query += fmt.Sprintf(",remark='%s'", goods.Remark)
 	}
 	query += fmt.Sprintf(" where id='%s' and user_id='%s'", goods.GoodsId, goods.UserId)
+	log.Debug(query)
+	_, err := DB.Exec(query)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+// save a  pending check record
+func SaveGoodsPendingCheck(model *pb.GoodsPendingCheck) error {
+	query := "insert into goods_pending_check(isbn,num,user_id,warehouse,shelf,floor) values(%s) returning id,extract(epoch from create_at)::bigint"
+	condition := fmt.Sprintf("'%s',%d,'%s','%s','%s','%s'", model.Isbn, model.Num, model.UserId, model.Warehouse, model.Shelf, model.Floor)
+	query = fmt.Sprintf(query, condition)
+	log.Debug(query)
+	err := DB.QueryRow(query).Scan(&model.Id, &model.CreateAt)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+// get pending check list
+func SaveGoodsBatchUploadRecord(model *pb.GoodsBatchUploadRecord) error {
+	query := "insert into goods_batch_upload(user_id,success_num,failed_num,origin_file,origin_filename,error_file) values(%s) returning id,extract(epoch from create_at)::bigint"
+	condition := fmt.Sprintf("'%s',%d,%d,'%s','%s','%s'", model.UserId, model.SuccessNum, model.FailedNum, model.OriginFile, model.OriginFilename, model.ErrorFile)
+	query = fmt.Sprintf(query, condition)
+	log.Debug(query)
+	err := DB.QueryRow(query).Scan(&model.Id, &model.CreateAt)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+// get pending check list
+func GetGoodsBatchUploadRecords(model *pb.GoodsBatchUploadRecord) (models []*pb.GoodsBatchUploadRecord, err error, totalCount int64) {
+	query := "select id,user_id,success_num,failed_num,origin_file,origin_filename,error_file,extract(epoch from create_at)::bigint,extract(epoch from update_at)::bigint from goods_batch_upload where 1=1"
+	queryCount := "select count(*) from goods_batch_upload where 1=1"
+	var condition string
+	if model.UserId != "" {
+		condition += fmt.Sprintf(" and user_id='%s'", model.UserId)
+	}
+	queryCount += condition
+	log.Debug(queryCount)
+	err = DB.QueryRow(queryCount).Scan(&totalCount)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	if totalCount <= 0 {
+		return
+	}
+	if model.Page <= 0 {
+		model.Page = 1
+	}
+	if model.Size <= 0 {
+		model.Size = 15
+	}
+	condition += fmt.Sprintf(" order by create_at desc,id desc offset %d limit %d", (model.Page-1)*model.Size, model.Size)
+	query += condition
+	log.Debug(query)
+	rows, err := DB.Query(query)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		model = &pb.GoodsBatchUploadRecord{}
+		models = append(models, model)
+		//id,user_id,success_num,failed_num,origin_file,origin_filename,error_file,extract(epoch from create_at)::bigint,extract(epoch from update_at)::bigint
+		err = rows.Scan(&model.Id, &model.UserId, &model.SuccessNum, &model.FailedNum, &model.OriginFile, &model.OriginFilename, &model.ErrorFile, &model.CreateAt, &model.UpdateAt)
+		if err != nil {
+			log.Error(err)
+			return
+		}
+	}
+	return
+}
+
+// get pending check list
+func GetGoodsPendingCheckList(model *pb.GoodsPendingCheck) (models []*pb.GoodsPendingCheck, err error, totalCount int64) {
+	query := "select id,isbn,num,user_id,warehouse,shelf,floor,extract(epoch from create_at)::bigint,extract(epoch from update_at)::bigint from goods_pending_check where 1=1"
+	queryCount := "select count(*) from goods_pending_check where 1=1"
+	var condition string
+	if model.UserId != "" {
+		condition += fmt.Sprintf(" and user_id='%s'", model.UserId)
+	}
+	if model.Isbn != "" {
+		condition += fmt.Sprintf(" and isbn='%s'", model.Isbn)
+	}
+	queryCount += condition
+	log.Debug(queryCount)
+	err = DB.QueryRow(queryCount).Scan(&totalCount)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	if totalCount <= 0 {
+		return
+	}
+	if model.Page <= 0 {
+		model.Page = 1
+	}
+	if model.Size <= 0 {
+		model.Size = 15
+	}
+	condition += fmt.Sprintf(" order by create_at desc,id desc offset %d limit %d", (model.Page-1)*model.Size, model.Size)
+	query += condition
+	log.Debug(query)
+	rows, err := DB.Query(query)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		model = &pb.GoodsPendingCheck{}
+		models = append(models, model)
+		// id,isbn,num,user_id,warehouse,shelf,floor,extract(epoch from create_at)::bigint,extract(epoch from update_at)::bigint
+		err = rows.Scan(&model.Id, &model.Isbn, &model.Num, &model.UserId, &model.Warehouse, &model.Shelf, &model.Floor, &model.CreateAt, &model.UpdateAt)
+		if err != nil {
+			log.Error(err)
+			return
+		}
+	}
+	return
+}
+
+// del the record about the goods pending check
+func DelGoodsPendingCheckList(model *pb.GoodsPendingCheck) error {
+	query := fmt.Sprintf("delete from goods_pending_check where id='%s' and user_id='%s'", model.Id, model.UserId)
 	log.Debug(query)
 	_, err := DB.Exec(query)
 	if err != nil {

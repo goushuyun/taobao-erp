@@ -64,6 +64,11 @@ func GetBookAuditList(record *pb.BookAuditRecord) (records []*pb.BookAuditRecord
 	if record.BookCate != "" {
 		condition += fmt.Sprintf(" and book_cate='%s'", record.BookCate)
 	}
+	if record.SearchType == 0 {
+		condition += " and book_id<>''"
+	} else {
+		condition += " and book_cate<>''"
+	}
 	queryCount += condition
 	log.Debug(queryCount)
 

@@ -6,7 +6,7 @@ create SEQUENCE book_id_seq;
 create table book (
     id text primary key not null default 'book_'||to_char(now() AT TIME ZONE 'cct', 'yymmdd') ||trim(to_char(nextval('book_id_seq'), '00000000')), --book id
     isbn            text            not null,       --图书isbn
-    book_no         text            default '',     --如果存在一isbn多书情况，需要分配图书编号
+    book_no         text            default '00',     --如果存在一isbn多书情况，需要分配图书编号
     book_cate       text            default '',     --用于区分一isbn多本书的情况 枚举类型
     title           text            default '',     --标题
     publisher       text            default '',     --出版社

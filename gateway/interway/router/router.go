@@ -36,6 +36,11 @@ func SetRouterV1() *m.Router {
 	v1.Register("/stock/search_goods", m.Wrap(c.SearchGoods))
 	v1.Register("/stock/update_goods_info", m.Wrap(c.UpdateGoodsInfo))
 	v1.Register("/stock/list_goods_all_locations", m.Wrap(c.ListGoodsAllLocations))
+	v1.Register("/stock/upload_goods_batch_data", m.Wrap(c.GoodsBatchUpload))
+	v1.Register("/stock/save_goods_batch_upload_record", m.Wrap(c.SaveGoodsBatchUploadRecord))
+	v1.Register("/stock/get_goods_batch_upload_records", m.Wrap(c.GetGoodsBatchUploadRecords))
+	v1.Register("/stock/get_goods_pending_check_list", m.Wrap(c.GetGoodsPendingCheckList))
+	v1.Register("/stock/deal_goods_pending_check", m.Wrap(c.DealWithGoodsPendingCheckList))
 
 	return v1
 }
