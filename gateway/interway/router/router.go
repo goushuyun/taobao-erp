@@ -10,7 +10,7 @@ func SetRouterV1() *m.Router {
 	v1 := m.NewWithPrefix("/v1")
 
 	// mediastock
-	v1.Register("/mediastock/get_up_token", m.Wrap(c.GetUpToken))
+	v1.Register("/mediastore/get_up_token", m.Wrap(c.GetUpToken))
 
 	// users
 	v1.Register("/users/register", m.Wrap(c.Register))
