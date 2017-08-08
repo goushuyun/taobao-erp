@@ -66,6 +66,12 @@ func SearchGoods(goods *pb.GoodsInfo) (models []*pb.GoodsInfo, err error, totalC
 	if goods.Isbn != "" {
 		condition += fmt.Sprintf(" and b.isbn='%s'", goods.Isbn)
 	}
+	if goods.BookNo != "" {
+		condition += fmt.Sprintf(" and b.book_no='%s'", goods.BookNo)
+	}
+	if goods.BookCate != "" {
+		condition += fmt.Sprintf(" and b.book_cate='%s'", goods.BookCate)
+	}
 	if goods.Title != "" {
 		condition += fmt.Sprintf(" and b.title like '%s'", misc.FazzyQuery(goods.Title))
 	}
@@ -92,8 +98,9 @@ func SearchGoods(goods *pb.GoodsInfo) (models []*pb.GoodsInfo, err error, totalC
 		if goods.InfoIsComplete == 1 {
 			condition += " and (b.title='' or b.price =0 or b.publisher='' or b.author ='' or b.edition='')"
 		} else if goods.InfoIsComplete == 2 {
-			condition += " and b.title <>'' and b.price <>0 and b.publisher<>'' and b.author <>'' and b.edition<>''"
+			condition += " and b.title <>'' and b.price <>0 and b.publisher<>'' and b.author '' or b.edition=''"
 		}
+
 	}
 
 	queryCount += condition

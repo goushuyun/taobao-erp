@@ -305,3 +305,7 @@
 2017-08-07 11:52:05.996671 I | raft: ce2a822cea30bfca became leader at term 4
 2017-08-07 11:52:05.997085 I | raft: raft.node: ce2a822cea30bfca elected leader ce2a822cea30bfca at term 4
 2017-08-07 11:52:05.998981 I | etcdserver: published {Name:default ClientURLs:[http://localhost:2379 http://localhost:4001]} to cluster 7e27652122e8b2ae
+2017-08-07 12:41:37.095330 I | etcdserver: start to snapshot (applied: 300030, lastsnap: 290029)
+2017-08-07 12:41:37.110798 I | etcdserver: saved snapshot at index 300030
+2017-08-07 12:41:37.112141 I | etcdserver: compacted raft log at 295030
+2017-08-07 12:42:06.121569 I | fileutil: purged file default.etcd/member/snap/0000000000000003-000000000003d0a9.snap successfully

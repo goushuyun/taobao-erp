@@ -148,7 +148,7 @@ func SaveGoodsBatchUploadRecord(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	req := &pb.GoodsBatchUploadRecord{UserId: c.UserId}
-	misc.CallWithResp(w, r, "stock", "SaveGoodsBatchUploadRecord", req, "origin_file", "origin_filename", "error_file")
+	misc.CallWithResp(w, r, "stock", "SaveGoodsBatchUploadRecord", req, "origin_file", "origin_filename")
 }
 
 // get the batch upload record list

@@ -4,6 +4,8 @@ import (
 	"database/sql"
 	"errors"
 	"fmt"
+	"regexp"
+	"strings"
 
 	. "github.com/goushuyun/taobao-erp/db"
 	"github.com/goushuyun/taobao-erp/pb"
@@ -57,6 +59,15 @@ func GetBookInfo(book *pb.Book) (books []*pb.Book, err error) {
    insert a new book data to db and return it's id where complete`	r
 */
 func InsertBookInfo(book *pb.Book) error {
+
+	reg := regexp.MustCompile("(\\d[- ]*){12}[\\d]")
+	isbn := reg.FindString(book.Isbn)
+	isbn = strings.Replace(isbn, "-", "", -1)
+	isbn = strings.Replace(isbn, " ", "", -1)
+	if isbn == "" {
+		return errors.New("isbn不正确")
+	}
+	book.Isbn = isbn
 	query := "select count(*) from book where isbn='%s' and book_no='%s' and book_cate='%s'"
 	query = fmt.Sprintf(query, book.Isbn, book.BookNo, book.BookCate)
 	log.Debug(query)
