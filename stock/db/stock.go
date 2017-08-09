@@ -65,7 +65,7 @@ func ListGoodsAllLocations(g *pb.Goods) ([]*pb.Goods, int64, error) {
 	select %s from goods_location_map as m
 		left join goods as g on m.goods_id = g.id
 		left join location as l on m.location_id = l.id
-		where m.stock > 0 and m.goods_id = $1 and m.user_id = $2 and m.stock > 0
+		where m.stock > 0 and m.goods_id = $1 and m.user_id = $2
 	`
 	var (
 		total int64
@@ -128,12 +128,6 @@ func UpdateStock(g *pb.Goods) error {
 	query := "update goods_location_map set stock = stock + $1 where id = $2"
 	_, err := DB.Exec(query, g.Stock, g.MapId)
 	return err
-}
-
-func SaveMap(g_l_map *pb.Goods) error {
-	query := "insert into goods_location_map(location_id, goods_id, stock) values($1, $2, $3) returning id, extract(epoch from create_at)::bigint"
-
-	return DB.QueryRow(query, g_l_map.LocationId, g_l_map.GoodsId, g_l_map.Stock).Scan(&g_l_map.MapId, &g_l_map.CreateAt)
 }
 
 // create location
