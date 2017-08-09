@@ -3,7 +3,6 @@ package bookspider
 
 import (
 	"bytes"
-	"encoding/json"
 	"fmt"
 	"io/ioutil"
 	"net/http"
@@ -238,12 +237,11 @@ func TestAbuyun(t *testing.T) {
 }
 
 func TestJdAnaly(t *testing.T) {
-	priceUrl := "http://p.3.cn/prices/mgets?skuIds=J_12460649031"
+	priceUrl := "https://upload.taobao.com/auction/json/get_category.htm?isB2CSeller=false&is3CSeller=false&isSynergicSeller=false&isAliMall=false&isFinancingSeller=false&isAssets=false&isTaoDianDian=false&fenxiaoProduct=&_input_charset=utf-8&keyword=9787115399922"
 	// reg := regexp.MustCompile("/\\d*\\.")
 	// productId := reg.FindString(productUrl)
 	// productId = strings.Replace(productId, ".", "", -1)
 	// productId = strings.Replace(productId, "/", "", -1)
-
 	// log.Debug("productId========", productId)
 	// priceUrl = strings.Replace(priceUrl, "PRODUCTID", productId, -1)
 	log.Debug("priceUrl========", priceUrl)
@@ -253,25 +251,12 @@ func TestJdAnaly(t *testing.T) {
 	if err != nil {
 		fmt.Println(err)
 	}
-	var price string
 	defer resp.Body.Close()
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
 		// handle error
 	}
-	//获取价格
-	var param []map[string]string
-	log.Debug(string(body))
-	err = json.Unmarshal(body, &param)
-	if err != nil {
-		log.Debug(err)
-		return
-	} else {
-		price = param[0]["m"]
-		if price == "" {
-			return
-		}
-	}
 
-	log.Debug("==============:%s", price)
+	log.Debug(string(body))
+
 }
