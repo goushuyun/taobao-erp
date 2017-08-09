@@ -17,6 +17,7 @@ func (s *BookServer) SubmitBookAudit(ctx context.Context, in *pb.BookAuditRecord
 	tid := misc.GetTidFromContext(ctx)
 	defer log.TraceOut(log.TraceIn(tid, "SubmitBookAudit", "%#v", in))
 	if in.BookId != "" {
+		in.Status = 1
 		_, err, totalCount := db.GetBookAuditList(in)
 		if err != nil {
 			log.Error(err)

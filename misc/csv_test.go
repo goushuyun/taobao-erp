@@ -9,9 +9,9 @@ import (
 )
 
 type Client struct { // Our example struct, you can use "-" to ignore a field
-	Id      string `csv:"client_id"`
-	Name    string `csv:"client_name"`
-	Age     string `csv:"client_age"`
+	Id      string `csv:"不知掉啊"`
+	Name    string `csv:"名字呀"`
+	Age     string `csv:"年龄呀"`
 	NotUsed string `csv:"-"`
 }
 
@@ -37,10 +37,10 @@ func TestCsvExport(t *testing.T) {
 		return
 	}
 
-	clients = append(clients, &Client{Id: "12", Name: "John", Age: "21"}) // Add clients
-	clients = append(clients, &Client{Id: "13", Name: "Fred"})
-	clients = append(clients, &Client{Id: "14", Name: "James", Age: "32"})
-	clients = append(clients, &Client{Id: "15", Name: "Danny"})
+	clients = append(clients, &Client{Id: "12", Name: "你好啊啊", Age: "21"}) // Add clients
+	clients = append(clients, &Client{Id: "13", Name: "故事"})
+	clients = append(clients, &Client{Id: "14", Name: "水啊", Age: "32"})
+	clients = append(clients, &Client{Id: "15", Name: "不知道"})
 	csvContent, err := gocsv.MarshalString(&clients) // Get all clients as CSV string
 	if err != nil {
 		panic(err)
