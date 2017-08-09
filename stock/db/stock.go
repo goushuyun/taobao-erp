@@ -99,7 +99,7 @@ func ListGoodsAllLocations(g *pb.Goods) ([]*pb.Goods, int64, error) {
 	case pb.ListOrderBy_UpdateAtForward:
 		order_condition = "m.update_at asc"
 	default:
-		order_condition = "l.floor asc, l.shelf asc, l.warehouse asc"
+		order_condition = "l.warehouse, l.shelf, l.floor"
 	}
 
 	condition = fmt.Sprintf(condition, order_condition, g.Size, (g.Page-1)*g.Size)
