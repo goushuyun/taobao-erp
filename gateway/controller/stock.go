@@ -186,3 +186,27 @@ func DealWithGoodsPendingCheckList(w http.ResponseWriter, r *http.Request) {
 	req := &pb.GoodsPendingCheck{UserId: c.UserId}
 	misc.CallWithResp(w, r, "stock", "DealWithGoodsPendingCheckList", req, "id")
 }
+
+// get the location stock
+func GetLocationStock(w http.ResponseWriter, r *http.Request) {
+	c := token.Get(r)
+	//检测token
+	if c == nil || c.UserId == "" {
+		misc.ReturnNotToken(w, r)
+		return
+	}
+	req := &pb.Location{UserId: c.UserId}
+	misc.CallWithResp(w, r, "stock", "GetLocationStock", req)
+}
+
+// get the location stock
+func UpdateLocation(w http.ResponseWriter, r *http.Request) {
+	c := token.Get(r)
+	//检测token
+	if c == nil || c.UserId == "" {
+		misc.ReturnNotToken(w, r)
+		return
+	}
+	req := &pb.Location{UserId: c.UserId}
+	misc.CallWithResp(w, r, "stock", "UpdateLocation", req, "location_id", "warehouse", "shelf", "floor")
+}

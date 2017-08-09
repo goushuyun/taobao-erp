@@ -130,3 +130,30 @@ func (s *StockServer) SaveMapRow(ctx context.Context, req *pb.MapRow) (*pb.MapRo
 
 	return &pb.MapRowResp{Code: errs.Ok, Message: "ok", Data: req}, nil
 }
+
+// get the location stock
+func (s *StockServer) GetLocationStock(ctx context.Context, req *pb.Location) (*pb.LocationBatchResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "GetLocationStock", "%#v", req))
+	locations, err, totalCount, totalStock := db.GetLocationStock(req)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	return &pb.LocationBatchResp{Code: errs.Ok, Message: "ok", Data: locations, TotalCount: totalCount, Total: totalStock}, nil
+}
+
+// get the location stock
+func (s *StockServer) UpdateLocation(ctx context.Context, req *pb.Location) (*pb.NormalResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "GetLocationStock", "%#v", req))
+	err := db.UpdateLocation(req)
+	if err != nil {
+		if err.Error() == "exists" {
+			return &pb.NormalResp{Code: errs.Ok, Message: "exists"}, nil
+		}
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	return &pb.NormalResp{Code: errs.Ok, Message: "ok"}, nil
+}
