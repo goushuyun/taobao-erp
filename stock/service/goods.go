@@ -139,7 +139,7 @@ func (s *StockServer) GoodsBatchUpload(ctx context.Context, in *pb.GoodsBatchUpl
 			}
 		}
 		// 4 新增或者保存商品和位置的map索引
-		maprow := &pb.MapRow{GoodsId: goods.GoodsId, LocationId: location.LocationId, Stock: uploadModel.Num}
+		maprow := &pb.MapRow{GoodsId: goods.GoodsId, LocationId: location.LocationId, Stock: uploadModel.Num, UserId: goods.UserId}
 		err = db.GetMapRow(maprow)
 		if err != nil {
 			if err.Error() == notFound {
