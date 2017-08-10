@@ -6,7 +6,7 @@ create table users (
     mobile text not null,
     password text not null,
     name text not null,
-    role int not null default 256,
+    role int not null default 512,
 
     create_at timestamptz not null default now(),
     update_at timestamptz not null default now()
