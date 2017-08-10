@@ -32,6 +32,10 @@ service StockService {
     rpc GetGoodsPendingCheckList (GoodsPendingCheck) returns (GoodsPendingCheckListResp);
     // deal with the goods check
     rpc DealWithGoodsPendingCheckList (GoodsPendingCheck) returns (NormalResp);
+    // get the location stock
+    rpc GetLocationStock (Location) returns (LocationBatchResp);
+    // update location
+    rpc UpdateLocation (Location) returns (NormalResp);
 }
 
 // location
@@ -42,6 +46,8 @@ message Location {
     string floor = 4;
     string location_id = 5;
     int64 total_stock = 6;
+    int64 page = 7;
+    int64 size = 8;
 }
 
 message LocationBatchResp {
@@ -49,6 +55,7 @@ message LocationBatchResp {
     string message = 2;
     repeated Location data = 3;
     int64 total = 4;
+    int64 total_count = 5;
 }
 
 message LocationResp {
@@ -212,6 +219,7 @@ message GoodsInfo{
     int64 page = 18;
     int64 size = 19;
     int64 info_is_complete = 20; //0 全部 1:信息不全 2:信息全有
+    string location_id  =21;
 
 }
 // goods infos resp

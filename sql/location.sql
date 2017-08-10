@@ -5,7 +5,6 @@ create table location (
     shelf text not null default '*',
     floor text not null default '*',
     user_id text not null,
-
     create_at timestamptz not null default now(),
     update_at timestamptz not null default now()
 );

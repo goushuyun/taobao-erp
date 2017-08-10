@@ -94,6 +94,10 @@ func SearchGoods(goods *pb.GoodsInfo) (models []*pb.GoodsInfo, err error, totalC
 	if goods.GoodsId != "" {
 		condition += fmt.Sprintf(" and g.id='%s'", goods.GoodsId)
 	}
+
+	if goods.LocationId != "" {
+		condition += fmt.Sprintf(" and exists (select * from goods_location_map gl where gl.goods_id::uuid=g.id::uuid and gl.location_id='%s' )", goods.LocationId)
+	}
 	if goods.InfoIsComplete != 0 {
 		if goods.InfoIsComplete == 1 {
 			condition += " and (b.title='' or b.price =0 or b.publisher='' or b.author ='' or b.edition='')"

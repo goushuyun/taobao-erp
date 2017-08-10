@@ -72,6 +72,9 @@ func ListGoodsAllLocations(g *pb.Goods) ([]*pb.Goods, int64, error) {
 		data  []*pb.Goods
 	)
 
+	if g.LocationId != "" {
+		query += fmt.Sprintf(" and m.location_id='%s'", g.LocationId)
+	}
 	log.Debug(fmt.Sprintf(query, "count(*)"))
 	err := DB.QueryRow(fmt.Sprintf(query, "count(*)"), g.GoodsId, g.UserId).Scan(&total)
 	if err != nil {
@@ -210,4 +213,91 @@ func SearchLocation(l *pb.Location) ([]*pb.Location, error) {
 	}
 
 	return locations, nil
+}
+
+// get the location stock
+func GetLocationStock(location *pb.Location) (locations []*pb.Location, err error, totalCount, totalStock int64) {
+
+	queryCount := "select count(distinct l.id),sum(stock) from location l join goods_location_map m on l.id::uuid=m.location_id::uuid where 1=1 %s  having sum(stock)>0"
+	query := "select l.id,warehouse,shelf,floor,sum(stock) from location l join goods_location_map m on l.id::uuid=m.location_id::uuid where 1=1 %s group by l.id,warehouse,shelf,floor having sum(stock)>0 order by warehouse,shelf,floor "
+	var condition string
+	if location.Warehouse != "" {
+		condition += fmt.Sprintf(" and warehouse='%s'", location.Warehouse)
+	}
+	if location.Shelf != "" {
+		condition += fmt.Sprintf(" and shelf='%s'", location.Shelf)
+	}
+	if location.Floor != "" {
+		condition += fmt.Sprintf(" and floor='%s'", location.Floor)
+	}
+	if location.UserId != "" {
+		condition += fmt.Sprintf(" and l.user_id='%s'", location.UserId)
+	}
+	queryCount = fmt.Sprintf(queryCount, condition)
+	log.Debug(queryCount)
+	err = DB.QueryRow(queryCount).Scan(&totalCount, &totalStock)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			err = nil
+			return
+		}
+		log.Error(err)
+		return
+	}
+	if totalCount <= 0 {
+		return
+	}
+	query = fmt.Sprintf(query, condition)
+	if location.Page <= 0 {
+		location.Page = 1
+	}
+	if location.Size <= 0 {
+		location.Size = 15
+	}
+	query += fmt.Sprintf(" offset %d limit %d", (location.Page-1)*location.Size, location.Size)
+	log.Debug(query)
+	rows, err := DB.Query(query)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	for rows.Next() {
+		model := &pb.Location{}
+		locations = append(locations, model)
+		err = rows.Scan(&model.LocationId, &model.Warehouse, &model.Shelf, &model.Floor, &model.TotalStock)
+		if err != nil {
+			log.Error(err)
+			return
+		}
+	}
+	return
+}
+
+// update location
+func UpdateLocation(location *pb.Location) error {
+	tx, err := DB.Begin()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	defer tx.Rollback()
+
+	query := "update location set update_at=now(),warehouse='%s',shelf='%s',floor='%s' where not exists(select * from location where warehouse='%s' and shelf='%s' and floor='%s' and user_id='%s') and id='%s'"
+	query = fmt.Sprintf(query, location.Warehouse, location.Shelf, location.Floor, location.Warehouse, location.Shelf, location.Floor, location.UserId, location.LocationId)
+	log.Debug(query)
+	result, err := tx.Exec(query)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	counts, err := result.RowsAffected()
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	if counts != 1 {
+		return errors.New("exists")
+	}
+	tx.Commit()
+	return nil
 }
