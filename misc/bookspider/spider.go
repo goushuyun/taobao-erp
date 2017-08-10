@@ -8,6 +8,7 @@ import (
 
 	"github.com/wothing/log"
 
+	"github.com/goushuyun/taobao-erp/misc/key_word_filter"
 	"github.com/goushuyun/taobao-erp/pb"
 	"github.com/hu17889/go_spider/core/common/page_items"
 	"github.com/hu17889/go_spider/core/common/request"
@@ -125,11 +126,13 @@ func structData(items *page_items.PageItems, book *pb.Book) {
 	packing, _ := items.GetItem("packing")
 	format, _ := items.GetItem("format")
 
-	//处理数据
+	// 处理数据
 	priceFloat, _ := strconv.ParseFloat(price, 64)
 	priceFloat = priceFloat * 100
 
-	//封装数据
+	// 封装数据
+	// 过滤数据
+	title = key_word_filter.FilterKeyWords(title)
 	book.Title = title
 	book.Isbn = isbn
 	book.Price = int64(priceFloat)
