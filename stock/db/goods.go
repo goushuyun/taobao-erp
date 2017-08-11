@@ -305,3 +305,16 @@ func DelGoodsPendingCheckList(model *pb.GoodsPendingCheck) error {
 	}
 	return nil
 }
+
+// get goods pending gathered
+func GetGoodsPendingGatherData(model *pb.Goods) (totalCount int64, err error) {
+	query := "select count(*) from goods g join book_pending_gather b on g.book_id=b.book_id where g.user_id='%s'"
+	query = fmt.Sprintf(query, model.UserId)
+	log.Debug(query)
+	err = DB.QueryRow(query).Scan(&totalCount)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	return
+}

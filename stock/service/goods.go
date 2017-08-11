@@ -216,3 +216,15 @@ func (s *StockServer) DealWithGoodsPendingCheckList(ctx context.Context, in *pb.
 	}
 	return &pb.NormalResp{Code: errs.Ok, Message: "ok"}, nil
 }
+
+// get goods pending gathered
+func (s *StockServer) GetGoodsPendingGatherData(ctx context.Context, in *pb.Goods) (*pb.GoodsResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "GetGoodsPendingGatherData", "%#v", in))
+	total, err := db.GetGoodsPendingGatherData(in)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	return &pb.GoodsResp{Code: errs.Ok, Message: "ok", Total: total}, nil
+}

@@ -210,3 +210,15 @@ func UpdateLocation(w http.ResponseWriter, r *http.Request) {
 	req := &pb.Location{UserId: c.UserId}
 	misc.CallWithResp(w, r, "stock", "UpdateLocation", req, "location_id", "warehouse", "shelf", "floor")
 }
+
+// get goods pending gathered
+func GetGoodsPendingGatherData(w http.ResponseWriter, r *http.Request) {
+	c := token.Get(r)
+	//检测token
+	if c == nil || c.UserId == "" {
+		misc.ReturnNotToken(w, r)
+		return
+	}
+	req := &pb.Goods{UserId: c.UserId}
+	misc.CallWithResp(w, r, "stock", "GetGoodsPendingGatherData", req)
+}

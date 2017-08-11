@@ -46,6 +46,7 @@ func SetRouterV1() *m.Router {
 	v1.Register("/stock/deal_goods_pending_check", m.Wrap(c.DealWithGoodsPendingCheckList))
 	v1.Register("/stock/get_location_stock", m.Wrap(c.GetLocationStock))
 	v1.Register("/stock/update_location", m.Wrap(c.UpdateLocation))
+	v1.Register("/stock/get_pending_gatherd_goods", m.Wrap(c.GetGoodsPendingGatherData))
 
 	return v1
 }

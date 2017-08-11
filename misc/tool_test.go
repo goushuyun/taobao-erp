@@ -222,3 +222,9 @@ func TestIsbnInjust(t *testing.T) {
 		log.Debug("hhh")
 	}
 }
+
+func TestStringReplace(t *testing.T) {
+	str := "<div class='con'><p style='TEXT-ALIGN: left; MARGIN: 0cm 0cm 0pt; mso-pagination: widow-orphan; mso-outline-level: 4'class='MsoNormal' align='left'><span style='FONT-FAMILY: 宋体; mso-bidi-font-family: FZXH1JW--GB1-0; mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt'><font size='3'><font color='#000000'>目<span lang='EN-US'><span style='mso-spacerun: yes'>   </span></span> 录</font></font></span></p><p style='TEXT-ALIGN: left; MARGIN: 0cm 0cm 0pt; mso-pagination: widow-orphan; mso-outline-level: 4'class='MsoNormal' align='left'><span style='FONT-FAMILY: 宋体; mso-bidi-font-family: FZXH1JW--GB1-0; mso-bidi-font-size: 10.5pt; mso-font-kerning: 0pt'><font size='3'>"
+	str = strings.Replace(str, "'", "\"", -1)
+	log.Debug(str)
+}

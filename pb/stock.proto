@@ -36,6 +36,8 @@ service StockService {
     rpc GetLocationStock (Location) returns (LocationBatchResp);
     // update location
     rpc UpdateLocation (Location) returns (NormalResp);
+    // get goods pending gathered
+    rpc GetGoodsPendingGatherData (Goods) returns (GoodsResp);
 }
 
 // location

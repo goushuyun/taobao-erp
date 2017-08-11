@@ -22,6 +22,7 @@ service BookService {
     // handle the book audit
     rpc HandleBookAudit (BookAuditRecord) returns (NormalResp);
 
+
 }
 
 //获取图书信息
@@ -37,8 +38,15 @@ message BookListResp {
     string message = 2;
     repeated Book data = 3;
 }
-
-
+// the model about the pending gathered book
+message BookPendingGather{
+    string id = 1;
+    string book_id = 2;
+    int64 search_time = 3;
+    int64 create_at = 4;
+    int64 update_at = 5;
+    string isbn = 6;
+}
 message OrganizedBookAuditListResp{
     string code = 1;
     string message = 2;
@@ -76,6 +84,7 @@ message Book {
     int64 create_at = 20;
     int64 update_at = 21;
     int64 upload_mode = 22;  //0 default mode(stardart mode): wait until search over ; 1 Speed mode : jump the wait time about the search from the internet
+    int64 search_time = 23;
 }
 //图书申请记录
 message BookAuditRecord{

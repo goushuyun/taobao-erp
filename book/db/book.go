@@ -162,6 +162,10 @@ func UpdateBookInfo(book *pb.Book) (updateContent string, err error) {
 		condition += fmt.Sprintf(",source_info='%s'", book.SourceInfo)
 		updateContent += fmt.Sprintf(" 书本来源：'%s'", book.SourceInfo)
 	}
+	if book.SearchTime != 0 {
+		condition += fmt.Sprintf(",search_time=search_time+%d", book.SearchTime)
+		updateContent += fmt.Sprintf(" 搜索次数+：%d", book.SearchTime)
+	}
 	condition += fmt.Sprintf(" where id='%s'", book.Id)
 	if updateContent == "" {
 		err = errors.New("没任何信息更新呦～")
@@ -172,6 +176,32 @@ func UpdateBookInfo(book *pb.Book) (updateContent string, err error) {
 	_, err = DB.Exec(query)
 	if err != nil {
 		log.Error(err)
+	}
+	return
+}
+
+// get all incomplete book and push them to the table book_pending_gather
+func GetIncompleteBook() (books []*pb.Book, err error) {
+	query := "select id from book where price=0 and search_time<3"
+	log.Debug(query)
+	rows, err := DB.Query(query)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			err = nil
+			return
+		}
+		log.Error(err)
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		book := &pb.Book{}
+		books = append(books, book)
+		err = rows.Scan(&book.Id)
+		if err != nil {
+			log.Error(err)
+			continue
+		}
 	}
 	return
 }

@@ -183,6 +183,13 @@ func insertByUploadMode(isbn string, uploadMode int64) (book *pb.Book, err error
 			log.Error(err)
 			return
 		}
+		if book == nil {
+			book, err = bookspider.GetBookInfoBySpider(isbn, "")
+			if err != nil {
+				log.Error(err)
+				return
+			}
+		}
 		if book != nil {
 			err = handleBookInfos(book, ctx) //handle the book info
 			if err != nil {
@@ -208,22 +215,7 @@ func insertByUploadMode(isbn string, uploadMode int64) (book *pb.Book, err error
 			return
 		}
 		go func() {
-			id := book.Id
-			book, err = bookspider.GetBookInfoBySpider(isbn, "")
-			if err != nil {
-				log.Error(err)
-				return
-			}
-			if book != nil {
-				err = handleBookInfos(book, ctx) //handle the book info
-				if err != nil {
-					log.Error(err)
-					return
-				}
-				book.Id = id
-				db.UpdateBookInfo(book)
-				return
-			}
+			db.InsertBookPendingGatherData(&pb.BookPendingGather{BookId: book.Id})
 		}()
 
 	}

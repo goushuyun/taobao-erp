@@ -108,7 +108,7 @@ func TestSpiderCaiCoolList(t *testing.T) {
 }
 
 func TestGetBookInfo(t *testing.T) {
-	book, _ := GetBookInfoBySpider("9787508622019", "")
+	book, _ := GetBookInfoBySpider("9787887811530", "")
 	println("-----------------------------------OOOOOOM---------------------------------")
 	log.Debugf("%#v", book)
 	log.Debug("-----------------------------------OOOOOOM---------------------------------")

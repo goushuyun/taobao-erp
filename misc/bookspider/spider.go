@@ -4,6 +4,7 @@ import (
 	"math/rand"
 	"strconv"
 	"strings"
+	"sync"
 	"time"
 
 	"github.com/wothing/log"
@@ -17,8 +18,102 @@ import (
 
 // "github.com/goushuyun/weixin-golang/misc/bookspider"
 
+type BookSearchResult struct {
+	err  error
+	book *pb.Book
+}
+
 //通过爬虫获取图书信息
 func GetBookInfoBySpider(isbn, upload_way string) (book *pb.Book, err error) {
+	timeout := make(chan bool)
+	result := make(chan BookSearchResult)
+
+	var wg sync.WaitGroup
+	go func() {
+		time.Sleep(25 * time.Second) // 设置查询超时时间
+		timeout <- true
+	}()
+	go func() {
+		wg.Add(1)
+		book, err = spiderCoreHandler(isbn, upload_way)
+		model := BookSearchResult{book: book, err: err}
+		result <- model
+	}()
+	select {
+	case model, ok := <-result:
+		if ok {
+			book = model.book
+			err = model.err
+		}
+		close(result)
+		break
+	case <-timeout:
+		log.Debug("timeout")
+		close(timeout)
+		break
+	}
+	return
+}
+
+//构建返回结果
+func structData(items *page_items.PageItems, book *pb.Book) {
+	//获取数据
+	title, _ := items.GetItem("title")
+	author, _ := items.GetItem("author")
+	publisher, _ := items.GetItem("publisher")
+	pubdate, _ := items.GetItem("pubdate")
+	price, _ := items.GetItem("price")
+	isbn, _ := items.GetItem("isbn")
+	edition, _ := items.GetItem("edition")
+	image_url, _ := items.GetItem("image_url")
+	catalog, _ := items.GetItem("catalog")
+	abstract, _ := items.GetItem("abstract")
+	series_name, _ := items.GetItem("series_name")
+	author_info, _ := items.GetItem("author_info")
+	page, _ := items.GetItem("page")
+	packing, _ := items.GetItem("packing")
+	format, _ := items.GetItem("format")
+
+	// 处理数据
+	priceFloat, _ := strconv.ParseFloat(price, 64)
+	priceFloat = priceFloat * 100
+
+	// 封装数据
+	// 过滤数据
+	title = key_word_filter.FilterKeyWords(title)
+	title = strings.Replace(title, "'", "\"", -1)
+	book.Title = title
+	isbn = strings.Replace(isbn, "'", "\"", -1)
+
+	book.Isbn = isbn
+	book.Price = int64(priceFloat)
+
+	author = strings.Replace(author, "'", "\"", -1)
+	book.Author = author
+
+	publisher = strings.Replace(publisher, "'", "\"", -1)
+	book.Publisher = publisher
+	book.Pubdate = pubdate
+	book.Image = image_url
+	book.Edition = edition
+
+	catalog = strings.Replace(catalog, "'", "\"", -1)
+	log.Debug(catalog)
+	book.Catalog = catalog
+	abstract = strings.Replace(abstract, "'", "\"", -1)
+	book.Abstract = abstract
+
+	book.SeriesName = series_name
+
+	author_info = strings.Replace(author_info, "'", "\"", -1)
+	book.AuthorIntro = author_info
+	book.Page = page
+	book.Packing = packing
+	book.Format = format
+	return
+}
+
+func spiderCoreHandler(isbn, upload_way string) (book *pb.Book, err error) {
 	book = &pb.Book{}
 	isbn = strings.Replace(isbn, "-", "", -1)
 	isbn = strings.Replace(isbn, " ", "", -1)
@@ -38,6 +133,7 @@ func GetBookInfoBySpider(isbn, upload_way string) (book *pb.Book, err error) {
 	baseURL := "http://search.dangdang.com/?key=ISBN&ddsale=1"
 	url := strings.Replace(baseURL, "ISBN", isbn, -1)
 	req := request.NewRequest(url, "html", "", "GET", "", nil, nil, nil, nil)
+
 	log.Debug(url)
 	if ip != "" {
 		req.AddProxyHost(ip)
@@ -49,7 +145,7 @@ func GetBookInfoBySpider(isbn, upload_way string) (book *pb.Book, err error) {
 		log.Debug("dangdang no data")
 	} else {
 		structData(pageItems, book)
-		if book.Isbn != "" && isbn == book.Isbn && book.Price != 0 && book.Title != "" {
+		if book.Isbn != "" && isbn == book.Isbn && book.Price != 0 && book.Title != "" && book.Publisher != "" {
 			//如果获取到数据，返回
 			log.Debugf("%+v", book)
 			return
@@ -105,48 +201,4 @@ func GetBookInfoBySpider(isbn, upload_way string) (book *pb.Book, err error) {
 
 	}
 	return nil, nil
-}
-
-//构建返回结果
-func structData(items *page_items.PageItems, book *pb.Book) {
-	//获取数据
-	title, _ := items.GetItem("title")
-	author, _ := items.GetItem("author")
-	publisher, _ := items.GetItem("publisher")
-	pubdate, _ := items.GetItem("pubdate")
-	price, _ := items.GetItem("price")
-	isbn, _ := items.GetItem("isbn")
-	edition, _ := items.GetItem("edition")
-	image_url, _ := items.GetItem("image_url")
-	catalog, _ := items.GetItem("catalog")
-	abstract, _ := items.GetItem("abstract")
-	series_name, _ := items.GetItem("series_name")
-	author_info, _ := items.GetItem("author_info")
-	page, _ := items.GetItem("page")
-	packing, _ := items.GetItem("packing")
-	format, _ := items.GetItem("format")
-
-	// 处理数据
-	priceFloat, _ := strconv.ParseFloat(price, 64)
-	priceFloat = priceFloat * 100
-
-	// 封装数据
-	// 过滤数据
-	title = key_word_filter.FilterKeyWords(title)
-	book.Title = title
-	book.Isbn = isbn
-	book.Price = int64(priceFloat)
-	book.Author = author
-	book.Publisher = publisher
-	book.Pubdate = pubdate
-	book.Image = image_url
-	book.Edition = edition
-	book.Catalog = catalog
-	book.Abstract = abstract
-	book.SeriesName = series_name
-	book.AuthorIntro = author_info
-	book.Page = page
-	book.Packing = packing
-	book.Format = format
-	return
 }

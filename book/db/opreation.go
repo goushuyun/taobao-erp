@@ -1,6 +1,7 @@
 package db
 
 import (
+	"database/sql"
 	"errors"
 	"fmt"
 	"strings"
@@ -293,4 +294,73 @@ func GetOrganizedBookAuditList(record *pb.BookAuditRecord) (models []*pb.Organiz
 	}
 
 	return
+}
+
+// get pending gathered the book list
+func GetPendingGatherBooks() (pendingBooks []*pb.BookPendingGather, err error) {
+	query := "select bpg.id,bpg.book_id,bpg.search_time,isbn from book_pending_gather bpg join book b on b.id=bpg.book_id order by search_time,bpg.create_at offset 0 limit 500"
+	log.Debug(query)
+	rows, err := DB.Query(query)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			err = nil
+			return
+		}
+		log.Error(err)
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		pendingBook := &pb.BookPendingGather{}
+		pendingBooks = append(pendingBooks, pendingBook)
+		err = rows.Scan(&pendingBook.Id, &pendingBook.BookId, &pendingBook.SearchTime, &pendingBook.Isbn)
+		if err != nil {
+			log.Error(err)
+			return
+		}
+	}
+
+	return
+}
+
+// update the pengding gather's data
+func UpdateBookPendingGatherData(model *pb.BookPendingGather) error {
+	query := "update book_pending_gather set update_at=now()"
+	if model.SearchTime != 0 {
+		query += fmt.Sprintf(",search_time=search_time+%d", model.SearchTime)
+	} else {
+		return nil
+	}
+	query += fmt.Sprintf(" where id='%s'", model.Id)
+	log.Debug(query)
+	_, err := DB.Exec(query)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+// del the pengding gather's data
+func DelBookPendingGatherData(model *pb.BookPendingGather) error {
+	query := fmt.Sprintf("delete from book_pending_gather where id='%s'", model.Id)
+	log.Debug(query)
+	_, err := DB.Exec(query)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+// insert book pengding gather's data
+func InsertBookPendingGatherData(model *pb.BookPendingGather) error {
+	query := "insert into book_pending_gather(book_id) select '%s' where not exists(select * from book_pending_gather where book_id='%s')"
+	query = fmt.Sprintf(query, model.BookId, model.BookId)
+	_, err := DB.Exec(query)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
 }

@@ -3,9 +3,11 @@ package main
 import (
 	"github.com/goushuyun/taobao-erp/db"
 	"github.com/goushuyun/taobao-erp/pb"
+	"github.com/robfig/cron"
 	"github.com/wothing/worpc"
 	"google.golang.org/grpc"
 
+	"github.com/goushuyun/taobao-erp/book/register"
 	"github.com/goushuyun/taobao-erp/book/service"
 )
 
@@ -26,6 +28,12 @@ func main() {
 
 	s := grpc.NewServer(grpc.UnaryInterceptor(worpc.UnaryInterceptorChain(worpc.Recovery, worpc.Logging)))
 	pb.RegisterBookServiceServer(s, &service.BookServer{})
+	//注册时间轮询
+	c := cron.New()
+	register.RegisterBookPolling(c)
+	c.Start()
+	defer c.Stop()
 
 	s.Serve(m.CreateListener())
+	service.HandlePendingBook()
 }
