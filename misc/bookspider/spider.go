@@ -73,43 +73,70 @@ func structData(items *page_items.PageItems, book *pb.Book) {
 	page, _ := items.GetItem("page")
 	packing, _ := items.GetItem("packing")
 	format, _ := items.GetItem("format")
-
+	var priceFloat float64
 	// 处理数据
-	priceFloat, _ := strconv.ParseFloat(price, 64)
-	priceFloat = priceFloat * 100
-
+	if price != "" {
+		priceFloat, _ = strconv.ParseFloat(price, 64)
+		priceFloat = priceFloat * 100
+	}
 	// 封装数据
 	// 过滤数据
 	title = key_word_filter.FilterKeyWords(title)
 	title = strings.Replace(title, "'", "\"", -1)
-	book.Title = title
-	isbn = strings.Replace(isbn, "'", "\"", -1)
+	if title != "" {
+		book.Title = title
+	}
+	if isbn != "" {
+		isbn = strings.Replace(isbn, "'", "\"", -1)
+		book.Isbn = isbn
+	}
 
-	book.Isbn = isbn
-	book.Price = int64(priceFloat)
+	if priceFloat != 0 {
+		book.Price = int64(priceFloat)
+	}
+	if author != "" {
+		author = strings.Replace(author, "'", "\"", -1)
+		book.Author = author
+	}
+	if publisher != "" {
+		publisher = strings.Replace(publisher, "'", "\"", -1)
+		book.Publisher = publisher
+	}
+	if pubdate != "" {
+		book.Pubdate = pubdate
+	}
+	if image_url != "" {
+		book.Image = image_url
+	}
+	if edition != "" {
+		book.Edition = edition
+	}
+	if catalog != "" {
+		catalog = strings.Replace(catalog, "'", "\"", -1)
+		book.Catalog = catalog
+	}
+	if abstract != "" {
+		abstract = strings.Replace(abstract, "'", "\"", -1)
+		book.Abstract = abstract
 
-	author = strings.Replace(author, "'", "\"", -1)
-	book.Author = author
+	}
+	if series_name != "" {
+		book.SeriesName = series_name
+	}
+	if author_info != "" {
+		author_info = strings.Replace(author_info, "'", "\"", -1)
+		book.AuthorIntro = author_info
+	}
+	if page != "" {
+		book.Page = page
+	}
+	if packing != "" {
+		book.Packing = packing
+	}
+	if format != "" {
+		book.Format = format
+	}
 
-	publisher = strings.Replace(publisher, "'", "\"", -1)
-	book.Publisher = publisher
-	book.Pubdate = pubdate
-	book.Image = image_url
-	book.Edition = edition
-
-	catalog = strings.Replace(catalog, "'", "\"", -1)
-	log.Debug(catalog)
-	book.Catalog = catalog
-	abstract = strings.Replace(abstract, "'", "\"", -1)
-	book.Abstract = abstract
-
-	book.SeriesName = series_name
-
-	author_info = strings.Replace(author_info, "'", "\"", -1)
-	book.AuthorIntro = author_info
-	book.Page = page
-	book.Packing = packing
-	book.Format = format
 	return
 }
 

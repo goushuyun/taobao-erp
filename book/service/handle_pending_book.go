@@ -139,7 +139,7 @@ func corePendingGatherHandler(pendingBooks []*pb.BookPendingGather) {
 				statisticChan <- 1
 				return
 			} else {
-				if pendingBook.SearchTime >= 100 {
+				if pendingBook.SearchTime >= 70 {
 					db.DelBookPendingGatherData(pendingBook)
 					statisticChan <- 1
 					return
