@@ -227,5 +227,27 @@ func spiderCoreHandler(isbn, upload_way string) (book *pb.Book, err error) {
 		}
 
 	}
+	book.SourceInfo = "youlu"
+	sp = spider.NewSpider(NewYouLuListProcesser(), "youlu")
+	baseURL = "http://www.youlu.net/search/result3/?isbn=ISBN&publisherName=&author=&bookName="
+	url = strings.Replace(baseURL, "ISBN", isbn, -1)
+	req = request.NewRequest(url, "html", "", "GET", "", nil, nil, nil, nil)
+	if ip != "" {
+		req.AddProxyHost(ip)
+	}
+
+	pageItems = sp.GetByRequest(req)
+	//没爬到数据
+	if pageItems == nil || len(pageItems.GetAll()) <= 0 {
+		log.Debug("youlu no data")
+	} else {
+		structData(pageItems, book)
+		if book.Isbn != "" && isbn == book.Isbn && book.Price != 0 && book.Title != "" {
+			//如果获取到数据，返回
+			log.Debugf("%+v", book)
+			return
+		}
+
+	}
 	return nil, nil
 }

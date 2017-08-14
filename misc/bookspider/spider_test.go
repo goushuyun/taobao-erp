@@ -107,8 +107,21 @@ func TestSpiderCaiCoolList(t *testing.T) {
 	}
 }
 
+func TestSpiderYouluList(t *testing.T) {
+	isbn := "9787540455958"
+	sp := spider.NewSpider(NewYouLuListProcesser(), "youlu")
+	baseUrl := "http://www.youlu.net/search/result3/?isbn=ISBN&publisherName=&author=&bookName="
+	url := strings.Replace(baseUrl, "ISBN", isbn, -1)
+	req := request.NewRequest(url, "html", "", "GET", "", nil, nil, nil, nil)
+
+	pageItems := sp.GetByRequest(req)
+	for name, value := range pageItems.GetAll() {
+		log.Debug(name + "\t:\t" + value)
+	}
+}
+
 func TestGetBookInfo(t *testing.T) {
-	book, _ := GetBookInfoBySpider("9787887027610", "")
+	book, _ := GetBookInfoBySpider("9787300217468", "")
 	println("-----------------------------------OOOOOOM---------------------------------")
 	log.Debugf("%#v", book)
 	log.Debug("-----------------------------------OOOOOOM---------------------------------")
