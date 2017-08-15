@@ -225,7 +225,6 @@ func spiderCoreHandler(isbn, upload_way string) (book *pb.Book, err error) {
 			log.Debugf("%+v", book)
 			return
 		}
-
 	}
 	book.SourceInfo = "youlu"
 	sp = spider.NewSpider(NewYouLuListProcesser(), "youlu")

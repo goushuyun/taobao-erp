@@ -301,3 +301,7 @@ func UpdateLocation(location *pb.Location) error {
 	tx.Commit()
 	return nil
 }
+
+func SaveShiftRecord() {
+
+}

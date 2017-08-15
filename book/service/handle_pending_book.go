@@ -18,6 +18,7 @@ import (
 )
 
 var IsRunOn = false
+var data_length = 50
 
 /*
 	first,find the book that info is complete
@@ -67,23 +68,23 @@ func HandlePendingBook() {
 			IsRunOn = false
 			HandlePendingBook()
 		} else {
-			if len(pendingBooks) <= 100 {
+			if len(pendingBooks) <= data_length {
 				corePendingGatherHandler(pendingBooks)
 			} else {
 				var weight int
-				mod := len(pendingBooks) / 100
+				mod := len(pendingBooks) / data_length
 
 				if mod > 0 {
-					weight = len(pendingBooks)/100 + 1
+					weight = len(pendingBooks)/data_length + 1
 				} else {
-					weight = len(pendingBooks) / 100
+					weight = len(pendingBooks) / data_length
 				}
 				log.Debug(mod)
 				log.Debug(weight)
 
-				for i := 0; i < weight; i = i + 100 {
+				for i := 0; i < weight; i = i + data_length {
 					var end int
-					end = i + 100
+					end = i + data_length
 					if end >= len(pendingBooks) {
 						end = len(pendingBooks)
 					}
