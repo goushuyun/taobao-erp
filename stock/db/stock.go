@@ -316,10 +316,14 @@ func AddGoodsShiftRecord(model *pb.GoodsShiftRecord) error {
 		return err
 	}
 	// the save the record
-	query = "insert into goods_shift_record(goods_id,location_id,warehouse,shelf,floor,user_id,stock) values('%s','%s','%s','%s','%s','%s','%d')"
-	query = fmt.Sprintf(query, model.GoodsId, model.LocationId, model.Warehouse, model.Shelf, model.Floor, model.UserId, model.Stock)
+	query = "insert into goods_shift_record(goods_id,location_id,warehouse,shelf,floor,user_id,stock,operate_type) values('%s','%s','%s','%s','%s','%s','%d','%s')"
+	query = fmt.Sprintf(query, model.GoodsId, model.LocationId, model.Warehouse, model.Shelf, model.Floor, model.UserId, model.Stock, model.OperateType)
 	log.Debug(query)
-
+	_, err = DB.Exec(query)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
 	return nil
 }
 
@@ -334,7 +338,7 @@ func GetGoodsShiftRecord(model *pb.GoodsShiftRecord) (models []*pb.GoodsShiftRec
 		condition += fmt.Sprintf(" and b.isbn ='%s'", model.Isbn)
 	}
 	if model.OperateType != "" {
-		condition += fmt.Sprintf(" and opreate_type='%s'", model.OperateType)
+		condition += fmt.Sprintf(" and operate_type='%s'", model.OperateType)
 	}
 	if model.UserId != "" {
 		condition += fmt.Sprintf(" and gs.user_id='%s'", model.UserId)
