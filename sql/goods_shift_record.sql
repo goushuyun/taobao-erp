@@ -8,6 +8,7 @@ create table goods_shift_record (
     floor           text                not null ,
     user_id         text                not null,
     stock           int                 not null,
+    opreate_type    string              not null,     -- load or unload
     create_at       timestamptz not null default now(),
     update_at       timestamptz not null default now()
 );

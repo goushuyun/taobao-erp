@@ -38,6 +38,8 @@ service StockService {
     rpc UpdateLocation (Location) returns (NormalResp);
     // get goods pending gathered
     rpc GetGoodsPendingGatherData (Goods) returns (GoodsResp);
+    // get goods'g shift record
+    rpc GetGoodsShiftRecord (GoodsShiftRecord) returns (GoodsShiftRecordListResp);
 }
 
 // location
@@ -240,7 +242,7 @@ message SearchStockResp {
     string message = 2;
     repeated Goods data = 3;
 }
-//
+// 商品上架下架记录
 message GoodsShiftRecord{
     string id = 1;
     string goods_id = 2;
@@ -252,11 +254,22 @@ message GoodsShiftRecord{
     int64 stock =8;
     int64 create_at = 9;
     int64 update_at = 10;
-
+    string operate_type = 11;
     //------
-    string isbn = 11;
-    string book_no = 12;
-    string book_cate = 13;
-    string book_title = 14;
-    string user_name = 15;
+    string isbn = 12;
+    string book_no = 13;
+    string book_cate = 14;
+    string book_title = 15;
+    string user_name = 16;
+    int64  start_at = 17;
+    int64 end_at = 18;
+    int64 page = 19;
+    int64 size = 20;
+}
+// 商品上架下架记录
+message GoodsShiftRecordListResp{
+    string code = 1;
+    string message = 2;
+    repeated GoodsShiftRecord  data= 3;
+    int64 total_count = 4;
 }

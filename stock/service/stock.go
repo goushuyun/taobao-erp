@@ -157,3 +157,15 @@ func (s *StockServer) UpdateLocation(ctx context.Context, req *pb.Location) (*pb
 	}
 	return &pb.NormalResp{Code: errs.Ok, Message: "ok"}, nil
 }
+
+// get goods'g shift record
+func (s *StockServer) GetGoodsShiftRecord(ctx context.Context, req *pb.GoodsShiftRecord) (*pb.GoodsShiftRecordListResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "GetGoodsShiftRecord", "%#v", req))
+	models, err, totalCount := db.GetGoodsShiftRecord(req)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	return &pb.GoodsShiftRecordListResp{Code: errs.Ok, Message: "ok", TotalCount: totalCount, Data: models}, nil
+}

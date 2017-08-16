@@ -222,3 +222,15 @@ func GetGoodsPendingGatherData(w http.ResponseWriter, r *http.Request) {
 	req := &pb.Goods{UserId: c.UserId}
 	misc.CallWithResp(w, r, "stock", "GetGoodsPendingGatherData", req)
 }
+
+// get goods pending gathered
+func GetGoodsShiftRecord(w http.ResponseWriter, r *http.Request) {
+	c := token.Get(r)
+	//检测token
+	if c == nil || c.UserId == "" {
+		misc.ReturnNotToken(w, r)
+		return
+	}
+	req := &pb.GoodsShiftRecord{UserId: c.UserId}
+	misc.CallWithResp(w, r, "stock", "GetGoodsShiftRecord", req)
+}

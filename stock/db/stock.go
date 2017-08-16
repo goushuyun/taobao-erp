@@ -302,6 +302,82 @@ func UpdateLocation(location *pb.Location) error {
 	return nil
 }
 
-func SaveShiftRecord() {
+// add a record about the goods shift record
+func AddGoodsShiftRecord(model *pb.GoodsShiftRecord) error {
+	// first get the location detail by location id
+	query := fmt.Sprintf("select warehouse,shelf,floor from location where id='%s'", model.LocationId)
+	log.Debug(query)
+	err := DB.QueryRow(query).Scan(&model.Warehouse, &model.Shelf, &model.Floor)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			err = errors.New("参数错误")
+		}
+		log.Error(err)
+		return err
+	}
+	// the save the record
+	query = "insert into goods_shift_record(goods_id,location_id,warehouse,shelf,floor,user_id,stock) values('%s','%s','%s','%s','%s','%s','%d')"
+	query = fmt.Sprintf(query, model.GoodsId, model.LocationId, model.Warehouse, model.Shelf, model.Floor, model.UserId, model.Stock)
+	log.Debug(query)
 
+	return nil
+}
+
+// get goods shift record
+func GetGoodsShiftRecord(model *pb.GoodsShiftRecord) (models []*pb.GoodsShiftRecord, err error, totalCount int64) {
+	query := "select count(*) from goods_shift_record gs left join goods g on gs.goods_id::uuid=g.id left join book b on g.book_id=b.id left join users u on u.id=gs.user_id"
+	var condition string
+	if model.StartAt != 0 && model.EndAt != 0 {
+		condition += fmt.Sprintf(" and gs.create_at between %d and %d", model.StartAt, model.EndAt)
+	}
+	if model.Isbn != "" {
+		condition += fmt.Sprintf(" and b.isbn ='%s'", model.Isbn)
+	}
+	if model.OperateType != "" {
+		condition += fmt.Sprintf(" and opreate_type='%s'", model.OperateType)
+	}
+	if model.UserId != "" {
+		condition += fmt.Sprintf(" and gs.user_id='%s'", model.UserId)
+
+	}
+	query += condition
+	log.Debug(query)
+	err = DB.QueryRow(query).Scan(&totalCount)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	if totalCount <= 0 {
+		return
+	}
+	query = "select %s from  goods_shift_record gs left join goods g on gs.goods_id::uuid=g.id left join book b on g.book_id=b.id left join users u on u.id=gs.user_id"
+	param := " gs.id, gs.goods_id,gs.location_id,gs.warehouse,gs.shelf,gs.floor,gs.user_id,gs.stock,extract(epoch from gs.create_at)::bigint,gs.operate_type,b.isbn,b.book_no,b.book_cate,b.title,u.name"
+	query = fmt.Sprintf(query, param)
+	if model.Page <= 0 {
+		model.Page = 1
+	}
+	if model.Size <= 0 {
+		model.Size = 15
+	}
+	condition += fmt.Sprintf(" order by gs.create_at desc,gs.id offset %d limit %d", (model.Page-1)*model.Size, model.Size)
+	query += condition
+	log.Debug(query)
+	rows, err := DB.Query(query)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		result := &pb.GoodsShiftRecord{}
+		models = append(models, result)
+		//b.isbn,b.book_no,b.book_cate,b.title,u.name
+		var isbn, book_no, book_cate, title, name sql.NullString
+		err = rows.Scan(&result.Id, &result.GoodsId, &result.LocationId, &result.Warehouse, &result.Shelf, &result.Floor, &result.UserId, &result.Stock, &result.CreateAt, &result.OperateType, &isbn, &book_no, &book_cate, &title, &name)
+		if err != nil {
+			log.Error(err)
+			return
+		}
+	}
+	return
 }
