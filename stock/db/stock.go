@@ -329,10 +329,10 @@ func AddGoodsShiftRecord(model *pb.GoodsShiftRecord) error {
 
 // get goods shift record
 func GetGoodsShiftRecord(model *pb.GoodsShiftRecord) (models []*pb.GoodsShiftRecord, err error, totalCount int64) {
-	query := "select count(*) from goods_shift_record gs left join goods g on gs.goods_id::uuid=g.id left join book b on g.book_id=b.id left join users u on u.id=gs.user_id"
+	query := "select count(*) from goods_shift_record gs left join goods g on gs.goods_id::uuid=g.id left join book b on g.book_id=b.id left join users u on u.id=gs.user_id where 1=1"
 	var condition string
 	if model.StartAt != 0 && model.EndAt != 0 {
-		condition += fmt.Sprintf(" and gs.create_at between %d and %d", model.StartAt, model.EndAt)
+		condition += fmt.Sprintf(" and gs.create_at between to_timestamp(%d) and to_timestamp(%d)", model.StartAt, model.EndAt)
 	}
 	if model.Isbn != "" {
 		condition += fmt.Sprintf(" and b.isbn ='%s'", model.Isbn)
@@ -354,7 +354,7 @@ func GetGoodsShiftRecord(model *pb.GoodsShiftRecord) (models []*pb.GoodsShiftRec
 	if totalCount <= 0 {
 		return
 	}
-	query = "select %s from  goods_shift_record gs left join goods g on gs.goods_id::uuid=g.id left join book b on g.book_id=b.id left join users u on u.id=gs.user_id"
+	query = "select %s from  goods_shift_record gs left join goods g on gs.goods_id::uuid=g.id left join book b on g.book_id=b.id left join users u on u.id=gs.user_id where 1=1"
 	param := " gs.id, gs.goods_id,gs.location_id,gs.warehouse,gs.shelf,gs.floor,gs.user_id,gs.stock,extract(epoch from gs.create_at)::bigint,gs.operate_type,b.isbn,b.book_no,b.book_cate,b.title,u.name"
 	query = fmt.Sprintf(query, param)
 	if model.Page <= 0 {
@@ -381,6 +381,21 @@ func GetGoodsShiftRecord(model *pb.GoodsShiftRecord) (models []*pb.GoodsShiftRec
 		if err != nil {
 			log.Error(err)
 			return
+		}
+		if isbn.Valid {
+			result.Isbn = isbn.String
+		}
+		if book_no.Valid {
+			result.BookNo = book_no.String
+		}
+		if book_cate.Valid {
+			result.BookCate = book_cate.String
+		}
+		if title.Valid {
+			result.BookTitle = title.String
+		}
+		if name.Valid {
+			result.UserName = name.String
 		}
 	}
 	return

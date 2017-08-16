@@ -1,8 +1,8 @@
 
 create table goods_shift_record (
     id UUID         PRIMARY KEY         NOT NULL        DEFAULT gen_random_uuid(),
-    goods_id        text                not null ,
-    location_id     text                not null ,
+    goods_id        UUID                not null ,
+    location_id     UUID                not null ,
     warehouse       text                not null ,
     shelf           text                not null ,
     floor           text                not null ,

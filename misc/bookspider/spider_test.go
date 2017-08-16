@@ -119,9 +119,8 @@ func TestSpiderYouluList(t *testing.T) {
 		log.Debug(name + "\t:\t" + value)
 	}
 }
-
 func TestGetBookInfo(t *testing.T) {
-	book, _ := GetBookInfoBySpider("9787300217468", "")
+	book, _ := GetBookInfoBySpider("9787121266942", "")
 	println("-----------------------------------OOOOOOM---------------------------------")
 	log.Debugf("%#v", book)
 	log.Debug("-----------------------------------OOOOOOM---------------------------------")
