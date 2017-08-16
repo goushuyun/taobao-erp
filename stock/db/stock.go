@@ -87,7 +87,7 @@ func ListGoodsAllLocations(g *pb.Goods) ([]*pb.Goods, int64, error) {
 		return data, total, nil
 	}
 
-	target := "m.stock, g.status, g.remark, l.warehouse, l.shelf, l.floor, m.id"
+	target := "m.stock, g.status, g.remark, l.warehouse, l.shelf, l.floor, m.id, l.id"
 	// join "order by" condition
 	condition := " order by %s limit %d offset %d"
 	var order_condition string
@@ -116,7 +116,7 @@ func ListGoodsAllLocations(g *pb.Goods) ([]*pb.Goods, int64, error) {
 
 	for rows.Next() {
 		tmp := &pb.Goods{}
-		err = rows.Scan(&tmp.Stock, &tmp.Status, &tmp.Remark, &tmp.Warehouse, &tmp.Shelf, &tmp.Floor, &tmp.MapRowId)
+		err = rows.Scan(&tmp.Stock, &tmp.Status, &tmp.Remark, &tmp.Warehouse, &tmp.Shelf, &tmp.Floor, &tmp.MapRowId, &tmp.LocationId)
 		if err != nil {
 			log.Error(err)
 			return nil, 0, err

@@ -35,6 +35,29 @@ func (s *StockServer) UpdateMapRow(ctx context.Context, req *pb.MapRowBatch) (*p
 			log.Error(err)
 			return nil, errs.Wrap(errors.New(err.Error()))
 		}
+
+		// add input/output record
+		var operate_type string
+		if g.Stock > 0 {
+			operate_type = "load"
+		} else {
+			operate_type = "unload"
+		}
+
+		goods_shift_record := &pb.GoodsShiftRecord{
+			GoodsId:     map_row.GoodsId,
+			LocationId:  map_row.LocationId,
+			Stock:       g.Stock,
+			UserId:      req.UserId,
+			OperateType: operate_type,
+		}
+
+		log.JSON(goods_shift_record)
+
+		err = db.AddGoodsShiftRecord(goods_shift_record)
+		if err != nil {
+			log.Error(err)
+		}
 	}
 
 	return &pb.NormalResp{Code: errs.Ok, Message: "ok"}, nil
@@ -97,8 +120,28 @@ func (s *StockServer) SaveMapRow(ctx context.Context, req *pb.MapRow) (*pb.MapRo
 	// update goods's stock
 	var operate_stock int64 = req.Stock
 	defer func() {
+		// modify Goods record
 		g := &pb.Goods{Stock: operate_stock, GoodsId: req.GoodsId}
 		err := db.UpdateGoods(g)
+		if err != nil {
+			log.Error(err)
+		}
+
+		// add input/output record
+		var operate_type string
+		if operate_stock > 0 {
+			operate_type = "load"
+		} else {
+			operate_type = "unload"
+		}
+		goods_shift_record := &pb.GoodsShiftRecord{
+			GoodsId:     req.GoodsId,
+			LocationId:  req.LocationId,
+			Stock:       operate_stock,
+			UserId:      req.UserId,
+			OperateType: operate_type,
+		}
+		err = db.AddGoodsShiftRecord(goods_shift_record)
 		if err != nil {
 			log.Error(err)
 		}

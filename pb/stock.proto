@@ -82,6 +82,7 @@ message MapRow {
 
 message MapRowBatch {
     repeated MapRow data = 1;
+    string user_id = 2;
 }
 
 message MapRowResp {
