@@ -206,6 +206,8 @@ func insertByUploadMode(isbn string, uploadMode int64) (book *pb.Book, err error
 			log.Error(err)
 			return
 		}
+		//爬取图书的分类
+		go db.InsertBookCategoryPendingGatherData(&pb.BookPendingGather{Id: book.Id, Source: "taobao"})
 		return
 	} else {
 		book = &pb.Book{Isbn: isbn}
@@ -216,6 +218,8 @@ func insertByUploadMode(isbn string, uploadMode int64) (book *pb.Book, err error
 		}
 		go func() {
 			db.InsertBookPendingGatherData(&pb.BookPendingGather{BookId: book.Id})
+			//爬取图书的分类
+			db.InsertBookCategoryPendingGatherData(&pb.BookPendingGather{BookId: book.Id, Source: "taobao"})
 		}()
 
 	}

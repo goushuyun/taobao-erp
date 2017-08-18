@@ -46,6 +46,7 @@ message BookPendingGather{
     int64 create_at = 4;
     int64 update_at = 5;
     string isbn = 6;
+    string source = 7;
 }
 message OrganizedBookAuditListResp{
     string code = 1;
@@ -85,6 +86,7 @@ message Book {
     int64 update_at = 21;
     int64 upload_mode = 22;  //0 default mode(stardart mode): wait until search over ; 1 Speed mode : jump the wait time about the search from the internet
     int64 search_time = 23;
+    string taobao_category = 24;
 }
 //图书申请记录
 message BookAuditRecord{

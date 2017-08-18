@@ -100,7 +100,6 @@ func TestSpiderCaiCoolList(t *testing.T) {
 	baseUrl := "http://www.caicool.cn/search?keywords=ISBN&typesMark=0&typesCode=-1&switchMark=0"
 	url := strings.Replace(baseUrl, "ISBN", isbn, -1)
 	req := request.NewRequest(url, "html", "", "GET", "", nil, nil, nil, nil)
-
 	pageItems := sp.GetByRequest(req)
 	for name, value := range pageItems.GetAll() {
 		log.Debug(name + "\t:\t" + value)
@@ -119,12 +118,16 @@ func TestSpiderYouluList(t *testing.T) {
 		log.Debug(name + "\t:\t" + value)
 	}
 }
+
+func TestSpiderTaobaoListList(t *testing.T) {
+	category := GetBookTaobaoCategory("9787219091029")
+	fmt.Println(category)
+}
 func TestGetBookInfo(t *testing.T) {
 	book, _ := GetBookInfoBySpider("9787121266942", "")
 	println("-----------------------------------OOOOOOM---------------------------------")
 	log.Debugf("%#v", book)
 	log.Debug("-----------------------------------OOOOOOM---------------------------------")
-
 }
 func TestRegular(t *testing.T) {
 	detailStr := "https://item.jd.com/11020022.html"
@@ -249,7 +252,7 @@ func TestAbuyun(t *testing.T) {
 }
 
 func TestJdAnaly(t *testing.T) {
-	priceUrl := "https://upload.taobao.com/auction/json/get_category.htm?isB2CSeller=false&is3CSeller=false&isSynergicSeller=false&isAliMall=false&isFinancingSeller=false&isAssets=false&isTaoDianDian=false&fenxiaoProduct=&_input_charset=utf-8&keyword=9787115399922"
+	priceUrl := "https://item.taobao.com/item.htm?spm=a230r.1.14.1.76bf523TpELYF&id=557335079963&ns=1&abbucket=19"
 	// reg := regexp.MustCompile("/\\d*\\.")
 	// productId := reg.FindString(productUrl)
 	// productId = strings.Replace(productId, ".", "", -1)
@@ -257,9 +260,7 @@ func TestJdAnaly(t *testing.T) {
 	// log.Debug("productId========", productId)
 	// priceUrl = strings.Replace(priceUrl, "PRODUCTID", productId, -1)
 	log.Debug("priceUrl========", priceUrl)
-	resp, err := http.Post(priceUrl,
-		"application/text/html",
-		strings.NewReader("name=cjb"))
+	resp, err := http.Get(priceUrl)
 	if err != nil {
 		fmt.Println(err)
 	}

@@ -266,6 +266,7 @@ message GoodsShiftRecord{
     int64 end_at = 18;
     int64 page = 19;
     int64 size = 20;
+    string size_limit = 21;
 }
 // 商品上架下架记录
 message GoodsShiftRecordListResp{

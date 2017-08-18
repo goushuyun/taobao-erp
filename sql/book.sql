@@ -24,6 +24,7 @@ create table book (
     author_intro    text            default '',     --作者介绍
     source_info     text            default '',     --数据源   caiku dangdang bookuu jd
     search_time     int             not null default 0,
+    taobao_category text            default '',     --淘宝
     create_at timestamptz not null default now(),
     update_at timestamptz not null default now()
 );

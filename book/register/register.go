@@ -19,6 +19,9 @@ func RegisterBookPolling(cron *cron.Cron) {
 	go func() {
 		service.HandlePendingBook()
 	}()
+	go func() {
+		service.HandlePendingBookCategory()
+	}()
 	// 增加 时间 轮训
 	cron.AddFunc(every_day_on_before_dawn_1, service.GetAllIncompleteBook)
 

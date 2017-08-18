@@ -2,8 +2,12 @@ package controller
 
 import (
 	"net/http"
+	"time"
+
+	log "qiniupkg.com/x/log.v7"
 
 	"github.com/goushuyun/taobao-erp/errs"
+	"github.com/tealeg/xlsx"
 
 	"github.com/goushuyun/taobao-erp/misc"
 	"github.com/goushuyun/taobao-erp/misc/token"
@@ -244,4 +248,70 @@ func GetGoodsShiftRecord(w http.ResponseWriter, r *http.Request) {
 	}
 	req := &pb.GoodsShiftRecord{UserId: c.UserId}
 	misc.CallWithResp(w, r, "stock", "GetGoodsShiftRecord", req)
+}
+
+// get goods pending gathered
+func ExportGoodsShiftRecord(w http.ResponseWriter, r *http.Request) {
+
+	req := &pb.GoodsShiftRecord{}
+	body := r.FormValue("params")
+	if err := misc.Bytes2Struct([]byte(body), req, "user_id"); err != nil {
+		misc.RespondMessage(w, r, err)
+		return
+	}
+
+	// Call RPC 请求订单详情
+	resp, ctx := &pb.GoodsShiftRecordListResp{}, misc.GenContext(r)
+	err := misc.CallSVC(ctx, "stock", "GetGoodsShiftRecord", req, resp)
+	if err != nil {
+		misc.RespondMessage(w, r, err)
+		return
+	}
+	// 开始写入Excel
+	var file *xlsx.File
+	var sheet *xlsx.Sheet
+	var row *xlsx.Row
+
+	file = xlsx.NewFile()
+	sheet, err = file.AddSheet("出库单")
+	if err != nil {
+		log.Error(err)
+		res := misc.NewErrResult(errs.ErrInternal, "Error on AddSheet")
+		misc.RespondMessage(w, r, res)
+		return
+	}
+
+	row = sheet.AddRow()
+	head := []string{"isbn", "书名", "库位", "架位", "层数", "数量", "日期", "业务类型"}
+	row.WriteSlice(&head, len(head))
+
+	for _, item := range resp.Data {
+		row = sheet.AddRow()
+		var book_no string
+		if item.BookNo != "" {
+			book_no = "_" + item.BookNo
+		}
+		row.AddCell().SetString(item.Isbn + book_no)
+		row.AddCell().SetString(item.BookTitle)
+		row.AddCell().SetString(item.Warehouse)
+		row.AddCell().SetString(item.Shelf)
+		row.AddCell().SetString(item.Floor)
+
+		row.AddCell().SetInt64(item.Stock)
+		row.AddCell().SetString(time.Unix(item.CreateAt, 0).Format("2006-01-02 15:04:05"))
+		if item.OperateType == "load" {
+			row.AddCell().SetString("入库")
+		} else {
+			row.AddCell().SetString("出库")
+		}
+	}
+
+	filename := "出库单_" + time.Now().Format("2006年01月02日") + ".xlsx"
+	w.Header().Set("Content-Disposition",
+		`attachment; filename="`+filename+`"; filename*=utf-8''`+filename)
+
+	w.Header().Set("Content-Type",
+		`application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8`)
+	file.Write(w)
+
 }

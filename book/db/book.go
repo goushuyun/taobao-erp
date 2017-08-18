@@ -166,6 +166,10 @@ func UpdateBookInfo(book *pb.Book) (updateContent string, err error) {
 		condition += fmt.Sprintf(",search_time=search_time+%d", book.SearchTime)
 		updateContent += fmt.Sprintf(" 搜索次数+：%d", book.SearchTime)
 	}
+	if book.TaobaoCategory != "" {
+		condition += fmt.Sprintf(",taobao_category='%s'", book.TaobaoCategory)
+		updateContent += fmt.Sprintf(" 淘宝分类：'%s'", book.TaobaoCategory)
+	}
 	condition += fmt.Sprintf(" where id='%s'", book.Id)
 	if updateContent == "" {
 		err = errors.New("没任何信息更新呦～")
