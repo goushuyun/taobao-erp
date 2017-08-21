@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	log "qiniupkg.com/x/log.v7"
+	"github.com/wothing/log"
 
 	"github.com/goushuyun/taobao-erp/errs"
 	"github.com/tealeg/xlsx"
@@ -273,6 +273,7 @@ func ExportGoodsShiftRecord(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Call RPC 请求订单详情
+	req.SizeLimit = "none"
 	resp, ctx := &pb.GoodsShiftRecordListResp{}, misc.GenContext(r)
 	err := misc.CallSVC(ctx, "stock", "GetGoodsShiftRecord", req, resp)
 	if err != nil {
