@@ -362,7 +362,7 @@ func GetGoodsShiftRecord(model *pb.GoodsShiftRecord) (models []*pb.GoodsShiftRec
 	query = fmt.Sprintf(query, param)
 
 	if model.SizeLimit == "none" {
-		condition += fmt.Sprintf(" order by gs.warehouse,gs.shelf,gs.floor,gs.id")
+		condition += fmt.Sprintf(" order by gs.warehouse,gs.shelf,gs.floor,b.isbn,gs.id")
 
 	} else {
 		if model.Page <= 0 {
