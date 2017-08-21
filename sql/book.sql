@@ -31,3 +31,5 @@ create table book (
 
 
 CREATE UNIQUE INDEX IF NOT EXISTS book_isbn_no ON  book(isbn,book_no);
+CREATE INDEX IF NOT EXISTS book_isbn ON  book(isbn);
+CREATE INDEX IF NOT EXISTS book_title ON  book(title);

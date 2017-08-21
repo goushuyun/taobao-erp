@@ -12,3 +12,7 @@ create table goods_shift_record (
     create_at       timestamptz not null default now(),
     update_at       timestamptz not null default now()
 );
+
+CREATE INDEX IF NOT EXISTS goods_shift_record_id ON  goods_shift_record(id);
+CREATE INDEX IF NOT EXISTS goods_shift_record_id_user ON  goods_shift_record(user_id);
+CREATE INDEX IF NOT EXISTS goods_shift_record_id_goods ON  goods_shift_record(goods_id);

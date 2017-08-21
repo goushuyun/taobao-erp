@@ -316,6 +316,7 @@ func AddGoodsShiftRecord(model *pb.GoodsShiftRecord) error {
 		log.Error(err)
 		return err
 	}
+
 	if model.UserId == "" {
 		model.UserId = userId
 	}
