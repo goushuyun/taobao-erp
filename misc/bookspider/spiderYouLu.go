@@ -70,7 +70,6 @@ func (s *YouLuDetailProcesser) Process(p *page.Page) {
 		log.Debug(p.Errormsg())
 		return
 	}
-
 	query := p.GetHtmlParser()
 	var series_name, page, packing, format, catalog, abstract, author_info, author, publisher, pubdate, title, isbn, price, url, edition string
 

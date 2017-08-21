@@ -8,6 +8,14 @@ create table users (
     name text not null,
     role int not null default 512,
 
+    ------ orican add ------
+    export_start_at int not null default 0,
+    export_end_at int not null default 0,
+    ------ end ------
+
     create_at timestamptz not null default now(),
     update_at timestamptz not null default now()
 );
+
+-- alter table users add column export_start_at int not null default 0;
+-- alter table users add column export_end_at int not null default 0;

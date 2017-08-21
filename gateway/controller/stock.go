@@ -251,11 +251,23 @@ func GetGoodsShiftRecord(w http.ResponseWriter, r *http.Request) {
 }
 
 // get goods pending gathered
+func GetShiftRocordExportDate(w http.ResponseWriter, r *http.Request) {
+	c := token.Get(r)
+	//检测token
+	if c == nil || c.UserId == "" {
+		misc.ReturnNotToken(w, r)
+		return
+	}
+	req := &pb.User{Id: c.UserId}
+	misc.CallWithResp(w, r, "stock", "GetShiftRocordExportDate", req)
+}
+
+// get goods pending gathered
 func ExportGoodsShiftRecord(w http.ResponseWriter, r *http.Request) {
 
 	req := &pb.GoodsShiftRecord{}
 	body := r.FormValue("params")
-	if err := misc.Bytes2Struct([]byte(body), req, "user_id"); err != nil {
+	if err := misc.Bytes2Struct([]byte(body), req, "user_id", "start_at", "end_at"); err != nil {
 		misc.RespondMessage(w, r, err)
 		return
 	}
@@ -305,6 +317,9 @@ func ExportGoodsShiftRecord(w http.ResponseWriter, r *http.Request) {
 			row.AddCell().SetString("出库")
 		}
 	}
+
+	user := &pb.User{Id: req.UserId, ExportStartAt: req.StartAt, ExportEndAt: req.EndAt}
+	misc.CallSVC(ctx, "stock", "UpdateShiftRocordExportDate", user, &pb.NormalResp{})
 
 	filename := "出库单_" + time.Now().Format("2006年01月02日") + ".xlsx"
 	w.Header().Set("Content-Disposition",

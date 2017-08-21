@@ -22,7 +22,6 @@ service BookService {
     // handle the book audit
     rpc HandleBookAudit (BookAuditRecord) returns (NormalResp);
 
-
 }
 
 //获取图书信息

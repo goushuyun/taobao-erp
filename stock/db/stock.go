@@ -346,7 +346,6 @@ func GetGoodsShiftRecord(model *pb.GoodsShiftRecord) (models []*pb.GoodsShiftRec
 	}
 	if model.UserId != "" {
 		condition += fmt.Sprintf(" and gs.user_id='%s'", model.UserId)
-
 	}
 	query += condition
 	log.Debug(query)
@@ -411,4 +410,32 @@ func GetGoodsShiftRecord(model *pb.GoodsShiftRecord) (models []*pb.GoodsShiftRec
 		}
 	}
 	return
+}
+
+//更改上架记录导日期
+func UpdateShiftRocordExportDate(user *pb.User) error {
+	query := "update users set export_start_at=%d,export_end_at=%d where id='%s'"
+	query = fmt.Sprintf(query, user.ExportStartAt, user.ExportEndAt, user.Id)
+	log.Debug(query)
+	_, err := DB.Exec(query)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+//获取导出时间
+func GetShiftRocordExportDate(user *pb.User) error {
+	query := fmt.Sprintf("select export_start_at,export_end_at from users where id='%s'", user.Id)
+	log.Debug(query)
+	err := DB.QueryRow(query).Scan(&user.ExportStartAt, &user.ExportEndAt)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil
+		}
+		log.Error(err)
+		return err
+	}
+	return nil
 }

@@ -204,37 +204,14 @@ func spiderCoreHandler(isbn, upload_way string) (book *pb.Book, err error) {
 
 	}
 
-	//如果当当图书信息为空 从bookUU上获取数据
-	book.SourceInfo = "bookUU"
-	sp = spider.NewSpider(NewBookUUListProcesser(), "BookUUlist")
-	baseURL = "http://search.bookuu.com/AdvanceSearch.php?isbn=ISBN&sm=&zz=&cbs=&dj_s=&dj_e=&bkj_s=&bkj_e=&layer2=&zk=0&cbrq_n=2017&cbrq_y=&cbrq_n1=2017&cbrq_y1=&sjsj=0&orderby=&layer1=1"
-	url = strings.Replace(baseURL, "ISBN", isbn, -1)
-	req = request.NewRequest(url, "html", "", "GET", "", nil, nil, nil, nil)
-	if ip != "" {
-		req.AddProxyHost(ip)
-	}
-
-	pageItems = sp.GetByRequest(req)
-	//没爬到数据
-	if pageItems == nil || len(pageItems.GetAll()) <= 0 {
-		log.Debug("bookuu no data")
-	} else {
-		structData(pageItems, book)
-		if book.Isbn != "" && isbn == book.Isbn && book.Price != 0 && book.Title != "" {
-			//如果获取到数据，返回
-			log.Debugf("%+v", book)
-			return
-		}
-	}
 	book.SourceInfo = "youlu"
 	sp = spider.NewSpider(NewYouLuListProcesser(), "youlu")
-	baseURL = "http://www.youlu.net/search/result3/?isbn=ISBN&publisherName=&author=&bookName="
+	baseURL = "http://www.youlu.net/search/result3/?isbn=ISBN"
 	url = strings.Replace(baseURL, "ISBN", isbn, -1)
 	req = request.NewRequest(url, "html", "", "GET", "", nil, nil, nil, nil)
 	if ip != "" {
 		req.AddProxyHost(ip)
 	}
-
 	pageItems = sp.GetByRequest(req)
 	//没爬到数据
 	if pageItems == nil || len(pageItems.GetAll()) <= 0 {

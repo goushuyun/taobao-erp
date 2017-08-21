@@ -212,3 +212,27 @@ func (s *StockServer) GetGoodsShiftRecord(ctx context.Context, req *pb.GoodsShif
 	}
 	return &pb.GoodsShiftRecordListResp{Code: errs.Ok, Message: "ok", TotalCount: totalCount, Data: models}, nil
 }
+
+//获取入库出库记录的导出时间
+func (s *StockServer) GetShiftRocordExportDate(ctx context.Context, req *pb.User) (*pb.UserResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "GetShiftRocordExportDate", "%#v", req))
+	err := db.GetShiftRocordExportDate(req)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	return &pb.UserResp{Code: errs.Ok, Message: "ok", Data: req}, nil
+}
+
+//获取入库出库记录的导出时间
+func (s *StockServer) UpdateShiftRocordExportDate(ctx context.Context, req *pb.User) (*pb.NormalResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "GetShiftRocordExportDate", "%#v", req))
+	err := db.UpdateShiftRocordExportDate(req)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	return &pb.NormalResp{Code: errs.Ok, Message: "ok"}, nil
+}
