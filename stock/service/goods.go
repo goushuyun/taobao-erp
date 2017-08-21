@@ -163,7 +163,6 @@ func (s *StockServer) GoodsBatchUpload(ctx context.Context, in *pb.GoodsBatchUpl
 				fieldUploadModels = append(fieldUploadModels, uploadModel)
 				continue
 			}
-			db.AddGoodsShiftRecord(&pb.GoodsShiftRecord{UserId: goods.UserId, GoodsId: goods.GoodsId, LocationId: location.LocationId, Stock: uploadModel.Num, OperateType: "load"})
 		}
 		successNum++
 	}

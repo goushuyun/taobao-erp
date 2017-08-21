@@ -305,26 +305,25 @@ func UpdateLocation(location *pb.Location) error {
 // add a record about the goods shift record
 func AddGoodsShiftRecord(model *pb.GoodsShiftRecord) error {
 	// first get the location detail by location id
-	if model.UserId == "" {
-		query := fmt.Sprintf("select warehouse,shelf,floor,user_id from location where id='%s'", model.LocationId)
-		log.Debug(query)
-		var userId string
-		err := DB.QueryRow(query).Scan(&model.Warehouse, &model.Shelf, &model.Floor, &userId)
-		if err != nil {
-			if err == sql.ErrNoRows {
-				err = errors.New("参数错误")
-			}
-			log.Error(err)
-			return err
+	query := fmt.Sprintf("select warehouse,shelf,floor,user_id from location where id='%s'", model.LocationId)
+	log.Debug(query)
+	var userId string
+	err := DB.QueryRow(query).Scan(&model.Warehouse, &model.Shelf, &model.Floor, &userId)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			err = errors.New("参数错误")
 		}
-
-		model.UserId = userId
+		log.Error(err)
+		return err
 	}
+
+	model.UserId = userId
+
 	// the save the record
-	query := "insert into goods_shift_record(goods_id,location_id,warehouse,shelf,floor,user_id,stock,operate_type) values('%s','%s','%s','%s','%s','%s','%d','%s')"
+	query = "insert into goods_shift_record(goods_id,location_id,warehouse,shelf,floor,user_id,stock,operate_type) values('%s','%s','%s','%s','%s','%s','%d','%s')"
 	query = fmt.Sprintf(query, model.GoodsId, model.LocationId, model.Warehouse, model.Shelf, model.Floor, model.UserId, model.Stock, model.OperateType)
 	log.Debug(query)
-	_, err := DB.Exec(query)
+	_, err = DB.Exec(query)
 	if err != nil {
 		log.Error(err)
 		return err
