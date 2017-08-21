@@ -15,8 +15,9 @@ message User {
     string name = 4;
     string checkcode = 5;
     string id = 6;
-    int64 export_start_at = 7;
-    int64 export_end_at = 8;
+    int64 create_at = 7;
+    int64 export_start_at = 8;
+    int64 export_end_at = 9;
 }
 
 message UserResp {
