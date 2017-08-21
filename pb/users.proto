@@ -15,6 +15,7 @@ message User {
     string name = 4;
     string checkcode = 5;
     string id = 6;
+    int64 create_at = 7;
 }
 
 message UserResp {

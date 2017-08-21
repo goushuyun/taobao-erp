@@ -11,10 +11,10 @@ import (
 )
 
 func Login(u *pb.User) error {
-	query := "select id, name, role from users where mobile = $1 and password = $2"
-	log.Debugf("select id, name, role from users where mobile = '%s' and password = '%s'", u.Mobile, u.Password)
+	query := "select id, name, role, extract(epoch from create_at)::bigint from users where mobile = $1 and password = $2"
+	log.Debugf("select id, name, role, extract(epoch from create_at)::bigint from users where mobile = '%s' and password = '%s'", u.Mobile, u.Password)
 
-	err := DB.QueryRow(query, u.Mobile, u.Password).Scan(&u.Id, &u.Name, &u.Role)
+	err := DB.QueryRow(query, u.Mobile, u.Password).Scan(&u.Id, &u.Name, &u.Role, &u.CreateAt)
 	switch {
 	case err == sql.ErrNoRows:
 		return errors.New("not_found")
@@ -24,10 +24,10 @@ func Login(u *pb.User) error {
 }
 
 func SaveUser(u *pb.User) error {
-	query := "insert into users (mobile, password, name) values($1, $2, $3) returning id"
+	query := "insert into users (mobile, password, name) values($1, $2, $3) returning id, extract(epoch from create_at)::bigint"
 
-	log.Debugf("insert into users (mobile, password, name) values('%s', '%s', '%s') returning id", u.Mobile, u.Password, u.Name)
-	err := DB.QueryRow(query, u.Mobile, u.Password, u.Name).Scan(&u.Id)
+	log.Debugf("insert into users (mobile, password, name) values('%s', '%s', '%s') returning id, extract(epoch from create_at)::bigint", u.Mobile, u.Password, u.Name)
+	err := DB.QueryRow(query, u.Mobile, u.Password, u.Name).Scan(&u.Id, &u.CreateAt)
 
 	return err
 }
