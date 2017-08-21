@@ -4,10 +4,9 @@ import (
 	"database/sql"
 	"errors"
 
+	. "github.com/goushuyun/taobao-erp/db"
 	"github.com/goushuyun/taobao-erp/pb"
 	"github.com/wothing/log"
-
-	. "github.com/goushuyun/taobao-erp/db"
 )
 
 func Login(u *pb.User) error {

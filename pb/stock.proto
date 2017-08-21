@@ -3,6 +3,7 @@ syntax = "proto3";
 package pb;
 
 import "pb/common.proto";
+import "pb/users.proto";
 
 service StockService {
 
@@ -40,6 +41,10 @@ service StockService {
     rpc GetGoodsPendingGatherData (Goods) returns (GoodsResp);
     // get goods'g shift record
     rpc GetGoodsShiftRecord (GoodsShiftRecord) returns (GoodsShiftRecordListResp);
+    // get export date
+    rpc GetShiftRocordExportDate (User) returns (UserResp);
+    // get export date
+    rpc UpdateShiftRocordExportDate (User) returns (NormalResp);
 }
 
 // location
@@ -266,6 +271,7 @@ message GoodsShiftRecord{
     int64 end_at = 18;
     int64 page = 19;
     int64 size = 20;
+    string size_limit = 21;
 }
 // 商品上架下架记录
 message GoodsShiftRecordListResp{

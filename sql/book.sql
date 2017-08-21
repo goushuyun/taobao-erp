@@ -24,9 +24,12 @@ create table book (
     author_intro    text            default '',     --作者介绍
     source_info     text            default '',     --数据源   caiku dangdang bookuu jd
     search_time     int             not null default 0,
+    taobao_category text            default '',     --淘宝
     create_at timestamptz not null default now(),
     update_at timestamptz not null default now()
 );
 
 
 CREATE UNIQUE INDEX IF NOT EXISTS book_isbn_no ON  book(isbn,book_no);
+CREATE INDEX IF NOT EXISTS book_isbn ON  book(isbn);
+CREATE INDEX IF NOT EXISTS book_title ON  book(title);

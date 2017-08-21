@@ -305,15 +305,20 @@ func UpdateLocation(location *pb.Location) error {
 // add a record about the goods shift record
 func AddGoodsShiftRecord(model *pb.GoodsShiftRecord) error {
 	// first get the location detail by location id
-	query := fmt.Sprintf("select warehouse,shelf,floor from location where id='%s'", model.LocationId)
+	query := fmt.Sprintf("select warehouse,shelf,floor,user_id from location where id='%s'", model.LocationId)
 	log.Debug(query)
-	err := DB.QueryRow(query).Scan(&model.Warehouse, &model.Shelf, &model.Floor)
+	var userId string
+	err := DB.QueryRow(query).Scan(&model.Warehouse, &model.Shelf, &model.Floor, &userId)
 	if err != nil {
 		if err == sql.ErrNoRows {
 			err = errors.New("参数错误")
 		}
 		log.Error(err)
 		return err
+	}
+
+	if model.UserId == "" {
+		model.UserId = userId
 	}
 	// the save the record
 	query = "insert into goods_shift_record(goods_id,location_id,warehouse,shelf,floor,user_id,stock,operate_type) values('%s','%s','%s','%s','%s','%s','%d','%s')"
@@ -329,10 +334,10 @@ func AddGoodsShiftRecord(model *pb.GoodsShiftRecord) error {
 
 // get goods shift record
 func GetGoodsShiftRecord(model *pb.GoodsShiftRecord) (models []*pb.GoodsShiftRecord, err error, totalCount int64) {
-	query := "select count(*) from goods_shift_record gs left join goods g on gs.goods_id::uuid=g.id left join book b on g.book_id=b.id left join users u on u.id=gs.user_id"
+	query := "select count(*) from goods_shift_record gs left join goods g on gs.goods_id::uuid=g.id left join book b on g.book_id=b.id left join users u on u.id=gs.user_id where 1=1"
 	var condition string
 	if model.StartAt != 0 && model.EndAt != 0 {
-		condition += fmt.Sprintf(" and gs.create_at between %d and %d", model.StartAt, model.EndAt)
+		condition += fmt.Sprintf(" and gs.create_at between to_timestamp(%d) and to_timestamp(%d)", model.StartAt, model.EndAt)
 	}
 	if model.Isbn != "" {
 		condition += fmt.Sprintf(" and b.isbn ='%s'", model.Isbn)
@@ -342,7 +347,6 @@ func GetGoodsShiftRecord(model *pb.GoodsShiftRecord) (models []*pb.GoodsShiftRec
 	}
 	if model.UserId != "" {
 		condition += fmt.Sprintf(" and gs.user_id='%s'", model.UserId)
-
 	}
 	query += condition
 	log.Debug(query)
@@ -354,16 +358,24 @@ func GetGoodsShiftRecord(model *pb.GoodsShiftRecord) (models []*pb.GoodsShiftRec
 	if totalCount <= 0 {
 		return
 	}
-	query = "select %s from  goods_shift_record gs left join goods g on gs.goods_id::uuid=g.id left join book b on g.book_id=b.id left join users u on u.id=gs.user_id"
+	query = "select %s from  goods_shift_record gs left join goods g on gs.goods_id::uuid=g.id left join book b on g.book_id=b.id left join users u on u.id=gs.user_id where 1=1"
 	param := " gs.id, gs.goods_id,gs.location_id,gs.warehouse,gs.shelf,gs.floor,gs.user_id,gs.stock,extract(epoch from gs.create_at)::bigint,gs.operate_type,b.isbn,b.book_no,b.book_cate,b.title,u.name"
 	query = fmt.Sprintf(query, param)
-	if model.Page <= 0 {
-		model.Page = 1
+
+	if model.SizeLimit == "none" {
+		condition += fmt.Sprintf(" order by gs.warehouse,gs.shelf,gs.floor,gs.id")
+
+	} else {
+		if model.Page <= 0 {
+			model.Page = 1
+		}
+		if model.Size <= 0 {
+			model.Size = 15
+		}
+
+		condition += fmt.Sprintf(" order by gs.create_at desc,gs.id offset %d limit %d", (model.Page-1)*model.Size, model.Size)
+
 	}
-	if model.Size <= 0 {
-		model.Size = 15
-	}
-	condition += fmt.Sprintf(" order by gs.create_at desc,gs.id offset %d limit %d", (model.Page-1)*model.Size, model.Size)
 	query += condition
 	log.Debug(query)
 	rows, err := DB.Query(query)
@@ -382,6 +394,49 @@ func GetGoodsShiftRecord(model *pb.GoodsShiftRecord) (models []*pb.GoodsShiftRec
 			log.Error(err)
 			return
 		}
+		if isbn.Valid {
+			result.Isbn = isbn.String
+		}
+		if book_no.Valid {
+			result.BookNo = book_no.String
+		}
+		if book_cate.Valid {
+			result.BookCate = book_cate.String
+		}
+		if title.Valid {
+			result.BookTitle = title.String
+		}
+		if name.Valid {
+			result.UserName = name.String
+		}
 	}
 	return
+}
+
+//更改上架记录导日期
+func UpdateShiftRocordExportDate(user *pb.User) error {
+	query := "update users set export_start_at=%d,export_end_at=%d where id='%s'"
+	query = fmt.Sprintf(query, user.ExportStartAt, user.ExportEndAt, user.Id)
+	log.Debug(query)
+	_, err := DB.Exec(query)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+//获取导出时间
+func GetShiftRocordExportDate(user *pb.User) error {
+	query := fmt.Sprintf("select export_start_at,export_end_at from users where id='%s'", user.Id)
+	log.Debug(query)
+	err := DB.QueryRow(query).Scan(&user.ExportStartAt, &user.ExportEndAt)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			return nil
+		}
+		log.Error(err)
+		return err
+	}
+	return nil
 }
