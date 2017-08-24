@@ -22,12 +22,16 @@ type Csv struct {
 	newline   string
 }
 
+const (
+	OUT_ENCODING = "gbk" //输出编码
+)
+
 func NewCsv(w io.Writer) *Csv {
 	var csv = &Csv{}
 	csv.writer = bufio.NewWriter(w)
 	csv.needBom = true
-	csv.separator = ","
-	csv.newline = "\r\n"
+	csv.separator = `,`
+	csv.newline = "\n"
 	csv.SetHasStart(false)
 	csv.names = make([]string, 0, 8)
 	return csv
@@ -200,6 +204,14 @@ func (this *Csv) writeTitle() {
 	var strs = make([]string, 0, len(this.names))
 	for _, name := range this.names {
 		title, ok := this.mp[name]
+		// cd, err := iconv.Open("gbk", "utf-8") // convert gbk to utf8
+		// if err != nil {
+		// 	fmt.Println("iconv.Open failed!")
+		// } else {
+		// 	defer cd.Close()
+		// 	title = cd.ConvString(title)
+		// }
+
 		if ok {
 			strs = append(strs, title)
 		}
@@ -219,14 +231,14 @@ func couldCsv(bean interface{}) bool {
 
 func bean2Str(bean interface{}) string {
 	var v = reflect.ValueOf(bean)
-
 	switch reflect.TypeOf(bean).Kind() {
 	case reflect.Float32, reflect.Float64:
 		return strconv.FormatFloat(v.Float(), 'f', -1, 64)
 	case reflect.Int, reflect.Int16, reflect.Int8, reflect.Int32, reflect.Uint, reflect.Int64:
 		return strconv.FormatInt(v.Int(), 10)
 	case reflect.String:
-		return `"` + v.String() + `"`
+		value := v.String()
+		return value
 	case reflect.Bool:
 		if v.Bool() {
 			return "true"

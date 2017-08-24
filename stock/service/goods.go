@@ -214,6 +214,7 @@ func (s *StockServer) DealWithGoodsPendingCheckList(ctx context.Context, in *pb.
 		log.Error(err)
 		return nil, errs.Wrap(errors.New(err.Error()))
 	}
+
 	return &pb.NormalResp{Code: errs.Ok, Message: "ok"}, nil
 }
 

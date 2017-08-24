@@ -231,7 +231,7 @@ message GoodsInfo{
     int64 size = 19;
     int64 info_is_complete = 20; //0 全部 1:信息不全 2:信息全有   3:无书名及没价格  4:无图片s
     string location_id  =21;
-
+    string size_limit = 22;
 }
 
 

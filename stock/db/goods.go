@@ -127,18 +127,25 @@ func SearchGoods(goods *pb.GoodsInfo) (models []*pb.GoodsInfo, err error, totalC
 	if goods.Sequence != "asc" && goods.Sequence != "desc" {
 		goods.Sequence = ""
 	}
+
 	if goods.OrderBy != "" {
 		condition += fmt.Sprintf(" order by %s %s,g.update_at desc,g.id desc", goods.OrderBy, goods.Sequence)
 	} else {
 		condition += " order by g.update_at desc,g.id desc "
 	}
-	if goods.Page <= 0 {
-		goods.Page = 1
+	if goods.SizeLimit == "none" {
+
+	} else {
+		if goods.Page <= 0 {
+			goods.Page = 1
+		}
+		if goods.Size <= 0 {
+			goods.Size = 15
+		}
+
+		condition += fmt.Sprintf(" offset %d limit %d", (goods.Page-1)*goods.Size, goods.Size)
 	}
-	if goods.Size <= 0 {
-		goods.Size = 15
-	}
-	condition += fmt.Sprintf(" offset %d limit %d", (goods.Page-1)*goods.Size, goods.Size)
+
 	query += condition
 	log.Debug(query)
 	rows, err := DB.Query(query)
