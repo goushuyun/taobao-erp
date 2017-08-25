@@ -164,7 +164,6 @@ func (s *StockServer) GoodsBatchUpload(ctx context.Context, in *pb.GoodsBatchUpl
 				continue
 			}
 		}
-		db.AddGoodsShiftRecord(&pb.GoodsShiftRecord{UserId: goods.UserId, GoodsId: goods.GoodsId, LocationId: location.LocationId, Stock: uploadModel.Num, OperateType: "load"})
 		successNum++
 	}
 	return &pb.GoodsBatchUploadResp{Code: errs.Ok, Message: "ok", SuccessNum: successNum, PendingCheckNum: pendingNum, FailedData: fieldUploadModels}, nil
@@ -215,6 +214,7 @@ func (s *StockServer) DealWithGoodsPendingCheckList(ctx context.Context, in *pb.
 		log.Error(err)
 		return nil, errs.Wrap(errors.New(err.Error()))
 	}
+
 	return &pb.NormalResp{Code: errs.Ok, Message: "ok"}, nil
 }
 

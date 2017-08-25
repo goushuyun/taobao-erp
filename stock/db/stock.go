@@ -317,9 +317,8 @@ func AddGoodsShiftRecord(model *pb.GoodsShiftRecord) error {
 		return err
 	}
 
-	if model.UserId == "" {
-		model.UserId = userId
-	}
+	model.UserId = userId
+
 	// the save the record
 	query = "insert into goods_shift_record(goods_id,location_id,warehouse,shelf,floor,user_id,stock,operate_type) values('%s','%s','%s','%s','%s','%s','%d','%s')"
 	query = fmt.Sprintf(query, model.GoodsId, model.LocationId, model.Warehouse, model.Shelf, model.Floor, model.UserId, model.Stock, model.OperateType)
@@ -363,8 +362,7 @@ func GetGoodsShiftRecord(model *pb.GoodsShiftRecord) (models []*pb.GoodsShiftRec
 	query = fmt.Sprintf(query, param)
 
 	if model.SizeLimit == "none" {
-		condition += fmt.Sprintf(" order by gs.warehouse,gs.shelf,gs.floor,gs.id")
-
+		condition += fmt.Sprintf(" order by gs.warehouse,gs.shelf,gs.floor,b.isbn,gs.id")
 	} else {
 		if model.Page <= 0 {
 			model.Page = 1
@@ -372,9 +370,7 @@ func GetGoodsShiftRecord(model *pb.GoodsShiftRecord) (models []*pb.GoodsShiftRec
 		if model.Size <= 0 {
 			model.Size = 15
 		}
-
 		condition += fmt.Sprintf(" order by gs.create_at desc,gs.id offset %d limit %d", (model.Page-1)*model.Size, model.Size)
-
 	}
 	query += condition
 	log.Debug(query)

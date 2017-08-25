@@ -16,6 +16,7 @@ const (
 
 var svcNames = []string{
 	"book",
+	"mediastore",
 }
 
 func main() {

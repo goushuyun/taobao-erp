@@ -159,7 +159,6 @@ func TestGbkToUtf(t *testing.T) {
 	utfBody := iconv.NewReader(cd, reader, 0)
 	if err != nil {
 		log.Debug(err)
-
 	}
 	doc, err := goquery.NewDocumentFromReader(utfBody)
 	if err != nil {

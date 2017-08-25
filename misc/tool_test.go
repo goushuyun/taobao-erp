@@ -11,6 +11,7 @@ import (
 	"github.com/wothing/log"
 
 	"github.com/goushuyun/taobao-erp/pb"
+	"github.com/mholt/archiver"
 
 	"github.com/tealeg/xlsx"
 )
@@ -235,6 +236,12 @@ func TestReadFile(t *testing.T) {
 	printErr(err)
 	fmt.Print(data)
 
+}
+
+func TestArchiver(t *testing.T) {
+
+	err := archiver.Zip.Make("/Users/lixiao/Desktop/test.zip", []string{"/Users/lixiao/Downloads/test.xlsx", "/Users/lixiao/Downloads/test"})
+	printErr(err)
 }
 
 func printErr(err error) {

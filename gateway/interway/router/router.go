@@ -49,7 +49,7 @@ func SetRouterV1() *m.Router {
 	v1.Register("/stock/get_pending_gatherd_goods", m.Wrap(c.GetGoodsPendingGatherData))
 	v1.Register("/stock/get_goods_shift_record", m.Wrap(c.GetGoodsShiftRecord))
 	v1.Register("/stock/get_shift_record_latest_export_date", m.Wrap(c.GetShiftRocordExportDate))
-
+	v1.RegisterGET("/stock/export_csv", m.Wrap(c.ExportCsv))
 	v1.RegisterGET("/stock/export_goods_shift_record", m.Wrap(c.ExportGoodsShiftRecord))
 	return v1
 }
