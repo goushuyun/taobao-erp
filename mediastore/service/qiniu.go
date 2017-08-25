@@ -127,6 +127,20 @@ func upload(url string, zone pb.MediaZone, appid string) (key string, err error)
 	return key, nil
 }
 
+func UploadLocalFile(filepath string, zone pb.MediaZone, key string) (err error) {
+	token, url := makeToken(zone, key)
+
+	err = uploader.PutFile(nil, nil, token, key, filepath, nil)
+	//打印出错信息
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	log.Debug(url)
+	return nil
+}
+
 func uploadLocal(filepath string, zone pb.MediaZone, filename string) (err error) {
 	token, url := makeToken(zone, filename)
 
