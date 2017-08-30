@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+package pb;
+
+service UsersService {
+    rpc Register (User) returns (UserResp);
+    rpc Login (User) returns (UserResp);
+    rpc UserExist (User) returns (UserResp);
+}
+
+message User {
+    string mobile = 1;
+    string password = 2;
+    int64 role = 3;
+    string name = 4;
+    string checkcode = 5;
+    string id = 6;
+    int64 create_at = 7;
+    int64 export_start_at = 8;
+    int64 export_end_at = 9;
+}
+
+message UserResp {
+    string code = 1;
+    string message = 2;
+    User data = 3;
+    string token = 4;
+}

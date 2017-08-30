@@ -1,0 +1,373 @@
+syntax = "proto3";
+
+package pb;
+
+import "pb/common.proto";
+import "pb/users.proto";
+
+service StockService {
+
+    rpc SaveMapRow (MapRow) returns (MapRowResp);
+    rpc UpdateMapRow (MapRowBatch) returns (NormalResp);
+    rpc SearchLocation (Location) returns (SearchLocationResp);
+
+    rpc GetLocationId (Location) returns (LocationResp);
+    rpc SaveGoods (Goods) returns (GoodsResp);
+
+    rpc ListGoodsAllLocations (Goods) returns (GoodsResp);
+
+    rpc LocationFazzyQuery (Location) returns (LocationBatchResp);
+
+    // goods module
+    // search goods from local db
+    rpc SearchGoods (GoodsInfo) returns (GoodsInfoListResp);
+    // update the goods info
+    rpc UpdateGoodsInfo (Goods) returns (NormalResp);
+    // batch upload
+    rpc GoodsBatchUpload (GoodsBatchUploadModel) returns (GoodsBatchUploadResp);
+    // add a batch upload record
+    rpc SaveGoodsBatchUploadRecord (GoodsBatchUploadRecord) returns (NormalResp);
+    // get the batch upload record list
+    rpc GetGoodsBatchUploadRecords (GoodsBatchUploadRecord) returns (GoodsBatchUploadRecordsResp);
+    // get the pending goods check list
+    rpc GetGoodsPendingCheckList (GoodsPendingCheck) returns (GoodsPendingCheckListResp);
+    // deal with the goods check
+    rpc DealWithGoodsPendingCheckList (GoodsPendingCheck) returns (NormalResp);
+    // get the location stock
+    rpc GetLocationStock (Location) returns (LocationBatchResp);
+    // update location
+    rpc UpdateLocation (Location) returns (NormalResp);
+    // get goods pending gathered
+    rpc GetGoodsPendingGatherData (Goods) returns (GoodsResp);
+    // get goods'g shift record
+    rpc GetGoodsShiftRecord (GoodsShiftRecord) returns (GoodsShiftRecordListResp);
+    // get export date
+    rpc GetShiftRocordExportDate (User) returns (UserResp);
+    // get export date
+    rpc UpdateShiftRocordExportDate (User) returns (NormalResp);
+    // get user's taobao setting
+    rpc GetUserTaobaoSetting (TaobaoCsvRecord) returns (UserTaobaoSettingResp);
+    // update user's taobao setting
+    rpc UpdateUserTaobaoSetting (TaobaoCsvRecord) returns (NormalResp);
+    // export taobao csv
+    rpc ExportTaobaoCsv (TaobaoCsvRecord) returns (NormalResp);
+    // get taobao csv export record
+    rpc GetTaobaoCsvExportRecord (TaobaoCsvRecord) returns (TaobaoCsvRecordListResp);
+}
+
+// location
+message Location {
+    string user_id = 1;
+    string warehouse = 2;
+    string shelf = 3;
+    string floor = 4;
+    string location_id = 5;
+    int64 total_stock = 6;
+    int64 page = 7;
+    int64 size = 8;
+}
+
+message LocationBatchResp {
+    string code = 1;
+    string message = 2;
+    repeated Location data = 3;
+    int64 total = 4;
+    int64 total_count = 5;
+}
+
+message LocationResp {
+    string code = 1;
+    string message = 2;
+    Location data = 3;
+}
+
+
+// map row
+message MapRow {
+    string goods_id = 1;
+    string location_id = 2;
+    int64 stock = 3;
+    int64 create_at = 4;
+    int64 update_at = 5;
+    string map_row_id = 6;
+    string user_id = 7;
+}
+
+message MapRowBatch {
+    repeated MapRow data = 1;
+    string user_id = 2;
+}
+
+message MapRowResp {
+    string code = 1;
+    string message = 2;
+    MapRow data = 3;
+}
+
+message SearchLocationResp {
+    string code = 1;
+    string message = 2;
+    repeated Location data = 3;
+}
+
+
+message Goods {
+    string isbn = 1;
+    string warehouse = 2;
+    string shelf = 3;
+    string floor = 4;
+    int64 stock = 5;
+    string goods_id = 6;
+    string user_id = 7;
+    string location_id = 8;
+    string book_id = 9;
+    int64 status = 10;
+    string remark = 11;
+    string map_id = 12;
+    int64 create_at = 13;
+    int64 page = 14;
+    int64 size = 15;
+    ListOrderBy order_by = 16;
+    string map_row_id = 17;
+
+}
+
+
+
+enum ListOrderBy {
+    StockReverse = 0;
+    StockForward = 1;
+    LocationForward = 2;
+    LocationReverse = 3;
+    UpdateAtForward = 4;
+    UpdateAtReverse = 5;
+}
+
+message GoodsResp {
+    string code = 1;
+    string message = 2;
+    repeated Goods data = 3;
+    int64 total = 4;
+}
+
+// goods batch upload model
+message GoodsBatchUploadModel{
+    string user_id = 1;
+    repeated GoodsUploadModel data = 2;
+}
+
+message GoodsBatchUploadResp{
+    string code = 1;
+    string message = 2;
+    int64 success_num = 3;        //成功插入的数据量
+    int64 pending_check_num = 4;  //待处理
+    repeated GoodsUploadModel failed_data = 5;
+
+}
+// goods upload model from batchupload
+message GoodsUploadModel{
+    // isbn num
+    string isbn = 1;
+    int64 num = 2;
+    string warehouse = 3; //仓库
+    string shelf = 4;     //货架
+    string floor = 5;     //层
+}
+
+//goods pending check
+message GoodsPendingCheck{
+    string id = 1;
+    string isbn = 2;
+    int64 num = 3;
+    string user_id = 4;
+    string warehouse = 5;
+    string shelf = 6;
+    string floor = 7;
+    int64 create_at = 8;
+    int64 update_at = 9;
+    int64 page = 10;
+    int64 size = 11;
+}
+// goods pending check list resp
+message GoodsPendingCheckListResp{
+    string code = 1;
+    string message =2;
+    repeated GoodsPendingCheck data = 3;
+    int64 total_count = 4;
+}
+//批量上传记录
+message GoodsBatchUploadRecordsResp{
+    string code = 1;
+    string message = 2;
+    repeated GoodsBatchUploadRecord data = 3;
+    int64 total_count = 4;
+}
+// goods batch upload
+message GoodsBatchUploadRecord{
+    string id = 1;
+    string user_id = 2;
+    int64 success_num = 3;
+    int64 failed_num = 4;
+    string origin_file = 5;
+    string origin_filename = 6;
+    string error_file = 7;
+    int64 create_at = 8;
+    int64 update_at = 9;
+    int64 page = 10;
+    int64 size = 11;
+}
+// goods book info
+message GoodsInfo{
+    string book_id = 1;
+    string isbn = 2;
+    string book_no = 3;
+    string book_cate = 4;
+    string title = 5;
+    string publisher = 6;
+    string author = 7;
+    string edition = 8;
+    string image = 9;
+    int64  price = 10;
+    string goods_id = 11;
+    int64 stock =12;
+    string remark = 13;
+    string compare = 14;
+    string user_id = 15;
+    string order_by = 16;
+    string sequence = 17;
+    int64 page = 18;
+    int64 size = 19;
+    int64 info_is_complete = 20; //0 全部 1:信息不全 2:信息全有   3:无书名及没价格  4:无图片s
+    string location_id  =21;
+    string size_limit = 22;
+}
+
+
+// goods infos resp
+message GoodsInfoListResp{
+    string code = 1;
+    string message = 2;
+    repeated GoodsInfo data = 3;
+    int64 total_count = 7;
+}
+
+message SearchStockResp {
+    string code = 1;
+    string message = 2;
+    repeated Goods data = 3;
+}
+// 商品上架下架记录
+message GoodsShiftRecord{
+    string id = 1;
+    string goods_id = 2;
+    string location_id = 3;
+    string warehouse = 4;
+    string shelf = 5;
+    string floor = 6;
+    string user_id = 7;
+    int64 stock =8;
+    int64 create_at = 9;
+    int64 update_at = 10;
+    string operate_type = 11;
+    //------
+    string isbn = 12;
+    string book_no = 13;
+    string book_cate = 14;
+    string book_title = 15;
+    string user_name = 16;
+    int64  start_at = 17;
+    int64 end_at = 18;
+    int64 page = 19;
+    int64 size = 20;
+    string size_limit = 21;
+}
+
+
+// 商品上架下架记录
+message GoodsShiftRecordListResp{
+    string code = 1;
+    string message = 2;
+    repeated GoodsShiftRecord  data= 3;
+    int64 total_count = 4;
+}
+
+
+// ------------taobao moudle------------------
+
+
+// taobao csv export record
+message TaobaoCsvRecord{
+    string id = 1;
+    string user_id = 2;
+    int64 discount = 3;
+    int64 supplemental_fee = 4;
+    string province = 5;
+    string city = 6;
+    string express_template = 7;
+    int64 pingyou_fee = 8;
+    int64 express_fee = 9;
+    int64 ems_fee = 10;
+    string reduce_stock_style = 11;
+    int64 total_num = 12;
+    int64 success_num = 13;
+    string product_title  = 14;
+    string product_describe = 15;
+    string filepath = 16;
+    int64 status = 17;
+    string file_url = 18;
+    int64 complete_at = 19;
+    int64 create_at = 20;
+    int64 update_at = 21;
+    string summary = 22;
+    string isbn = 23;
+    string book_no = 24;
+    string title = 25;
+    string publisher = 26;
+    string author = 27;
+    string edition = 28;
+    int64 stock =29;
+    string compare = 30;
+    int64 page = 31;
+    int64 size = 32;
+}
+
+// taobao csv export record items
+message TaobaoCsvRecordItem{
+    string id = 1;
+    string goods_id = 2;
+    string taobao_csv_record_id = 3;
+    int64 create_at = 4;
+    int64 update_at = 5;
+
+    int64 stock = 6;
+    string isbn = 7;
+    string book_no = 8;
+    string title = 9;
+    string publisher = 10;
+    string author = 11;
+    string edition = 12;
+    string pubdate = 13;
+    string series_name = 14;
+    string image = 15;
+    int64 price = 16;
+    string catalog = 17;
+    string abstract = 18;
+    string page = 19;
+    string packing = 20;
+    string format = 21;
+    string author_intro = 22;
+    string taobao_category = 23;
+}
+
+message UserTaobaoSettingResp{
+    string code = 1;
+    string message = 2;
+    TaobaoCsvRecord data = 3;
+}
+
+message TaobaoCsvRecordListResp{
+    string code = 1;
+    string message = 2;
+    repeated TaobaoCsvRecord data = 3;
+    int64 total_count = 4;
+}

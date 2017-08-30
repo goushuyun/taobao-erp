@@ -1,0 +1,130 @@
+syntax = "proto3";
+package pb;
+import "pb/common.proto";
+
+service BookService {
+    //获取图书信息
+    rpc GetBookInfo (Book) returns (BookListResp);
+    //获取图书信息
+    rpc GetLocalBookInfo (Book) returns (BookListResp);
+    //更改图书信息
+    rpc UpdateBookInfo (Book) returns (BookResp);
+    //管理员新增图书信息
+    rpc SaveBook (Book) returns (BookResp);
+    // submit a request about the book check
+    rpc SubmitBookAudit (BookAuditRecord) returns (NormalResp);
+    // get book audit record
+    rpc GetBookAuditRecord (BookAuditRecord) returns (BookAuditRecordListResp);
+    // handle the audit request : accept or reject (when reject ,a reason is better)
+    rpc UpdateAuditRecord (BookAuditRecord) returns (NormalResp);
+    // get book audit organize list
+    rpc GetOrganizedBookAuditList (BookAuditRecord) returns (OrganizedBookAuditListResp);
+    // handle the book audit
+    rpc HandleBookAudit (BookAuditRecord) returns (NormalResp);
+
+}
+
+//获取图书信息
+message BookResp {
+    string code = 1;
+    string message = 2;
+     Book data = 3;
+}
+
+//获取图书信息
+message BookListResp {
+    string code = 1;
+    string message = 2;
+    repeated Book data = 3;
+}
+// the model about the pending gathered book
+message BookPendingGather{
+    string id = 1;
+    string book_id = 2;
+    int64 search_time = 3;
+    int64 create_at = 4;
+    int64 update_at = 5;
+    string isbn = 6;
+    string source = 7;
+}
+message OrganizedBookAuditListResp{
+    string code = 1;
+    string message = 2;
+    repeated OrganizedBookAudit data = 3;
+    int64 total_count = 4;
+}
+//auditrecord list
+message BookAuditRecordListResp{
+    string code = 1;
+    string message = 2;
+    repeated BookAuditRecord data = 3;
+    int64 total_count = 4;
+}
+//标准图书信息表
+message Book {
+    string id = 1;
+    string isbn = 2;
+    string book_no = 3;
+    string book_cate = 4;
+    string title = 5;
+    string publisher = 6;
+    string author = 7;
+    string edition = 8;
+    string pubdate = 9;
+    string series_name = 10;
+    string image = 11;
+    int64 price = 12;
+    string catalog = 13;
+    string abstract = 14;
+    string page = 15;
+    string packing = 16;
+    string format = 17;
+    string author_intro = 18;
+    string source_info = 19;
+    int64 create_at = 20;
+    int64 update_at = 21;
+    int64 upload_mode = 22;  //0 default mode(stardart mode): wait until search over ; 1 Speed mode : jump the wait time about the search from the internet
+    int64 search_time = 23;
+    string taobao_category = 24;
+}
+//图书申请记录
+message BookAuditRecord{
+    string id = 1;
+    string book_id = 2;
+    string isbn = 3;
+    string publisher = 4;
+    string author = 5;
+    string edition = 6;
+    string image = 7;
+    int64 price = 8;
+    string apply_user_id = 9;
+    string apply_user_name = 10;
+    string check_user_id = 11;
+    string check_user_name = 12;
+    string apply_reason = 13;
+    int64 status = 14;
+    string feedback = 15;
+    int64 create_at = 16;
+    int64 update_at = 17;
+    string book_cate = 18;
+    string title = 19;
+    int64 search_type = 20; // search type : default: all; 1:
+    int64 page = 21;
+    int64 size = 22;
+    repeated string ids = 23;
+
+}
+//组织过的图书申请请求
+message OrganizedBookAudit{
+    string book_id = 1;
+    string isbn = 2;
+    string book_cate = 3;
+    string book_no = 4;
+    string image = 5;
+    string title = 6;
+    int64 price = 7;
+    string publisher = 8;
+    string author = 9;
+    string edition = 10;
+    int64 participate_num = 11;
+}

@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package pb;
+import "pb/common.proto";
+
+
+service SMSService {
+    // 即将关闭订单
+    rpc SendSMS (SMSReq) returns (Void);
+    rpc SendIdentifyingCode (SMSReq) returns (NormalResp);
+}
+
+enum SMSType {
+    UnknownSMSType                 = 0;
+
+    // 购书云 164093 帐号申请时的短息验证码
+    // 【购书云】您的验证码是{1}，请于3分钟内正确输入
+    CommonCheckCode = 1;
+
+    // 174196 发货通知
+    // 【购书云】您在{1}购买书籍已发货，订单号为{2}。随后会有配送员与您联系，请耐心等待
+    Delivery = 2;
+
+    // 174203 自动确认收货通知
+    // 【购书云】您在{1}购买的书籍将于{2}自动确认收货，订单号为{3}。如果您没有收到书籍，请尽快与商家联系。联系电话：{4}
+    AutoConfirmReceipt = 3;
+}
+
+message SMSReq {
+    // 短信类型枚举
+    SMSType type            = 1;
+    // 电话号码, 格式 86-15618309412
+    string mobile           = 2;
+    // 根据上面短信魔板依次填入
+    repeated string message = 3;
+}
