@@ -45,6 +45,7 @@ service StockService {
     rpc GetShiftRocordExportDate (User) returns (UserResp);
     // get export date
     rpc UpdateShiftRocordExportDate (User) returns (NormalResp);
+<<<<<<< HEAD
     // get user's taobao setting
     rpc GetUserTaobaoSetting (TaobaoCsvRecord) returns (UserTaobaoSettingResp);
     // update user's taobao setting
@@ -53,6 +54,8 @@ service StockService {
     rpc ExportTaobaoCsv (TaobaoCsvRecord) returns (NormalResp);
     // get taobao csv export record
     rpc GetTaobaoCsvExportRecord (TaobaoCsvRecord) returns (TaobaoCsvRecordListResp);
+=======
+>>>>>>> de836f41d6f30c2465ff7afe594bc361b423564e
 }
 
 // location
@@ -281,8 +284,11 @@ message GoodsShiftRecord{
     int64 size = 20;
     string size_limit = 21;
 }
+<<<<<<< HEAD
 
 
+=======
+>>>>>>> de836f41d6f30c2465ff7afe594bc361b423564e
 // 商品上架下架记录
 message GoodsShiftRecordListResp{
     string code = 1;
@@ -290,6 +296,7 @@ message GoodsShiftRecordListResp{
     repeated GoodsShiftRecord  data= 3;
     int64 total_count = 4;
 }
+<<<<<<< HEAD
 
 
 // ------------taobao moudle------------------
@@ -371,3 +378,5 @@ message TaobaoCsvRecordListResp{
     repeated TaobaoCsvRecord data = 3;
     int64 total_count = 4;
 }
+=======
+>>>>>>> de836f41d6f30c2465ff7afe594bc361b423564e
