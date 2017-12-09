@@ -9,6 +9,19 @@ import (
 	"github.com/wothing/log"
 )
 
+func ChangePwd(user *pb.User) error {
+	query := `update users set password = $1, update_at = now() where id = $2`
+	log.Debugf("update users set password = %s where id = %s", user.Password, user.Id)
+
+	_, err := DB.Exec(query, user.Password, user.Id)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+
+	return nil
+}
+
 func Login(u *pb.User) error {
 	query := "select id, name, role, extract(epoch from create_at)::bigint from users where mobile = $1 and password = $2"
 	log.Debugf("select id, name, role, extract(epoch from create_at)::bigint from users where mobile = '%s' and password = '%s'", u.Mobile, u.Password)

@@ -16,6 +16,10 @@ import (
 	"github.com/tealeg/xlsx"
 )
 
+func TestMd5(t *testing.T) {
+	t.Log(Md5String("yl941002"))
+}
+
 func TestGenCheckCode(t *testing.T) {
 	code := GenCheckCode(4, KC_RAND_KIND_NUM)
 	fmt.Println("====>", code)

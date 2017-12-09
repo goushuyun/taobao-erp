@@ -16,6 +16,7 @@ func SetRouterV1() *m.Router {
 	v1.Register("/users/register", m.Wrap(c.Register))
 	v1.Register("/users/check_user_exist", m.Wrap(c.CheckUserExist))
 	v1.Register("/users/login", m.Wrap(c.Login))
+	v1.Register("/users/change_passwod", m.Wrap(c.ChangePwd))
 
 	// sms
 	v1.Register("/sms/send_identifying_code", m.Wrap(c.SendIdentifyingCode))
