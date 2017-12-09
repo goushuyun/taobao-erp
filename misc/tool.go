@@ -12,8 +12,10 @@ import (
 	"crypto/md5"
 	"encoding/hex"
 	"fmt"
+	"io"
 	"math/rand"
 	"net/http"
+	"os"
 	"reflect"
 	"regexp"
 	"strconv"
@@ -255,4 +257,41 @@ func UnicodeToUtf8(str string) (to string) {
 	to = strings.Replace(to, "\\n", "", -1)
 	to = strings.Replace(to, "\\", "", -1)
 	return
+}
+
+func DownloadFileFromServer(filePath, rawURL string) error {
+	fmt.Println("Downloading file...")
+
+	file, err := os.Create(filePath)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	defer file.Close()
+
+	check := http.Client{
+		CheckRedirect: func(r *http.Request, via []*http.Request) error {
+			r.URL.Opaque = r.URL.Path
+			return nil
+		},
+	}
+
+	resp, err := check.Get(rawURL) // add a filter to check redirect
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	defer resp.Body.Close()
+	fmt.Println(resp.Status)
+
+	size, err := io.Copy(file, resp.Body)
+
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	fmt.Printf(" with %v bytes downloaded", size)
+	return nil
 }

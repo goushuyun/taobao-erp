@@ -45,6 +45,17 @@ service StockService {
     rpc GetShiftRocordExportDate (User) returns (UserResp);
     // get export date
     rpc UpdateShiftRocordExportDate (User) returns (NormalResp);
+<<<<<<< HEAD
+    // get user's taobao setting
+    rpc GetUserTaobaoSetting (TaobaoCsvRecord) returns (UserTaobaoSettingResp);
+    // update user's taobao setting
+    rpc UpdateUserTaobaoSetting (TaobaoCsvRecord) returns (NormalResp);
+    // export taobao csv
+    rpc ExportTaobaoCsv (TaobaoCsvRecord) returns (NormalResp);
+    // get taobao csv export record
+    rpc GetTaobaoCsvExportRecord (TaobaoCsvRecord) returns (TaobaoCsvRecordListResp);
+=======
+>>>>>>> de836f41d6f30c2465ff7afe594bc361b423564e
 }
 
 // location
@@ -273,6 +284,11 @@ message GoodsShiftRecord{
     int64 size = 20;
     string size_limit = 21;
 }
+<<<<<<< HEAD
+
+
+=======
+>>>>>>> de836f41d6f30c2465ff7afe594bc361b423564e
 // 商品上架下架记录
 message GoodsShiftRecordListResp{
     string code = 1;
@@ -280,3 +296,87 @@ message GoodsShiftRecordListResp{
     repeated GoodsShiftRecord  data= 3;
     int64 total_count = 4;
 }
+<<<<<<< HEAD
+
+
+// ------------taobao moudle------------------
+
+
+// taobao csv export record
+message TaobaoCsvRecord{
+    string id = 1;
+    string user_id = 2;
+    int64 discount = 3;
+    int64 supplemental_fee = 4;
+    string province = 5;
+    string city = 6;
+    string express_template = 7;
+    int64 pingyou_fee = 8;
+    int64 express_fee = 9;
+    int64 ems_fee = 10;
+    string reduce_stock_style = 11;
+    int64 total_num = 12;
+    int64 success_num = 13;
+    string product_title  = 14;
+    string product_describe = 15;
+    string filepath = 16;
+    int64 status = 17;
+    string file_url = 18;
+    int64 complete_at = 19;
+    int64 create_at = 20;
+    int64 update_at = 21;
+    string summary = 22;
+    string isbn = 23;
+    string book_no = 24;
+    string title = 25;
+    string publisher = 26;
+    string author = 27;
+    string edition = 28;
+    int64 stock =29;
+    string compare = 30;
+    int64 page = 31;
+    int64 size = 32;
+}
+
+// taobao csv export record items
+message TaobaoCsvRecordItem{
+    string id = 1;
+    string goods_id = 2;
+    string taobao_csv_record_id = 3;
+    int64 create_at = 4;
+    int64 update_at = 5;
+
+    int64 stock = 6;
+    string isbn = 7;
+    string book_no = 8;
+    string title = 9;
+    string publisher = 10;
+    string author = 11;
+    string edition = 12;
+    string pubdate = 13;
+    string series_name = 14;
+    string image = 15;
+    int64 price = 16;
+    string catalog = 17;
+    string abstract = 18;
+    string page = 19;
+    string packing = 20;
+    string format = 21;
+    string author_intro = 22;
+    string taobao_category = 23;
+}
+
+message UserTaobaoSettingResp{
+    string code = 1;
+    string message = 2;
+    TaobaoCsvRecord data = 3;
+}
+
+message TaobaoCsvRecordListResp{
+    string code = 1;
+    string message = 2;
+    repeated TaobaoCsvRecord data = 3;
+    int64 total_count = 4;
+}
+=======
+>>>>>>> de836f41d6f30c2465ff7afe594bc361b423564e

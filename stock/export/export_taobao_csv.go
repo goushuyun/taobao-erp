@@ -1,5 +1,10 @@
 package export
 
+import (
+	"os"
+	"strings"
+)
+
 type TaobaoCsvModel struct {
 	Product_name          string  `csv:"宝贝名称"`
 	Product_category      string  `csv:"宝贝类目"`
@@ -46,7 +51,7 @@ type TaobaoCsvModel struct {
 	Reduce_stock_style    string  `csv:"库存计数"`
 }
 
-func PackingTaobaoParam(isbn, category, title, image, province, city, describe string, stock int64, price, pingyou_fee, ems_fee, express_fee float64) (model *TaobaoCsvModel) {
+func PackingTaobaoParam(isbn, category, title, book_title, image, province, city, describe, reduceStockStyle, deliveryFeeTemplete string, stock int64, price, pingyou_fee, ems_fee, express_fee float64) (model *TaobaoCsvModel) {
 	model = &TaobaoCsvModel{}
 	//自动设置的数据项
 	model.Store_category = `",,"`
@@ -68,7 +73,6 @@ func PackingTaobaoParam(isbn, category, title, image, province, city, describe s
 	model.Product_property = "2043183:2147483647;1636953:2147483647;2045745:4052146;"
 	model.Groupon_price = "0"
 	model.Min_groupon_num = "0"
-	model.Delivery_fee_templet = ""
 	model.Member_discount = "0"
 	model.Update_time = ""
 	model.Upload_status = "200"
@@ -76,11 +80,12 @@ func PackingTaobaoParam(isbn, category, title, image, province, city, describe s
 	model.Rebate = 5
 	model.Video = ""
 	model.Sale_property_combine = ""
-	model.User_input_id = `"16,369,532,043,183"`
+	model.User_input_id = `"1636953,2043183"`
 	model.Express_weight = ""
-	model.Reduce_stock_style = "2"
+
 	//手动设置的数据项
-	model.Product_name = title
+	title = strings.Replace(title, "\"", `'`, -1)
+	model.Product_name = `"` + title + `"`
 	model.Product_category = category
 	model.Province = province
 	model.City = city
@@ -89,10 +94,17 @@ func PackingTaobaoParam(isbn, category, title, image, province, city, describe s
 	model.Pingyou_freight = pingyou_fee
 	model.Ems_freight = ems_fee
 	model.Express_freight = express_fee
+	describe = strings.Replace(describe, "\"", `'`, -1)
 	model.Describe = `"` + describe + `"`
 	model.New_images = image
-	model.Product_title_id_map = `"` + isbn + "," + title + `"`
+	model.Product_title_id_map = `"` + isbn + "," + book_title + `"`
 	model.Seller_code = isbn
-
+	model.Reduce_stock_style = reduceStockStyle
+	model.Delivery_fee_templet = deliveryFeeTemplete
 	return
+}
+
+func SetReadOnly(filepath string) error {
+	err := os.Chmod(filepath, 0444)
+	return err
 }

@@ -30,8 +30,8 @@ func NewCsv(w io.Writer) *Csv {
 	var csv = &Csv{}
 	csv.writer = bufio.NewWriter(w)
 	csv.needBom = true
-	csv.separator = `,`
-	csv.newline = "\n"
+	csv.separator = "\t"
+	csv.newline = "\r\n"
 	csv.SetHasStart(false)
 	csv.names = make([]string, 0, 8)
 	return csv

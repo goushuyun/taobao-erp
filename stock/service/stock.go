@@ -8,7 +8,9 @@ import (
 
 	"golang.org/x/net/context"
 
+	baseDb "github.com/goushuyun/taobao-erp/db"
 	"github.com/goushuyun/taobao-erp/pb"
+
 	"github.com/goushuyun/taobao-erp/stock/db"
 	"github.com/wothing/log"
 )
@@ -235,4 +237,68 @@ func (s *StockServer) UpdateShiftRocordExportDate(ctx context.Context, req *pb.U
 		return nil, errs.Wrap(errors.New(err.Error()))
 	}
 	return &pb.NormalResp{Code: errs.Ok, Message: "ok"}, nil
+}
+
+// get user's taobao setting
+func (s *StockServer) GetUserTaobaoSetting(ctx context.Context, req *pb.TaobaoCsvRecord) (*pb.UserTaobaoSettingResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "GetUserTaobaoSetting", "%#v", req))
+	err := db.GetUserTaobaoSetting(req)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	return &pb.UserTaobaoSettingResp{Code: errs.Ok, Message: "ok", Data: req}, nil
+}
+
+//update user's taobao setting
+func (s *StockServer) UpdateUserTaobaoSetting(ctx context.Context, req *pb.TaobaoCsvRecord) (*pb.NormalResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "UpdateUserTaobaoSetting", "%#v", req))
+	err := db.UpdateUserTaobaoSetting(req)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	return &pb.NormalResp{Code: errs.Ok, Message: "ok"}, nil
+}
+
+//update user's taobao setting
+func (s *StockServer) ExportTaobaoCsv(ctx context.Context, req *pb.TaobaoCsvRecord) (*pb.NormalResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "ExportTaobaoCsv", "%#v", req))
+	//添加事务
+	tx, err := baseDb.DB.Begin()
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	defer tx.Rollback()
+	//新建csv
+	err = db.AddExportCsvRecord(tx, req)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	//添加列表
+	err = db.AddExportCsvRecordRelatedItems(tx, req)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	//完成之后提交数据
+	tx.Commit()
+	return &pb.NormalResp{Code: errs.Ok, Message: "ok"}, nil
+}
+
+//update user's taobao setting
+func (s *StockServer) GetTaobaoCsvExportRecord(ctx context.Context, req *pb.TaobaoCsvRecord) (*pb.TaobaoCsvRecordListResp, error) {
+	tid := misc.GetTidFromContext(ctx)
+	defer log.TraceOut(log.TraceIn(tid, "GetTaobaoCsvExportRecord", "%#v", req))
+	models, err, totalCount := db.GetTaobaoCsvExportRecord(req)
+	if err != nil {
+		log.Error(err)
+		return nil, errs.Wrap(errors.New(err.Error()))
+	}
+	return &pb.TaobaoCsvRecordListResp{Code: errs.Ok, Message: "ok", Data: models, TotalCount: totalCount}, nil
 }

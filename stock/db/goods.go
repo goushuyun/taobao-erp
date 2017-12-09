@@ -96,7 +96,7 @@ func SearchGoods(goods *pb.GoodsInfo) (models []*pb.GoodsInfo, err error, totalC
 	}
 
 	if goods.LocationId != "" {
-		condition += fmt.Sprintf(" and exists (select * from goods_location_map gl where gl.goods_id::uuid=g.id::uuid and gl.location_id='%s' )", goods.LocationId)
+		condition += fmt.Sprintf(" and exists (select * from goods_location_map gl where gl.goods_id::uuid=g.id::uuid and gl.location_id='%s' and gl.stock>0 )", goods.LocationId)
 	}
 	// 0 全部 1:信息不全 2:信息全有   3:无书名及没价格  4:无图片
 	if goods.InfoIsComplete != 0 {

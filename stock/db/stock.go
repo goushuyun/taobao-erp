@@ -436,3 +436,247 @@ func GetShiftRocordExportDate(user *pb.User) error {
 	}
 	return nil
 }
+
+// get user taobao setting
+func GetUserTaobaoSetting(model *pb.TaobaoCsvRecord) error {
+	query := "select id ,user_id,discount,supplemental_fee,province,city,express_template,pingyou_fee,express_fee,ems_fee,reduce_stock_style,extract(epoch from create_at)::bigint,product_title,product_describe from users_taobao_setting where user_id='%s'"
+	query = fmt.Sprintf(query, model.UserId)
+	log.Debug(query)
+	err := DB.QueryRow(query).Scan(&model.Id, &model.UserId, &model.Discount, &model.SupplementalFee, &model.Province, &model.City, &model.ExpressTemplate, &model.PingyouFee, &model.ExpressFee, &model.EmsFee, &model.ReduceStockStyle, &model.CreateAt, &model.ProductTitle, &model.ProductDescribe)
+	if err != nil {
+		if err == sql.ErrNoRows {
+			query = fmt.Sprintf("insert into users_taobao_setting(user_id) values('%s') returning id", model.UserId)
+			err = DB.QueryRow(query).Scan(&model.Id)
+			if err != nil {
+				log.Error(err)
+				return err
+			}
+		} else {
+			log.Error(err)
+			return err
+		}
+	}
+	return nil
+}
+
+// update user's taobao setting
+func UpdateUserTaobaoSetting(model *pb.TaobaoCsvRecord) error {
+	query := "update users_taobao_setting set update_at=now()"
+	var conditon string
+	conditon += fmt.Sprintf(",discount=%d", model.Discount)
+
+	conditon += fmt.Sprintf(",supplemental_fee=%d", model.SupplementalFee)
+
+	if model.Province != "" {
+		conditon += fmt.Sprintf(",province='%s'", model.Province)
+	}
+	if model.City != "" {
+		conditon += fmt.Sprintf(",city='%s'", model.City)
+	}
+	if model.ExpressTemplate != "" {
+		conditon += fmt.Sprintf(",express_template='%s'", model.ExpressTemplate)
+	}
+	if model.PingyouFee != 0 {
+		conditon += fmt.Sprintf(",pingyou_fee=%d", model.PingyouFee)
+	}
+	if model.ExpressFee != 0 {
+		conditon += fmt.Sprintf(",express_fee=%d", model.ExpressFee)
+	}
+	if model.EmsFee != 0 {
+		conditon += fmt.Sprintf(",ems_fee=%d", model.EmsFee)
+	}
+	if model.ReduceStockStyle != "" {
+		conditon += fmt.Sprintf(",reduce_stock_style='%s'", model.ReduceStockStyle)
+	}
+	if model.ProductTitle != "" {
+		conditon += fmt.Sprintf(",product_title='%s'", model.ProductTitle)
+	}
+	if model.ProductDescribe != "" {
+		conditon += fmt.Sprintf(",product_describe='%s'", model.ProductDescribe)
+	}
+	conditon += fmt.Sprintf(" where id='%s'", model.Id)
+	query += conditon
+	log.Debug(query)
+	_, err := DB.Exec(query)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+// add a record about taobaocsv
+func AddExportCsvRecord(tx *sql.Tx, model *pb.TaobaoCsvRecord) error {
+	query := "insert into taobao_csv_record(user_id,discount,supplemental_fee,province,city,express_template,pingyou_fee,express_fee,ems_fee,reduce_stock_style,product_title,product_describe,search_isbn,search_title,search_publisher,search_compare,search_stock,search_author) values('%s',%d,%d,'%s','%s','%s',%d,%d,%d,'%s','%s','%s','%s','%s','%s','%s',%d,'%s') returning id"
+	query = fmt.Sprintf(query, model.UserId, model.Discount, model.SupplementalFee, model.Province, model.City, model.ExpressTemplate, model.PingyouFee, model.ExpressFee, model.EmsFee, model.ReduceStockStyle, model.ProductTitle, model.ProductDescribe, model.Isbn, model.Title, model.Publisher, model.Compare, model.Stock, model.Author)
+	log.Debug(query)
+	err := tx.QueryRow(query).Scan(&model.Id)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+// add item to record
+func AddExportCsvRecordRelatedItems(tx *sql.Tx, model *pb.TaobaoCsvRecord) error {
+	query := "insert into taobao_csv_record_item(goods_id,taobao_csv_record_id) select g.id,'%s' from goods g join book b on g.book_id=b.id where 1=1"
+	query = fmt.Sprintf(query, model.Id)
+	var condition string
+	if model.Isbn != "" {
+		condition += fmt.Sprintf(" and b.isbn='%s'", model.Isbn)
+	}
+	if model.BookNo != "" {
+		condition += fmt.Sprintf(" and b.book_no='%s'", model.BookNo)
+	}
+
+	if model.Title != "" {
+		condition += fmt.Sprintf(" and b.title like '%s'", misc.FazzyQuery(model.Title))
+	}
+	if model.Publisher != "" {
+		condition += fmt.Sprintf(" and b.publisher='%s'", model.Publisher)
+	}
+	if model.Author != "" {
+		condition += fmt.Sprintf(" and b.author='%s'", model.Author)
+	}
+	if model.Compare != "" {
+		if model.Compare == "less" {
+			condition += fmt.Sprintf(" and g.stock<%d", model.Stock)
+		} else if model.Compare == "greater" {
+			condition += fmt.Sprintf(" and g.stock>=%d", model.Stock)
+		}
+	}
+	if model.UserId != "" {
+		condition += fmt.Sprintf(" and g.user_id='%s'", model.UserId)
+	}
+
+	query += condition
+
+	log.Debug(query)
+	_, err := tx.Exec(query)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+//获取淘宝导出记录
+func GetTaobaoCsvExportRecord(req *pb.TaobaoCsvRecord) (models []*pb.TaobaoCsvRecord, err error, totalCount int64) {
+	query := "select id,user_id,discount,supplemental_fee,province,city,express_template,pingyou_fee,express_fee,ems_fee,reduce_stock_style,status,file_url,extract(epoch from create_at)::bigint,extract(epoch from create_at)::bigint,summary,product_title,product_describe,search_isbn,search_title,search_publisher,search_compare,search_stock,search_author from taobao_csv_record where 1=1"
+	queryCount := "select count(*) from  taobao_csv_record where 1=1"
+	if req.UserId != "" {
+		query += fmt.Sprintf(" and user_id='%s'", req.UserId)
+		queryCount += fmt.Sprintf(" and user_id='%s'", req.UserId)
+
+	}
+	if req.Id != "" {
+		query += fmt.Sprintf(" and id='%s'", req.Id)
+		queryCount += fmt.Sprintf(" and id='%s'", req.Id)
+
+	}
+	if req.Status != 0 {
+		query += fmt.Sprintf(" and status=%d", req.Status)
+		queryCount += fmt.Sprintf(" and status=%d", req.Status)
+	}
+	log.Debug(queryCount)
+	err = DB.QueryRow(queryCount).Scan(&totalCount)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	if totalCount <= 0 {
+		return
+	}
+	if req.Page <= 0 {
+		req.Page = 1
+	}
+	if req.Size <= 0 {
+		req.Size = 15
+	}
+
+	query += fmt.Sprintf(" order by create_at desc,id desc offset %d limit %d", req.Size*(req.Page-1), req.Size)
+
+	log.Debug(query)
+
+	rows, err := DB.Query(query)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	defer rows.Close()
+	for rows.Next() {
+		model := &pb.TaobaoCsvRecord{}
+		models = append(models, model)
+		//id,user_id,discount,supplemental_fee,province,city,express_template,pingyou_fee,express_fee,ems_fee,reduce_stock_style,status,file_url,extract(epoch from complete_at)::bigint,extract(epoch from create_at)::bigint
+		var completeAt sql.NullInt64
+		err = rows.Scan(&model.Id, &model.UserId, &model.Discount, &model.SupplementalFee, &model.Province, &model.City, &model.ExpressTemplate, &model.PingyouFee, &model.ExpressFee, &model.EmsFee, &model.ReduceStockStyle, &model.Status, &model.FileUrl, &completeAt, &model.CreateAt, &model.Summary, &model.ProductTitle, &model.ProductDescribe, &model.Isbn, &model.Title, &model.Publisher, &model.Compare, &model.Stock, &model.Author)
+		if err != nil {
+			log.Error(err)
+			return
+		}
+		if completeAt.Valid {
+			model.CompleteAt = completeAt.Int64
+		}
+	}
+	return
+
+}
+
+// get items about taobao exported record
+func GetTaobaoCsvExportRecordItems(req *pb.TaobaoCsvRecord) (models []*pb.TaobaoCsvRecordItem, err error) {
+	query := "select t.id,t.goods_id,g.stock,b.isbn,b.book_no,b.title,b.publisher,b.author,b.edition,b.pubdate,b.series_name,b.image,b.price,b.catalog,b.abstract,b.page,b.packing,b.format,b.author_intro,b.taobao_category from taobao_csv_record_item t join goods g on t.goods_id::uuid=g.id join book b on g.book_id=b.id where taobao_csv_record_id='%s' order by id desc"
+	query = fmt.Sprintf(query, req.Id)
+	log.Debug(query)
+	rows, err := DB.Query(query)
+	if err != nil {
+		log.Error(err)
+		return
+	}
+	defer rows.Close()
+
+	for rows.Next() {
+		model := &pb.TaobaoCsvRecordItem{}
+		models = append(models, model)
+		err = rows.Scan(&model.Id, &model.GoodsId, &model.Stock, &model.Isbn, &model.BookNo, &model.Title, &model.Publisher, &model.Author, &model.Edition, &model.Pubdate, &model.SeriesName, &model.Image, &model.Price, &model.Catalog, &model.Abstract, &model.Page, &model.Packing, &model.Format, &model.AuthorIntro, &model.TaobaoCategory)
+		if err != nil {
+			log.Error(err)
+			return
+		}
+	}
+	return
+}
+
+// get items about taobao exported record
+func UpdatTaobaoCsvExportRecordItems(req *pb.TaobaoCsvRecord) error {
+	query := "update taobao_csv_record set update_at=now()"
+	if req.Summary != "" {
+		query += fmt.Sprintf(",summary='%s'", req.Summary)
+	}
+	if req.Status != 0 {
+		query += fmt.Sprintf(",status=%d", req.Status)
+	}
+	if req.FileUrl != "" {
+		query += fmt.Sprintf(",file_url='%s'", req.FileUrl)
+	}
+	query += fmt.Sprintf(" where id='%s'", req.Id)
+	log.Debug(query)
+	_, err := DB.Exec(query)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}
+
+// del taobao csv record items
+func DelTaobaoCsvExportRecordItems(req *pb.TaobaoCsvRecord) error {
+	query := fmt.Sprintf("delete from taobao_csv_record_item where taobao_csv_record_id='%s'", req.Id)
+	log.Debug(query)
+	_, err := DB.Exec(query)
+	if err != nil {
+		log.Error(err)
+		return err
+	}
+	return nil
+}

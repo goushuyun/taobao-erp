@@ -50,7 +50,10 @@ func SetRouterV1() *m.Router {
 	v1.Register("/stock/get_pending_gatherd_goods", m.Wrap(c.GetGoodsPendingGatherData))
 	v1.Register("/stock/get_goods_shift_record", m.Wrap(c.GetGoodsShiftRecord))
 	v1.Register("/stock/get_shift_record_latest_export_date", m.Wrap(c.GetShiftRocordExportDate))
-	v1.RegisterGET("/stock/export_csv", m.Wrap(c.ExportCsv))
+	v1.Register("/stock/get_taobao_setting", m.Wrap(c.GetUserTaobaoSetting))
+	v1.Register("/stock/update_taobao_setting", m.Wrap(c.UpdateUserTaobaoSetting))
+	v1.Register("/stock/export_taobao_csv", m.Wrap(c.ExportTaobaoCsv))
+	v1.Register("/stock/get_exported_taobao_csv_record", m.Wrap(c.GetTaobaoCsvExportRecord))
 	v1.RegisterGET("/stock/export_goods_shift_record", m.Wrap(c.ExportGoodsShiftRecord))
 	return v1
 }
