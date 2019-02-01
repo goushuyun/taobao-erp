@@ -7,7 +7,7 @@ import (
 
 	"github.com/gocarina/gocsv"
 	"github.com/goushuyun/taobao-erp/misc"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 type People struct {

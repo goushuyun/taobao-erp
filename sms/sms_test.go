@@ -5,7 +5,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 
 	"github.com/goushuyun/taobao-erp/pb"
 

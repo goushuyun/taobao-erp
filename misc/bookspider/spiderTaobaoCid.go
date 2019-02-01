@@ -4,7 +4,7 @@ import (
 	"regexp"
 	"strings"
 
-	log "github.com/wothing/log"
+	log "github.com/goushuyun/log"
 
 	"github.com/hu17889/go_spider/core/common/page"
 )

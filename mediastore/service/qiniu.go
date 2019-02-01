@@ -18,7 +18,7 @@ import (
 	"github.com/goushuyun/taobao-erp/pb"
 
 	"github.com/tealeg/xlsx"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 	"qiniupkg.com/api.v7/kodo"
 	"qiniupkg.com/api.v7/kodocli"
 )

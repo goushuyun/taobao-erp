@@ -15,7 +15,7 @@ import (
 	"github.com/goushuyun/taobao-erp/stock/db"
 	"github.com/goushuyun/taobao-erp/stock/export"
 	"github.com/mholt/archiver"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 var IsRunOn = false

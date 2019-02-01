@@ -14,7 +14,7 @@ import (
 	"time"
 
 	_ "github.com/lib/pq"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 var DB *sql.DB

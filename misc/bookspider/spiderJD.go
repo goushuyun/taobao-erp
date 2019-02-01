@@ -12,10 +12,10 @@ import (
 	iconv "gopkg.in/iconv.v1"
 
 	"github.com/PuerkitoBio/goquery"
+	log "github.com/goushuyun/log"
 	"github.com/hu17889/go_spider/core/common/page"
 	"github.com/hu17889/go_spider/core/common/request"
 	"github.com/hu17889/go_spider/core/spider"
-	log "github.com/wothing/log"
 )
 
 type JDListProcesser struct {

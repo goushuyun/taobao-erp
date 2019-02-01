@@ -13,7 +13,7 @@ import (
 	"reflect"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 	"github.com/wothing/worc"
 	"google.golang.org/grpc/metadata"
 

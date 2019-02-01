@@ -8,7 +8,7 @@ import (
 	"github.com/pborman/uuid"
 	"google.golang.org/grpc/metadata"
 
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 func TestHandleBook(t *testing.T) {

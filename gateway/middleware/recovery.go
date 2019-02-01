@@ -6,7 +6,7 @@ import (
 	"runtime"
 
 	"github.com/urfave/negroni"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 const (

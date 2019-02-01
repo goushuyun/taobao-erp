@@ -3,7 +3,7 @@ package misc
 import (
 	"testing"
 
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 func TestGetReceipt(t *testing.T) {

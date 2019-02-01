@@ -14,7 +14,7 @@ import (
 	"github.com/goushuyun/taobao-erp/pb"
 	"github.com/pborman/uuid"
 
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 var IsRunOn = false

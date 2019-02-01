@@ -7,7 +7,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 
 	"github.com/goushuyun/taobao-erp/misc/key_word_filter"
 	"github.com/goushuyun/taobao-erp/pb"

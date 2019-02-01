@@ -1,0 +1,72 @@
+package:       github.com/goushuyun/taobao-erp
+import:
+- package:     github.com/PuerkitoBio/goquery
+  version:     v1.2.0
+- package:     github.com/coreos/etcd
+  version:     v2.3.6
+  subpackages:
+  - client
+- package:     github.com/dgrijalva/jwt-go
+  version:     v3.1.0
+- package:     github.com/elgs/gostrgen
+- package:     github.com/garyburd/redigo
+  version:     v1.4.0
+  subpackages:
+  - redis
+- package:     github.com/golang/protobuf
+  version:     1e59b77b52bf8e4b449a57e6f79f21226d571845
+  subpackages:
+  - proto
+- package:     github.com/goushuyun/log
+- package:     github.com/hu17889/go_spider
+  version:     85ede20bf88b6861235d89765dacbc732695ab59
+  subpackages:
+  - core/common/page
+  - core/common/page_items
+  - core/common/request
+  - core/spider
+- package:     github.com/jackc/pgx
+  version:     v3.1.0
+- package:     github.com/julienschmidt/httprouter
+  version:     v1.1
+- package:     github.com/lib/pq
+- package:     github.com/mholt/archiver
+  version:     v2.0
+- package:     github.com/nsqio/go-nsq
+  version:     v1.0.7
+- package:     github.com/pborman/uuid
+  version:     v1.1
+- package:     github.com/robfig/cron
+  version:     v1
+- package:     github.com/tealeg/xlsx
+  version:     v1.0.0
+- package:     github.com/urfave/negroni
+  version:     v0.3.0
+- package:     github.com/wothing/wonaming
+  version:     28ff1d6e5f9d5aac27751104e39c8ab827352076
+  subpackages:
+  - etcd
+- package:     github.com/wothing/worc
+- package:     github.com/wothing/worpc
+- package:     golang.org/x/net
+  version:     ab5485076ff3407ad2d02db054635913f017b0ed
+  repo:        https://github.com/golang/net.git
+  subpackages:
+  - context
+- package:     google.golang.org/grpc
+  repo:        https://github.com/grpc/grpc-go.git
+  version:     v1.5.1
+  subpackages:
+  - codes
+  - metadata
+- package:     gopkg.in/iconv.v1
+  version:     v1.1.1
+  vcs:         git
+- package:     qiniupkg.com/api.v7
+  version:     v7.0.5
+  repo:        https://github.com/qiniu/api.v7.git
+  subpackages:
+  - kodo
+  - kodocli
+testImport:
+- package:     github.com/gocarina/gocsv

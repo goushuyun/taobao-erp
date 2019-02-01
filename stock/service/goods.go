@@ -10,7 +10,7 @@ import (
 
 	"github.com/goushuyun/taobao-erp/pb"
 	"github.com/goushuyun/taobao-erp/stock/db"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 var notFound = "not_found"

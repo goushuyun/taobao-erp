@@ -30,11 +30,11 @@ func Jwt(ctx context.Context, req interface{}, info *grpc.UnaryServerInfo, handl
 
 // GetTokenFromContext extract token from context
 func getTokenFromContext(ctx context.Context) string {
-	if md, ok := metadata.FromContext(ctx); ok {
-		if len(md["token"]) > 0 {
-			return md["token"][0]
-		}
-	}
+	// if md, ok := metadata.FromContext(ctx); ok {
+	// 	if len(md["token"]) > 0 {
+	// 		return md["token"][0]
+	// 	}
+	// }
 	return ""
 }
 

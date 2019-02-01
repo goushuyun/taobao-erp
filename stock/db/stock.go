@@ -8,7 +8,7 @@ import (
 	. "github.com/goushuyun/taobao-erp/db"
 	"github.com/goushuyun/taobao-erp/misc"
 	"github.com/goushuyun/taobao-erp/pb"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 func LocationFazzyQuery(l *pb.Location) ([]*pb.Location, int64, error) {

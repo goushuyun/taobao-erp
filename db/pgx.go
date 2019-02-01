@@ -11,7 +11,7 @@ import (
 	"strconv"
 
 	"github.com/jackc/pgx"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 var PGX *pgx.ConnPool

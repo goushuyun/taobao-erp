@@ -7,7 +7,7 @@ import (
 	"regexp"
 	"strings"
 
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 func getOrderNo() string {

@@ -1,0 +1,187 @@
+hash: 1d90b1281486983fcdb18dbecc59e8b83c0391b92c9f04f4385fb2077097d0e4
+updated: 2018-01-20T14:26:35.765096+08:00
+imports:
+- name: github.com/andybalholm/cascadia
+  version: 349dd0209470eabd9514242c688c403c0926d266
+- name: github.com/bitly/go-simplejson
+  version: 0c965951289cce37dec52ad1f34200fefc816777
+- name: github.com/coreos/etcd
+  version: 128344c45541a477053f9df2ac39328027badc02
+  subpackages:
+  - Godeps/_workspace/src/github.com/ugorji/go/codec
+  - Godeps/_workspace/src/golang.org/x/net/context
+  - client
+  - pkg/pathutil
+  - pkg/types
+- name: github.com/dgrijalva/jwt-go
+  version: dbeaa9332f19a944acb5736b4456cfcc02140e29
+- name: github.com/dsnet/compress
+  version: cc9eb1d7ad760af14e8f918698f745e80377af4f
+  subpackages:
+  - bzip2
+  - bzip2/internal/sais
+  - internal
+  - internal/errors
+  - internal/prefix
+- name: github.com/elgs/gostrgen
+  version: 9d61ae07eeaeb54ce2100022b1fd3ea020093d09
+- name: github.com/garyburd/redigo
+  version: d1ed5c67e5794de818ea85e6b522fda02623a484
+  subpackages:
+  - internal
+  - redis
+- name: github.com/golang/protobuf
+  version: 1e59b77b52bf8e4b449a57e6f79f21226d571845
+  subpackages:
+  - jsonpb
+  - proto
+  - ptypes/any
+  - ptypes/struct
+- name: github.com/golang/snappy
+  version: 553a641470496b2327abcac10b36396bd98e45c9
+- name: github.com/goushuyun/log
+  version: 5cd88c0ddc9e8d965992d4a07357085585636674
+- name: github.com/hu17889/go_spider
+  version: 85ede20bf88b6861235d89765dacbc732695ab59
+  subpackages:
+  - core/common/com_interfaces
+  - core/common/mlog
+  - core/common/page
+  - core/common/page_items
+  - core/common/request
+  - core/common/resource_manage
+  - core/common/util
+  - core/downloader
+  - core/page_processer
+  - core/pipeline
+  - core/scheduler
+  - core/spider
+- name: github.com/jackc/pgx
+  version: da3231b0b66e2e74cdb779f1d46c5e958ba8be27
+  subpackages:
+  - chunkreader
+  - internal/sanitize
+  - pgio
+  - pgproto3
+  - pgtype
+- name: github.com/julienschmidt/httprouter
+  version: 8c199fb6259ffc1af525cc3ad52ee60ba8359669
+- name: github.com/lib/pq
+  version: 27ea5d92de30060e7121ddd543fe14e9a327e0cc
+  subpackages:
+  - oid
+- name: github.com/mholt/archiver
+  version: cdc68dd1f170b8dfc1a0d2231b5bb0967ed67006
+- name: github.com/nsqio/go-nsq
+  version: eee57a3ac4174c55924125bb15eeeda8cffb6e6f
+- name: github.com/nwaples/rardecode
+  version: e06696f847aeda6f39a8f0b7cdff193b7690aef6
+- name: github.com/pborman/uuid
+  version: e790cca94e6cc75c7064b1332e63811d4aae1a53
+- name: github.com/pkg/errors
+  version: e881fd58d78e04cf6d0de1217f8707c8cc2249bc
+- name: github.com/PuerkitoBio/goquery
+  version: a41cf096e64e3752d7683898d5746bc0b98ee213
+- name: github.com/robfig/cron
+  version: b024fc5ea0e34bc3f83d9941c8d60b0622bfaca4
+- name: github.com/tealeg/xlsx
+  version: cbd41c13621a761938cfef0a3d365a75968d54d9
+- name: github.com/ulikunitz/xz
+  version: 0c6b41e72360850ca4f98dc341fd999726ea007f
+  subpackages:
+  - internal/hash
+  - internal/xlog
+  - lzma
+- name: github.com/urfave/negroni
+  version: 5dbbc83f748fc3ad38585842b0aedab546d0ea1e
+- name: github.com/wothing/log
+  version: c00ead6ccb9b6432e201447ef1d10db5e69fc89c
+- name: github.com/wothing/wonaming
+  version: 28ff1d6e5f9d5aac27751104e39c8ab827352076
+  subpackages:
+  - etcd
+- name: github.com/wothing/worc
+  version: 1ad84ac226ecab56bd28bfe6d91cf90fcd29bf95
+- name: github.com/wothing/worpc
+  version: 14120d28f35ad415019749f0179ccc6ae290166b
+- name: golang.org/x/net
+  version: ab5485076ff3407ad2d02db054635913f017b0ed
+  repo: https://github.com/golang/net.git
+  subpackages:
+  - context
+  - html
+  - html/atom
+  - html/charset
+  - http2
+  - http2/hpack
+  - idna
+  - internal/timeseries
+  - lex/httplex
+  - trace
+- name: golang.org/x/text
+  version: b19bf474d317b857955b12035d2c5acb57ce8b01
+  subpackages:
+  - encoding
+  - encoding/charmap
+  - encoding/htmlindex
+  - encoding/internal
+  - encoding/internal/identifier
+  - encoding/japanese
+  - encoding/korean
+  - encoding/simplifiedchinese
+  - encoding/traditionalchinese
+  - encoding/unicode
+  - internal/tag
+  - internal/utf8internal
+  - language
+  - runes
+  - secure/bidirule
+  - transform
+  - unicode/bidi
+  - unicode/norm
+- name: google.golang.org/genproto
+  version: 09f6ed296fc66555a25fe4ce95173148778dfa85
+  subpackages:
+  - googleapis/rpc/status
+- name: google.golang.org/grpc
+  version: b8669c35455183da6d5c474ea6e72fbf55183274
+  repo: https://github.com/grpc/grpc-go.git
+  subpackages:
+  - codes
+  - credentials
+  - grpclb/grpc_lb_v1
+  - grpclog
+  - internal
+  - keepalive
+  - metadata
+  - naming
+  - peer
+  - stats
+  - status
+  - tap
+  - transport
+- name: gopkg.in/iconv.v1
+  version: 16a760eb7e186ae0e3aedda00d4a1daa4d0701d8
+  vcs: git
+- name: qiniupkg.com/api.v7
+  version: e4122ada30952518d4745bb9f8dd87bef65a498f
+  repo: https://github.com/qiniu/api.v7.git
+  subpackages:
+  - auth/qbox
+  - conf
+  - kodo
+  - kodocli
+- name: qiniupkg.com/x
+  version: f512abcf45ab4e2ba0fd4784c57b53d495997d66
+  subpackages:
+  - bytes.v7
+  - bytes.v7/seekable
+  - ctype.v7
+  - log.v7
+  - reqid.v7
+  - rpc.v7
+  - url.v7
+  - xlog.v7
+testImports:
+- name: github.com/gocarina/gocsv
+  version: 45cbb9cde54ea46d800c4fcd1a686949ac6d87a3

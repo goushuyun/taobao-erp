@@ -19,7 +19,7 @@ import (
 	"github.com/goushuyun/taobao-erp/misc"
 	"github.com/goushuyun/taobao-erp/pb"
 
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 type BookServer struct {

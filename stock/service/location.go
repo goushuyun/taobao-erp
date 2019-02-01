@@ -11,7 +11,7 @@ import (
 	"golang.org/x/net/context"
 
 	"github.com/goushuyun/taobao-erp/pb"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 func (s *StockServer) LocationFazzyQuery(ctx context.Context, req *pb.Location) (*pb.LocationBatchResp, error) {

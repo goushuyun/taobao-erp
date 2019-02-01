@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/goushuyun/taobao-erp/db"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 func TestPgArray2StringSlice(t *testing.T) {

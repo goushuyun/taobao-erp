@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/garyburd/redigo/redis"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 var pool *redis.Pool

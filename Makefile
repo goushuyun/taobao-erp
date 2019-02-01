@@ -170,7 +170,7 @@ get:
 	go get github.com/gorilla/context
 	go get github.com/dgrijalva/jwt-go
 	go get github.com/pborman/uuid
-	go get github.com/wothing/log
+	go get github.com/goushuyun/log
 	go get github.com/wothing/worc
 	go get github.com/wothing/worpc
 	go get github.com/wothing/wonaming/etcd

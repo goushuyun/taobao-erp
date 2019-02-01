@@ -14,7 +14,7 @@ import (
 	"net/http"
 
 	"github.com/goushuyun/taobao-erp/errs"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 var client = &http.Client{}

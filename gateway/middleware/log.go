@@ -13,7 +13,7 @@ import (
 	"github.com/goushuyun/taobao-erp/errs"
 	"github.com/goushuyun/taobao-erp/misc"
 	"github.com/goushuyun/taobao-erp/misc/hack"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 func LogMiddleware() negroni.HandlerFunc {

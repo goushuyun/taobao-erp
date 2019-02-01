@@ -8,7 +8,7 @@ import (
 	"sync"
 	"testing"
 
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 
 	"github.com/goushuyun/taobao-erp/pb"
 	"github.com/mholt/archiver"
@@ -17,7 +17,7 @@ import (
 )
 
 func TestMd5(t *testing.T) {
-	t.Log(Md5String("yl941002"))
+	t.Log(Md5String("723325"))
 }
 
 func TestGenCheckCode(t *testing.T) {

@@ -12,7 +12,7 @@ import (
 	"os"
 	"time"
 
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 	wonaming "github.com/wothing/wonaming/etcd"
 
 	"github.com/goushuyun/taobao-erp/ver"

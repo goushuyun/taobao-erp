@@ -16,7 +16,7 @@ import (
 	"syscall"
 	"time"
 
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 	wonaming "github.com/wothing/wonaming/etcd"
 	"github.com/wothing/worc"
 )

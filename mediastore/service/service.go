@@ -8,7 +8,7 @@ import (
 
 	"github.com/goushuyun/taobao-erp/pb"
 
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 	"golang.org/x/net/context"
 )
 

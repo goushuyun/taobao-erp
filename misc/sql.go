@@ -13,7 +13,7 @@ import (
 	"golang.org/x/net/context"
 
 	"github.com/pborman/uuid"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 func StringSlice2PgArray(arr []string) string {

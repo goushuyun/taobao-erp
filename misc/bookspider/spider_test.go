@@ -15,7 +15,7 @@ import (
 	"github.com/goushuyun/taobao-erp/misc"
 	"github.com/hu17889/go_spider/core/common/request"
 	"github.com/hu17889/go_spider/core/spider"
-	log "github.com/wothing/log"
+	log "github.com/goushuyun/log"
 	"gopkg.in/iconv.v1"
 )
 

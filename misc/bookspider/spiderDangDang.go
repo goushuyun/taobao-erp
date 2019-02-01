@@ -13,7 +13,7 @@ import (
 	"github.com/hu17889/go_spider/core/common/page"
 	"github.com/hu17889/go_spider/core/common/request"
 	"github.com/hu17889/go_spider/core/spider"
-	log "github.com/wothing/log"
+	log "github.com/goushuyun/log"
 )
 
 type DangDangListProcesser struct {

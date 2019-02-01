@@ -6,7 +6,7 @@ import (
 
 	. "github.com/goushuyun/taobao-erp/db"
 	"github.com/goushuyun/taobao-erp/pb"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 func ChangePwd(user *pb.User) error {

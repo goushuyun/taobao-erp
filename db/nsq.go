@@ -11,7 +11,7 @@ import (
 	"strings"
 
 	nsq "github.com/nsqio/go-nsq"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 type nsqPub struct {

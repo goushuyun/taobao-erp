@@ -13,7 +13,7 @@ import (
 	"time"
 
 	"github.com/nsqio/go-nsq"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 	"golang.org/x/net/context"
 
 	"github.com/goushuyun/taobao-erp/db"

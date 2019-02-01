@@ -4,7 +4,7 @@ import (
 	"net/http"
 	"time"
 
-	log "github.com/wothing/log"
+	log "github.com/goushuyun/log"
 
 	"github.com/goushuyun/taobao-erp/errs"
 	"github.com/tealeg/xlsx"

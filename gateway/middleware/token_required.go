@@ -10,7 +10,7 @@ import (
 
 	"github.com/goushuyun/taobao-erp/misc"
 	"github.com/goushuyun/taobao-erp/misc/token"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 func TokenRequiredMiddle() negroni.HandlerFunc {

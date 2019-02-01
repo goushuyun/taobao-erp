@@ -6,7 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 func Get(url string) ([]byte, error) {

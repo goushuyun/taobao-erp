@@ -6,7 +6,7 @@ import (
 
 	"google.golang.org/grpc"
 
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 	"github.com/wothing/worpc"
 
 	"github.com/goushuyun/taobao-erp/db"

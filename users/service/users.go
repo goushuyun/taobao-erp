@@ -14,7 +14,7 @@ import (
 
 	"github.com/goushuyun/taobao-erp/misc/token"
 	"github.com/goushuyun/taobao-erp/users/role"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 )
 
 type UsersServer struct {

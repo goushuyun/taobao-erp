@@ -10,7 +10,7 @@ import (
 	"reflect"
 
 	"github.com/golang/protobuf/proto"
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 
 	"github.com/goushuyun/taobao-erp/errs"
 	"github.com/goushuyun/taobao-erp/misc/hack"

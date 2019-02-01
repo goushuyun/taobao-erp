@@ -6,7 +6,7 @@ import (
 	"fmt"
 	"strings"
 
-	"github.com/wothing/log"
+	"github.com/goushuyun/log"
 
 	. "github.com/goushuyun/taobao-erp/db"
 	"github.com/goushuyun/taobao-erp/pb"
