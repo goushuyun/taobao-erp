@@ -5,9 +5,10 @@ import (
 	"os"
 	"testing"
 
+	"github.com/goushuyun/log"
+
 	"github.com/gocarina/gocsv"
 	"github.com/goushuyun/taobao-erp/misc"
-	"github.com/goushuyun/log"
 )
 
 type People struct {

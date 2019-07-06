@@ -17,7 +17,7 @@ import (
 )
 
 func TestMd5(t *testing.T) {
-	t.Log(Md5String("723325"))
+	t.Log(Md5String("ke190630"))
 }
 
 func TestGenCheckCode(t *testing.T) {
