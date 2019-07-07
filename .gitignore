@@ -41,7 +41,6 @@ _testmain.go
 .idea/
 
 ver/
-vendor/
 default.etcd/
 nohup.out
 *.paw
