@@ -82,9 +82,9 @@ func CallSVC(ctx context.Context, serviceName string, method string, req interfa
 }
 
 func CallRPCWithNewCtx(ctx context.Context, serviceName string, method string, req interface{}) (interface{}, error) {
-	md, ok := metadata.FromContext(ctx)
+	md, ok := metadata.FromIncomingContext(ctx)
 	if ok {
-		ctx = metadata.NewContext(context.Background(), md)
+		ctx = metadata.NewOutgoingContext(context.Background(), md)
 	} else {
 		ctx = context.Background()
 	}
@@ -92,9 +92,9 @@ func CallRPCWithNewCtx(ctx context.Context, serviceName string, method string, r
 }
 
 func CallSVCWithNewCtx(ctx context.Context, serviceName string, method string, req interface{}, resp interface{}) error {
-	md, ok := metadata.FromContext(ctx)
+	md, ok := metadata.FromIncomingContext(ctx)
 	if ok {
-		ctx = metadata.NewContext(context.Background(), md)
+		ctx = metadata.NewOutgoingContext(context.Background(), md)
 	} else {
 		ctx = context.Background()
 	}

@@ -14,7 +14,7 @@ import (
 
 // GetTidFromContext 从 gPRC context 中取到 tid
 func GetTidFromContext(ctx context.Context) string {
-	if md, ok := metadata.FromContext(ctx); ok {
+	if md, ok := metadata.FromIncomingContext(ctx); ok {
 		if md["tid"] != nil && len(md["tid"]) > 0 {
 			return md["tid"][0]
 		}
@@ -43,5 +43,5 @@ func GetHospitalIdFromToken(r *http.Request) string {
 
 func GenContext(r *http.Request) context.Context {
 	tid := r.Context().Value("tid").(string)
-	return metadata.NewContext(context.Background(), metadata.Pairs("tid", tid))
+	return metadata.AppendToOutgoingContext(context.Background(), "tid", tid)
 }
