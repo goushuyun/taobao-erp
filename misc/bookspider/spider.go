@@ -180,29 +180,29 @@ func spiderCoreHandler(isbn, upload_way string) (book *pb.Book, err error) {
 
 	}
 
+	// ##暂且注释掉，iconv lib 编译有问题##
 	//从京东上获取图书信息
-	book.SourceInfo = "jd"
-	sp = spider.NewSpider(NewJDListProcesser(), "spiderJDList")
-	baseURL = "https://search.jd.com/Search?keyword=ISBN&enc=utf-8&qrst=1&rt=1&stop=1&vt=2&wq=ISBN&psort=1&wtype=1&click=1"
-	url = strings.Replace(baseURL, "ISBN", isbn, -1)
-	req = request.NewRequest(url, "html", "", "GET", "", nil, nil, nil, nil)
+	// book.SourceInfo = "jd"
+	// sp = spider.NewSpider(NewJDListProcesser(), "spiderJDList")
+	// baseURL = "https://search.jd.com/Search?keyword=ISBN&enc=utf-8&qrst=1&rt=1&stop=1&vt=2&wq=ISBN&psort=1&wtype=1&click=1"
+	// url = strings.Replace(baseURL, "ISBN", isbn, -1)
+	// req = request.NewRequest(url, "html", "", "GET", "", nil, nil, nil, nil)
 
-	if ip != "" {
-		req.AddProxyHost(ip)
-	}
-	pageItems = sp.GetByRequest(req)
-	//没爬到数据
-	if pageItems == nil || len(pageItems.GetAll()) <= 0 {
-		log.Debug("jd no data")
-	} else {
-		structData(pageItems, book)
-		if book.Isbn != "" && isbn == book.Isbn && book.Price != 0 && book.Title != "" {
-			//如果获取到数据，返回
-			log.Debugf("%+v", book)
-			return
-		}
-
-	}
+	// if ip != "" {
+	// 	req.AddProxyHost(ip)
+	// }
+	// pageItems = sp.GetByRequest(req)
+	// //没爬到数据
+	// if pageItems == nil || len(pageItems.GetAll()) <= 0 {
+	// 	log.Debug("jd no data")
+	// } else {
+	// 	structData(pageItems, book)
+	// 	if book.Isbn != "" && isbn == book.Isbn && book.Price != 0 && book.Title != "" {
+	// 		//如果获取到数据，返回
+	// 		log.Debugf("%+v", book)
+	// 		return
+	// 	}
+	// }
 
 	book.SourceInfo = "youlu"
 	sp = spider.NewSpider(NewYouLuListProcesser(), "youlu")
