@@ -8,6 +8,7 @@ import (
 	"sync"
 	"time"
 
+	"github.com/goushuyun/log"
 	mediastore "github.com/goushuyun/taobao-erp/mediastore/service"
 	"github.com/goushuyun/taobao-erp/misc"
 	"github.com/goushuyun/taobao-erp/misc/bookspider"
@@ -15,7 +16,6 @@ import (
 	"github.com/goushuyun/taobao-erp/stock/db"
 	"github.com/goushuyun/taobao-erp/stock/export"
 	"github.com/mholt/archiver"
-	"github.com/goushuyun/log"
 )
 
 var IsRunOn = false

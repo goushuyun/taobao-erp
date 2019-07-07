@@ -53,6 +53,9 @@ service StockService {
     rpc ExportTaobaoCsv (TaobaoCsvRecord) returns (NormalResp);
     // get taobao csv export record
     rpc GetTaobaoCsvExportRecord (TaobaoCsvRecord) returns (TaobaoCsvRecordListResp);
+
+    // location
+    rpc DelLocation (Location) returns (NormalResp);
 }
 
 // location

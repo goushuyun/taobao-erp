@@ -14,6 +14,12 @@ import (
 	"github.com/goushuyun/taobao-erp/pb"
 )
 
+func DelLocation(w http.ResponseWriter, r *http.Request) {
+	req := &pb.Location{}
+
+	misc.CallWithResp(w, r, "stock", "DelLocation", req, "location_id")
+}
+
 func ListGoodsAllLocations(w http.ResponseWriter, r *http.Request) {
 	req := &pb.Goods{}
 

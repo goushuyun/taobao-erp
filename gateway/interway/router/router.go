@@ -55,5 +55,6 @@ func SetRouterV1() *m.Router {
 	v1.Register("/stock/export_taobao_csv", m.Wrap(c.ExportTaobaoCsv))
 	v1.Register("/stock/get_exported_taobao_csv_record", m.Wrap(c.GetTaobaoCsvExportRecord))
 	v1.RegisterGET("/stock/export_goods_shift_record", m.Wrap(c.ExportGoodsShiftRecord))
+	v1.Register("/stock/del_location", m.Wrap(c.DelLocation))
 	return v1
 }
