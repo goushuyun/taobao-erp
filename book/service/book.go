@@ -176,7 +176,7 @@ func handleBookInfos(book *pb.Book, ctx context.Context) error {
 */
 
 func insertByUploadMode(isbn string, uploadMode int64) (book *pb.Book, err error) {
-	ctx := metadata.NewContext(context.Background(), metadata.Pairs("tid", uuid.New()))
+	ctx := metadata.AppendToOutgoingContext(context.Background(), "tid", uuid.New())
 	if uploadMode == 0 {
 		book, err = bookspider.GetBookInfoBySpider(isbn, "")
 		if err != nil {

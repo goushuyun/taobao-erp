@@ -100,7 +100,7 @@ func HandlePendingBook() {
 }
 
 func corePendingGatherHandler(pendingBooks []*pb.BookPendingGather) {
-	ctx := metadata.NewContext(context.Background(), metadata.Pairs("tid", uuid.New()))
+	ctx := metadata.AppendToOutgoingContext(context.Background(), "tid", uuid.New())
 	var wg sync.WaitGroup
 	statisticChan := make(chan int)
 	for i := 0; i < len(pendingBooks); i++ {

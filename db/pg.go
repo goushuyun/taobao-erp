@@ -13,8 +13,8 @@ import (
 	"os"
 	"time"
 
-	_ "github.com/lib/pq"
 	"github.com/goushuyun/log"
+	_ "github.com/lib/pq"
 )
 
 var DB *sql.DB
