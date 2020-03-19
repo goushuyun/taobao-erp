@@ -20,7 +20,14 @@ func StartServiceConns(address string, serviceList []string) {
 			r := wonaming.NewResolver(name)
 			b := grpc.RoundRobin(r)
 
-			conn, err := grpc.Dial(address, grpc.WithInsecure(), grpc.WithBalancer(b))
+			conn, err := grpc.Dial(
+				address,
+				grpc.WithInsecure(),
+				grpc.WithBalancer(b),
+				grpc.WithDefaultCallOptions(
+					grpc.MaxCallRecvMsgSize(1024*1024*5),
+				),
+			)
 			if err != nil {
 				log.Printf(`connect to '%s' service failed: %v`, name, err)
 			}
